@@ -9,6 +9,7 @@ public class JacksonUtil<T> {
 
     /**
      * 对象转换成json
+     *
      * @param obj 对象
      * @return String
      */
@@ -23,7 +24,6 @@ public class JacksonUtil<T> {
      * @return String
      **/
     // TODO
-
 
     /**
      * 将json转换成对象Class
