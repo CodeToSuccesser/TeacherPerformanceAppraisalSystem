@@ -13,7 +13,7 @@
     <modules>
         <module>management</module>
         <module>common</module>
-        <module>report_business</module>
+        <module>report-business</module>
     </modules>
 
     <groupId>com.management</groupId>
