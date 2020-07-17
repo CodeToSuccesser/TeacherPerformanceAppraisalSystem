@@ -34,7 +34,7 @@
         <!-- 引入report_bussiness -->
         <dependency>
             <groupId>com.management</groupId>
-            <artifactId>report_business</artifactId>
+            <artifactId>report-business</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
