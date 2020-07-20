@@ -9,10 +9,19 @@ package com.management.common.enums;
 public enum ResponseCodeEnum {
 
     // TODO
-    NO_PERMISSION(401, "No permission");
+    OK(200, "OK"),
+    NO_PERMISSION(401, "No permission"),
+    EXCEPTION(500, "系统错误"),
+    JSON_CONVERT_ERROR(555, "JSON转换异常");
 
-    private final int code;
-    private final String msg;
+    public final int code;
+
+    public final String msg;
+
+    ResponseCodeEnum(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
 
     public int getCode() {
         return code;
@@ -20,10 +29,5 @@ public enum ResponseCodeEnum {
 
     public String getMsg() {
         return msg;
-    }
-
-    ResponseCodeEnum(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
     }
 }
