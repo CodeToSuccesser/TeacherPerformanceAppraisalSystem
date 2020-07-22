@@ -4,7 +4,8 @@ import com.management.common.enums.ResponseCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
 import com.management.common.utils.JacksonUtil;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @description 全局异常处理
  * @date 2020/7/16
  **/
-@Slf4j
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
     /**
      * @param e 业务异常

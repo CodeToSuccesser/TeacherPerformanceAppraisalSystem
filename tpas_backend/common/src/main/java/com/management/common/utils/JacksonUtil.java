@@ -10,8 +10,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.management.common.enums.ResponseCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
@@ -22,10 +23,11 @@ import java.util.TimeZone;
  * @description json转化工具
  * @date 2020/7/16
  **/
-@Slf4j
 public class JacksonUtil {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private static final Logger log = LoggerFactory.getLogger(JacksonUtil.class);
 
     static {
         // 遇到未知属性是否抛出异常 ，默认是抛出异常的
