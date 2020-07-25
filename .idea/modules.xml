@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/TeacherPerformanceAppraisalSystem.iml" filepath="$PROJECT_DIR$/.idea/TeacherPerformanceAppraisalSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tpas_backend/common/common.iml" filepath="$PROJECT_DIR$/tpas_backend/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tpas_backend/management/management.iml" filepath="$PROJECT_DIR$/tpas_backend/management/management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tpas_backend/report-business/report-business.iml" filepath="$PROJECT_DIR$/tpas_backend/report-business/report-business.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tpas_backend/tpas_backend.iml" filepath="$PROJECT_DIR$/tpas_backend/tpas_backend.iml" />
+    </modules>
+  </component>
+</project>
