@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,21 +17,6 @@ import java.util.Scanner;
  * @date 2020/7/16
  **/
 public class CodeGenerator {
-    private static String author = "";
-    private static String outputDir = "/Users/lengwen/Desktop/erp";
-    private static String driver = "com.mysql.cj.jdbc.Driver";
-    private static String url = "jdbc:mysql://localhost:3306/erp?useUnicode=true&characterEncoding=UTF-8" +
-            "&serverTimezone=UTC";
-    private static String username = "root";
-    private static String password = "root";
-    private static String tablePrefix = "t_";
-    private static String parentPackage = "com.management";
-    private static String dao = "dao";
-    private static String service = "service";
-    private static String entity = "entity";
-    private static String controller = "controller";
-    private static String mapperxml = "mapper";
-    private static String moduleName = "sys";
 
     /**
      * <p>
