@@ -296,7 +296,11 @@ CREATE TABLE `user_log`(
 # 管理员
 DROP USER IF EXISTS `tpas_admin`@`localhost`;
 CREATE USER `tpas_admin`@`localhost` IDENTIFIED BY 'AaBb2020!';
-GRANT ALL ON `teacher_performance`.`*` TO `tpas_admin`@`localhost`;
+UPDATE user SET host='%' where user='tpas_admin';
+GRANT ALL PRIVILEGES ON *.* TO 'tpas_admin'@'%' IDENTIFIED BY 'AaBb2020!' WITH GRANT OPTION;
+GRANT ALL ON `teacher_performance`.`*` TO `tpas_admin_dev`@`localhost`;
+GRANT ALL ON `teacher_performance`.`*` TO `tpas_admin_test`@`localhost`;
+GRANT ALL ON `teacher_performance`.`*` TO `tpas_admin_pro`@`localhost`;
 
 # ----------------------------------------SQL v1.0.0----------------------------------------
 
