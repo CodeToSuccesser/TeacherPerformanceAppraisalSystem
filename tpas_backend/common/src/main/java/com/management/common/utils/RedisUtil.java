@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis工具类
  *
- * @author
+ * @author pwh
  * @version 1.0
  */
 public class RedisUtil {
@@ -28,8 +28,6 @@ public class RedisUtil {
     public StringRedisTemplate getRedisTemplate() {
         return this.redisTemplate;
     }
-
-    /** -------------------key相关操作--------------------- */
 
     /**
      * 删除key
@@ -183,8 +181,6 @@ public class RedisUtil {
     public DataType type(String key) {
         return redisTemplate.type(key);
     }
-
-    /** -------------------string相关操作--------------------- */
 
     /**
      * 设置指定 key 的值
@@ -357,8 +353,6 @@ public class RedisUtil {
         return redisTemplate.opsForValue().append(key, value);
     }
 
-    /** -------------------hash相关操作------------------------- */
-
     /**
      * 获取存储在哈希表中指定字段的值
      *
@@ -497,8 +491,6 @@ public class RedisUtil {
     public Cursor<Entry<Object, Object>> hScan(String key, ScanOptions options) {
         return redisTemplate.opsForHash().scan(key, options);
     }
-
-    /** ------------------------list相关操作---------------------------- */
 
     /**
      * 通过索引获取列表中的元素
@@ -740,8 +732,6 @@ public class RedisUtil {
     public Long lLen(String key) {
         return redisTemplate.opsForList().size(key);
     }
-
-    /** --------------------set相关操作-------------------------- */
 
     /**
      * set添加元素
@@ -1005,8 +995,6 @@ public class RedisUtil {
     public Cursor<String> sScan(String key, ScanOptions options) {
         return redisTemplate.opsForSet().scan(key, options);
     }
-
-    /**------------------zSet相关操作--------------------------------*/
 
     /**
      * 添加元素,有序集合是按照元素的score值由小到大排列
