@@ -3,7 +3,7 @@
 DROP DATABASE IF EXISTS `teacher_performance_dev`;
 CREATE  DATABASE `teacher_performance_dev`;
 
-USE `teacher_performance_pro`;
+USE `teacher_performance_dev`;
 
 CREATE TABLE `teacher_msg`(
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
