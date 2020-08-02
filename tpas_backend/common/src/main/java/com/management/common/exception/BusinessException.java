@@ -1,6 +1,6 @@
 package com.management.common.exception;
 
-import com.management.common.enums.ResponseCodeEnum;
+import com.management.common.enums.ErrorCodeEnum;
 
 /**
  * @author dude
@@ -22,8 +22,8 @@ public class BusinessException extends RuntimeException {
     public String msg;
 
     public BusinessException() {
-        this.code = ResponseCodeEnum.EXCEPTION.code;
-        this.msg = ResponseCodeEnum.EXCEPTION.msg;
+        this.code = ErrorCodeEnum.EXCEPTION.code;
+        this.msg = ErrorCodeEnum.EXCEPTION.msg;
     }
 
     public BusinessException(Integer code, String msg) {
@@ -31,9 +31,9 @@ public class BusinessException extends RuntimeException {
         this.msg = msg;
     }
 
-    public BusinessException(ResponseCodeEnum responseCodeEnum) {
-        this.code = responseCodeEnum.code;
-        this.msg = responseCodeEnum.msg;
+    public BusinessException(ErrorCodeEnum errorCodeEnum) {
+        this.code = errorCodeEnum.code;
+        this.msg = errorCodeEnum.msg;
     }
 
     @Override

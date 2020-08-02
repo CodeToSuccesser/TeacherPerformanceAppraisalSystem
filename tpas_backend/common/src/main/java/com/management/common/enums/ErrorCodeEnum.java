@@ -6,19 +6,20 @@ package com.management.common.enums;
  * code 状态码
  * msg 返回描述
  */
-public enum ResponseCodeEnum {
+public enum ErrorCodeEnum {
 
     // TODO
     OK(200, "OK"),
     NO_PERMISSION(401, "No permission"),
     EXCEPTION(500, "系统错误"),
-    JSON_CONVERT_ERROR(555, "JSON转换异常");
+    JSON_CONVERT_ERROR(555, "JSON转换异常"),
+    DUPLICATE_OBJECT_EXIST(400,"logName已存在");
 
     public final int code;
 
     public final String msg;
 
-    ResponseCodeEnum(int code, String msg) {
+    ErrorCodeEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
