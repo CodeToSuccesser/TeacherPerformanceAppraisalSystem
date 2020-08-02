@@ -1,9 +1,9 @@
 # ----------------------------------------SQL v1.0.0----------------------------------------
 # --2020.07.25
-DROP DATABASE IF EXISTS `teacher_performance`;
-CREATE  DATABASE `teacher_performance`;
+DROP DATABASE IF EXISTS `teacher_performance_dev`;
+CREATE  DATABASE `teacher_performance_dev`;
 
-USE `teacher_performance`;
+USE `teacher_performance_dev`;
 
 CREATE TABLE `teacher_msg`(
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -295,7 +295,7 @@ CREATE TABLE `user_log`(
 
 # 管理员
 DROP USER IF EXISTS `tpas_admin`@`localhost`;
-CREATE USER `tpas_admin`@`localhost` IDENTIFIED BY '123456';
+CREATE USER `tpas_admin`@`localhost` IDENTIFIED BY 'AaBb2020!';
 GRANT ALL ON `teacher_performance`.`*` TO `tpas_admin`@`localhost`;
 
 # ----------------------------------------SQL v1.0.0----------------------------------------
