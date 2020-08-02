@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.CourseHoursMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.CourseHours">
+        <id column="id" property="id" />
+        <result column="course_id" property="courseId" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="student_number" property="studentNumber" />
+        <result column="total_capacity" property="totalCapacity" />
+        <result column="selected_student" property="selectedStudent" />
+        <result column="week_hours" property="weekHours" />
+        <result column="peroid" property="peroid" />
+        <result column="classed" property="classed" />
+        <result column="teaching_hours" property="teachingHours" />
+        <result column="computer_hours" property="computerHours" />
+        <result column="experiment_hours" property="experimentHours" />
+        <result column="selection_number" property="selectionNumber" />
+        <result column="students_institute" property="studentsInstitute" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="primary_secondary" property="primarySecondary" />
+        <result column="exp_number" property="expNumber" />
+        <result column="exp_per_number" property="expPerNumber" />
+        <result column="course_time" property="courseTime" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, course_id, teacher_id, student_number, total_capacity, selected_student, week_hours, peroid, classed, teaching_hours, computer_hours, experiment_hours, selection_number, students_institute, semester, school_year, admin_id, primary_secondary, exp_number, exp_per_number, course_time, remark, update_time, create_time
+    </sql>
+
+</mapper>
