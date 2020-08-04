@@ -1,0 +1,305 @@
+package com.business.tpas.entity;
+
+import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import java.io.Serializable;
+
+/**
+ * <p>
+ * 课程课时修改记录表, 修改用户:教师/管理员
+ * </p>
+ *
+ * @author peihua.wu
+ * @since 2020-08-01
+ */
+public class CourseHoursModifyRecord implements Serializable {
+
+    private static final long serialVersionUID=1L;
+
+    /**
+     * 主键
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    /**
+     * 课时信息编码
+     */
+    private Long hoursId;
+
+    /**
+     * 提出修改用户类型, 默认0 教师, 1 管理员
+     */
+    private Integer applyType;
+
+    /**
+     * 提出修改用户编码, teachar_id或者admin_id
+     */
+    private Long applyId;
+
+    /**
+     * 已选学生人数, 非空
+     */
+    private Integer selectedStudent;
+
+    /**
+     * 学分, 非空
+     */
+    private BigDecimal courseCridet;
+
+    /**
+     * 总学时数, 非空
+     */
+    private BigDecimal totalHours;
+
+    /**
+     * 起止周, 非空
+     */
+    private String peroid;
+
+    /**
+     * 教学班组成, 非空
+     */
+    private String classed;
+
+    /**
+     * 修改已选学生人数
+     */
+    private Integer modifySelectedStudent;
+
+    /**
+     * 修改学时
+     */
+    private BigDecimal modifyCourseCridet;
+
+    /**
+     * 修改总学时数
+     */
+    private BigDecimal modifyTotalHours;
+
+    /**
+     * 修改起止周
+     */
+    private String modifyPeroid;
+
+    /**
+     * 修改教学班组成
+     */
+    private String modifyClassed;
+
+    /**
+     * 处理的管理员编码
+     */
+    private Long adminId;
+
+    /**
+     * 管理员处理时间
+     */
+    private LocalDateTime checkTime;
+
+    /**
+     * 管理员处理结果, 默认0 未处理, 1 通过, 2 驳回
+     */
+    private Integer checkResult;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 数据最新操作时间
+     */
+    private LocalDateTime updateTime;
+
+    private LocalDateTime createTime;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getHoursId() {
+        return hoursId;
+    }
+
+    public void setHoursId(Long hoursId) {
+        this.hoursId = hoursId;
+    }
+
+    public Integer getApplyType() {
+        return applyType;
+    }
+
+    public void setApplyType(Integer applyType) {
+        this.applyType = applyType;
+    }
+
+    public Long getApplyId() {
+        return applyId;
+    }
+
+    public void setApplyId(Long applyId) {
+        this.applyId = applyId;
+    }
+
+    public Integer getSelectedStudent() {
+        return selectedStudent;
+    }
+
+    public void setSelectedStudent(Integer selectedStudent) {
+        this.selectedStudent = selectedStudent;
+    }
+
+    public BigDecimal getCourseCridet() {
+        return courseCridet;
+    }
+
+    public void setCourseCridet(BigDecimal courseCridet) {
+        this.courseCridet = courseCridet;
+    }
+
+    public BigDecimal getTotalHours() {
+        return totalHours;
+    }
+
+    public void setTotalHours(BigDecimal totalHours) {
+        this.totalHours = totalHours;
+    }
+
+    public String getPeroid() {
+        return peroid;
+    }
+
+    public void setPeroid(String peroid) {
+        this.peroid = peroid;
+    }
+
+    public String getClassed() {
+        return classed;
+    }
+
+    public void setClassed(String classed) {
+        this.classed = classed;
+    }
+
+    public Integer getModifySelectedStudent() {
+        return modifySelectedStudent;
+    }
+
+    public void setModifySelectedStudent(Integer modifySelectedStudent) {
+        this.modifySelectedStudent = modifySelectedStudent;
+    }
+
+    public BigDecimal getModifyCourseCridet() {
+        return modifyCourseCridet;
+    }
+
+    public void setModifyCourseCridet(BigDecimal modifyCourseCridet) {
+        this.modifyCourseCridet = modifyCourseCridet;
+    }
+
+    public BigDecimal getModifyTotalHours() {
+        return modifyTotalHours;
+    }
+
+    public void setModifyTotalHours(BigDecimal modifyTotalHours) {
+        this.modifyTotalHours = modifyTotalHours;
+    }
+
+    public String getModifyPeroid() {
+        return modifyPeroid;
+    }
+
+    public void setModifyPeroid(String modifyPeroid) {
+        this.modifyPeroid = modifyPeroid;
+    }
+
+    public String getModifyClassed() {
+        return modifyClassed;
+    }
+
+    public void setModifyClassed(String modifyClassed) {
+        this.modifyClassed = modifyClassed;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public LocalDateTime getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(LocalDateTime checkTime) {
+        this.checkTime = checkTime;
+    }
+
+    public Integer getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(Integer checkResult) {
+        this.checkResult = checkResult;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseHoursModifyRecord{" +
+        "id=" + id +
+        ", hoursId=" + hoursId +
+        ", applyType=" + applyType +
+        ", applyId=" + applyId +
+        ", selectedStudent=" + selectedStudent +
+        ", courseCridet=" + courseCridet +
+        ", totalHours=" + totalHours +
+        ", peroid=" + peroid +
+        ", classed=" + classed +
+        ", modifySelectedStudent=" + modifySelectedStudent +
+        ", modifyCourseCridet=" + modifyCourseCridet +
+        ", modifyTotalHours=" + modifyTotalHours +
+        ", modifyPeroid=" + modifyPeroid +
+        ", modifyClassed=" + modifyClassed +
+        ", adminId=" + adminId +
+        ", checkTime=" + checkTime +
+        ", checkResult=" + checkResult +
+        ", remark=" + remark +
+        ", updateTime=" + updateTime +
+        ", createTime=" + createTime +
+        "}";
+    }
+}

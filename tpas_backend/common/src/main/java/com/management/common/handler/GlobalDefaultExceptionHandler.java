@@ -1,6 +1,6 @@
 package com.management.common.handler;
 
-import com.management.common.enums.ResponseCodeEnum;
+import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
 import com.management.common.utils.JacksonUtil;
@@ -30,7 +30,7 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
     public String businessExceptionHandler(BusinessException e) {
-        log.warn("业务异常==> code: {}, msg: {}", e.code, e.code);
+        log.error("业务异常==> code: {}, msg: {}", e.code, e.code);
         return JacksonUtil.object2Json(new BaseResponse<>(e.code, e.msg));
     }
 
@@ -44,8 +44,8 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = RuntimeException.class)
     public String runtimeExceptionHandler(RuntimeException e) {
-        log.warn("业务异常==> Exception: {}", e.getMessage());
-        return JacksonUtil.object2Json(new BaseResponse<>(ResponseCodeEnum.EXCEPTION.code, ResponseCodeEnum.EXCEPTION.msg));
+        log.error("业务异常==> Exception: {}", e.getMessage());
+        return JacksonUtil.object2Json(new BaseResponse<>(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg));
     }
 
     /**
@@ -58,7 +58,7 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public String defaultExceptionHandler(Exception e) {
-        log.warn("业务异常==> Exception: {}", e.getMessage());
-        return JacksonUtil.object2Json(new BaseResponse<>(ResponseCodeEnum.EXCEPTION.code, ResponseCodeEnum.EXCEPTION.msg));
+        log.error("业务异常==> Exception: {}", e.getMessage());
+        return JacksonUtil.object2Json(new BaseResponse<>(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg));
     }
 }

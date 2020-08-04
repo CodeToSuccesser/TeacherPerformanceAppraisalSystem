@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.management.common.enums.ResponseCodeEnum;
+import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +52,7 @@ public class JacksonUtil {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             log.error("JacksonUtil.object2Json转换异常: {}", e.getMessage());
-            throw new BusinessException(ResponseCodeEnum.JSON_CONVERT_ERROR.code, ResponseCodeEnum.JSON_CONVERT_ERROR.msg);
+            throw new BusinessException(ErrorCodeEnum.JSON_CONVERT_ERROR.code, ErrorCodeEnum.JSON_CONVERT_ERROR.msg);
         }
     }
 
@@ -67,7 +67,7 @@ public class JacksonUtil {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             log.error("JacksonUtil.object2JsonPretty转换异常: {}", e.getMessage());
-            throw new BusinessException(ResponseCodeEnum.JSON_CONVERT_ERROR.code, ResponseCodeEnum.JSON_CONVERT_ERROR.msg);
+            throw new BusinessException(ErrorCodeEnum.JSON_CONVERT_ERROR.code, ErrorCodeEnum.JSON_CONVERT_ERROR.msg);
         }
     }
 
@@ -86,7 +86,7 @@ public class JacksonUtil {
             return OBJECT_MAPPER.readValue(src, clazz);
         } catch (Exception e) {
             log.error("JacksonUtil.json2Object转换异常: {}", e.getMessage());
-            throw new BusinessException(ResponseCodeEnum.JSON_CONVERT_ERROR.code, ResponseCodeEnum.JSON_CONVERT_ERROR.msg);
+            throw new BusinessException(ErrorCodeEnum.JSON_CONVERT_ERROR.code, ErrorCodeEnum.JSON_CONVERT_ERROR.msg);
         }
     }
 
@@ -118,13 +118,13 @@ public class JacksonUtil {
             return OBJECT_MAPPER.readValue(src, javaType);
         } catch (Exception e) {
             log.error("JacksonUtil.isJsonObjValid异常: {}", e.getMessage());
-            throw new BusinessException(ResponseCodeEnum.JSON_CONVERT_ERROR.code, ResponseCodeEnum.JSON_CONVERT_ERROR.msg);
+            throw new BusinessException(ErrorCodeEnum.JSON_CONVERT_ERROR.code, ErrorCodeEnum.JSON_CONVERT_ERROR.msg);
         }
     }
 
     public static void main(String[] args) {
-        log.info(new BaseResponse<Object>(ResponseCodeEnum.OK).toString());
-        log.info(object2JsonPretty(new BaseResponse<Object>(ResponseCodeEnum.OK).toString()));
+        log.info(new BaseResponse<Object>(ErrorCodeEnum.OK).toString());
+        log.info(object2JsonPretty(new BaseResponse<Object>(ErrorCodeEnum.OK).toString()));
         log.info(Objects.requireNonNull(json2Object("{\"code\":555,\"msg\":\"JSON转换异常\"}", BaseResponse.class)).toString());
         log.info("{}", isJsonObjValid("[{\"a\":1}]"));
         log.info("{}", json2Map("{\"a\":1, \"b\":\"2\"}"));

@@ -9,7 +9,7 @@ import java.util.List;
  * @description 基础的dao接口，所有的dao都要继承这个接口  如果有什么通用的方法，可自行扩展
  * @date 2020/7/16
  **/
-interface BaseDao<T> extends BaseMapper<T> {
+public interface BaseDao<T> extends BaseMapper<T> {
     /**
      * 保存实体
      * @param entity

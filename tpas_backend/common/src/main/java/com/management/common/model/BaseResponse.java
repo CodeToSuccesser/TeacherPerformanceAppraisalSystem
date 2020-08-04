@@ -1,7 +1,7 @@
 package com.management.common.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.management.common.enums.ResponseCodeEnum;
+import com.management.common.enums.ErrorCodeEnum;
 
 import java.io.Serializable;
 
@@ -33,8 +33,8 @@ public class BaseResponse<T> implements Serializable {
     private T data;
 
     public BaseResponse() {
-        this.code = ResponseCodeEnum.OK.code;
-        this.msg = ResponseCodeEnum.OK.msg;
+        this.code = ErrorCodeEnum.OK.code;
+        this.msg = ErrorCodeEnum.OK.msg;
     }
 
     public BaseResponse(Integer code, String msg, T data) {
@@ -48,14 +48,14 @@ public class BaseResponse<T> implements Serializable {
         this.msg = msg;
     }
 
-    public BaseResponse(ResponseCodeEnum responseCodeEnum) {
-        this.code = responseCodeEnum.code;
-        this.msg = responseCodeEnum.msg;
+    public BaseResponse(ErrorCodeEnum errorCodeEnum) {
+        this.code = errorCodeEnum.code;
+        this.msg = errorCodeEnum.msg;
     }
 
     public BaseResponse(T data) {
-        this.code = ResponseCodeEnum.OK.getCode();
-        this.msg = ResponseCodeEnum.OK.getMsg();
+        this.code = ErrorCodeEnum.OK.getCode();
+        this.msg = ErrorCodeEnum.OK.getMsg();
         this.data = data;
     }
 
