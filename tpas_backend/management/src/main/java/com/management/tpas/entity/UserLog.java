@@ -2,8 +2,9 @@ package com.management.tpas.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -15,7 +16,7 @@ import java.io.Serializable;
  */
 public class UserLog implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键
@@ -58,8 +59,10 @@ public class UserLog implements Serializable {
      */
     private String resultMsg;
 
-    private LocalDateTime createTime;
+    private Date createTime;
 
+    public UserLog() {
+    }
 
     public Long getId() {
         return id;
@@ -85,7 +88,7 @@ public class UserLog implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getUserType() {
+    public Integer getUserType(Integer integer) {
         return userType;
     }
 
@@ -125,26 +128,26 @@ public class UserLog implements Serializable {
         this.resultMsg = resultMsg;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
     @Override
     public String toString() {
         return "UserLog{" +
-        "id=" + id +
-        ", ip=" + ip +
-        ", userId=" + userId +
-        ", userType=" + userType +
-        ", url=" + url +
-        ", param=" + param +
-        ", resultCode=" + resultCode +
-        ", resultMsg=" + resultMsg +
-        ", createTime=" + createTime +
-        "}";
+                "id=" + id +
+                ", ip=" + ip +
+                ", userId=" + userId +
+                ", userType=" + userType +
+                ", url=" + url +
+                ", param=" + param +
+                ", resultCode=" + resultCode +
+                ", resultMsg=" + resultMsg +
+                ", createTime=" + createTime +
+                "}";
     }
 }
