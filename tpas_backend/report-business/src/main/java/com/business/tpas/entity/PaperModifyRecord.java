@@ -2,8 +2,8 @@ package com.business.tpas.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -106,7 +106,7 @@ public class PaperModifyRecord implements Serializable {
     /**
      * 管理员处理时间
      */
-    private LocalDateTime checkTime;
+    private Date checkTime;
 
     /**
      * 管理员处理结果, 默认0 未处理, 1 通过, 2 驳回
@@ -116,9 +116,9 @@ public class PaperModifyRecord implements Serializable {
     /**
      * 数据最新操作时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
-    private LocalDateTime createTime;
+    private Date createTime;
 
 
     public Long getId() {
@@ -257,11 +257,11 @@ public class PaperModifyRecord implements Serializable {
         this.adminId = adminId;
     }
 
-    public LocalDateTime getCheckTime() {
+    public Date getCheckTime() {
         return checkTime;
     }
 
-    public void setCheckTime(LocalDateTime checkTime) {
+    public void setCheckTime(Date checkTime) {
         this.checkTime = checkTime;
     }
 
@@ -273,19 +273,19 @@ public class PaperModifyRecord implements Serializable {
         this.checkResult = checkResult;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

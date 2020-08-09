@@ -3,8 +3,8 @@ package com.business.tpas.entity;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -57,7 +57,7 @@ public class CourseBase implements Serializable {
     /**
      * 首次开课时间, 默认为信息录入时间
      */
-    private LocalDateTime firstClassTime;
+    private Date firstClassTime;
 
     /**
      * 是否双语授课, 默认0 非双语, 1 双语
@@ -67,7 +67,7 @@ public class CourseBase implements Serializable {
     /**
      * 选用教材时间, 默认为信息录入时间
      */
-    private LocalDateTime newTextbookTime;
+    private Date newTextbookTime;
 
     /**
      * 软硬件课程, 默认0 软件, 1 硬件
@@ -92,9 +92,9 @@ public class CourseBase implements Serializable {
     /**
      * 数据最新操作时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
-    private LocalDateTime createTime;
+    private Date createTime;
 
 
     public Long getId() {
@@ -153,11 +153,11 @@ public class CourseBase implements Serializable {
         this.institute = institute;
     }
 
-    public LocalDateTime getFirstClassTime() {
+    public Date getFirstClassTime() {
         return firstClassTime;
     }
 
-    public void setFirstClassTime(LocalDateTime firstClassTime) {
+    public void setFirstClassTime(Date firstClassTime) {
         this.firstClassTime = firstClassTime;
     }
 
@@ -169,11 +169,11 @@ public class CourseBase implements Serializable {
         this.isBilingual = isBilingual;
     }
 
-    public LocalDateTime getNewTextbookTime() {
+    public Date getNewTextbookTime() {
         return newTextbookTime;
     }
 
-    public void setNewTextbookTime(LocalDateTime newTextbookTime) {
+    public void setNewTextbookTime(Date newTextbookTime) {
         this.newTextbookTime = newTextbookTime;
     }
 
@@ -209,19 +209,19 @@ public class CourseBase implements Serializable {
         this.remark = remark;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

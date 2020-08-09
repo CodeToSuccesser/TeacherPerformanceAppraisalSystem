@@ -25,7 +25,7 @@
         select
         <include refid="Base_Column_List" />
         from teacher_msg
-        where log_name = #{logName,jdbcType=VARCHAR}
+        where log_name = #{logName,jdbcType=VARCHAR} and is_deleted = 0
     </select>
 
     <insert id="save" parameterType="com.management.tpas.entity.TeacherMsg">

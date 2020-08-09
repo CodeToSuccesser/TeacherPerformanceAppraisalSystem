@@ -20,4 +20,11 @@
         id, admin_name, log_name, log_password, contact, portrait, is_deleted, update_time, create_time
     </sql>
 
+    <select id="selectByLogName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from admin_msg
+        where log_name = #{logName,jdbcType=VARCHAR} AND is_deleted = 0
+    </select>
+
 </mapper>

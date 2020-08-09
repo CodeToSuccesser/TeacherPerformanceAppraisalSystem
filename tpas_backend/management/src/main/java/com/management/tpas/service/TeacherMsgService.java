@@ -2,6 +2,7 @@ package com.management.tpas.service;
 
 import com.management.common.base.BaseService;
 import com.management.tpas.entity.TeacherMsg;
+import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,7 @@ import org.springframework.stereotype.Service;
 public interface TeacherMsgService extends BaseService<TeacherMsg> {
 
     void insertTeacherMsg(TeacherMsgModel teacherMsgModel);
+
+    TeacherMsgModel getByLoginMsg(LoginMsgModel loginMsgModel);
 
 }

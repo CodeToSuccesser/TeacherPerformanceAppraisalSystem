@@ -1,9 +1,8 @@
 package com.management.tpas.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author Pietra
@@ -22,21 +21,17 @@ public class TeacherMsgModel implements Serializable {
 
     private String logName;
 
-    private String logPassword;
-
     private String contact;
 
     private String portrait;
 
     private Long adminId;
 
-    private Integer isDeleted;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -66,14 +61,6 @@ public class TeacherMsgModel implements Serializable {
         this.logName = logName;
     }
 
-    public String getLogPassword() {
-        return logPassword;
-    }
-
-    public void setLogPassword(String logPassword) {
-        this.logPassword = logPassword;
-    }
-
     public String getContact() {
         return contact;
     }
@@ -98,35 +85,33 @@ public class TeacherMsgModel implements Serializable {
         this.adminId = adminId;
     }
 
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
     @Override
     public String toString() {
-        return "TeacherMsgModel{" + "id=" + id + ", teacherName='" + teacherName + '\'' + ", logName='" + logName + '\''
-            + ", logPassword='" + logPassword + '\'' + ", contact='" + contact + '\'' + ", portrait='" + portrait + '\''
-            + ", adminId=" + adminId + ", isDeleted=" + isDeleted + ", updateTime=" + updateTime + ", createTime="
-            + createTime + '}';
+        return "TeacherMsgModel{" +
+                "id=" + id +
+                ", teacherName='" + teacherName + '\'' +
+                ", logName='" + logName + '\'' +
+                ", contact='" + contact + '\'' +
+                ", portrait='" + portrait + '\'' +
+                ", adminId=" + adminId +
+                ", updateTime=" + updateTime +
+                ", createTime=" + createTime +
+                '}';
     }
 }

@@ -25,20 +25,20 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        String remoteAddr = request.getRemoteAddr();
-        String userId = request.getParameter("userId");
-        String userType = request.getParameter("userType");
-        String requestURL = request.getRequestURL().toString();
-        String param = request.getQueryString().toString();
-        String date = request.getHeader("Date");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date localdate = format.parse(date);
-        userLog.setIp(remoteAddr);
-        userLog.setCreateTime(localdate);
-        userLog.setParam(param);
-        userLog.setUserId(Long.parseLong(userId));
-        userLog.setUserType(Integer.parseInt(userType));
-        userLog.setUrl(requestURL);
+//        String remoteAddr = request.getRemoteAddr();
+//        String userId = request.getParameter("userId");
+//        String userType = request.getParameter("userType");
+//        String requestURL = request.getRequestURL().toString();
+//        String param = request.getQueryString().toString();
+//        String date = request.getHeader("Date");
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date localdate = format.parse(date);
+//        userLog.setIp(remoteAddr);
+//        userLog.setCreateTime(localdate);
+//        userLog.setParam(param);
+//        userLog.setUserId(Long.parseLong(userId));
+//        userLog.setUserType(Integer.parseInt(userType));
+//        userLog.setUrl(requestURL);
 
 
         return true;
@@ -46,14 +46,14 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        int status = response.getStatus();
-        String warning = response.getHeader("Warning");
-        userLog.setResultCode(String.valueOf(status));
-        userLog.setResultMsg(warning);
+//        int status = response.getStatus();
+//        String warning = response.getHeader("Warning");
+//        userLog.setResultCode(String.valueOf(status));
+//        userLog.setResultMsg(warning);
     }
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        mapper.insert(userLog);
+//        mapper.insert(userLog);
     }
 }

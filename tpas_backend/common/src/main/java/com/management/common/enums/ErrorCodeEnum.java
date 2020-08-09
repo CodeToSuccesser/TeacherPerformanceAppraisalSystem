@@ -13,7 +13,9 @@ public enum ErrorCodeEnum {
     NO_PERMISSION(401, "No permission"),
     EXCEPTION(500, "系统错误"),
     JSON_CONVERT_ERROR(555, "JSON转换异常"),
-    DUPLICATE_OBJECT_EXIST(400,"logName已存在");
+    DUPLICATE_OBJECT_EXIST(409,"logName已存在"),
+    PARAM_IS_EMPTY(411, "请求参数为空"),
+    PARAM_IS_WRONG(416, "请求参数有误");
 
     public final int code;
 
