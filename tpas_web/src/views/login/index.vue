@@ -2,6 +2,12 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
+      <div class="title-container">
+        <h3 class="title">
+          {{ "教师绩效考核系统" }}
+        </h3>
+      </div>
+
       <el-form-item prop="username" class="input">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -199,7 +205,7 @@ $input_shadow: #F9F0FE;
     width: 520px;
     max-width: 100%;
     margin: auto;
-    padding: 100px 40px 0;
+    padding: 65px 50px 0;
     overflow: hidden;
     background-color: $bg_from;
     box-shadow: 0 0 1px 1px $form_shadow;
@@ -242,7 +248,7 @@ $input_shadow: #F9F0FE;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #454545;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
