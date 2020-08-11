@@ -13,6 +13,7 @@ import com.management.common.model.BaseResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
@@ -96,7 +97,7 @@ public class JacksonUtil {
      * @param src 字符串
      * @return Boolean
      */
-    static Boolean isJsonObjValid(String src) {
+    public static Boolean isJsonObjValid(String src) {
         try {
             return JsonNodeType.OBJECT == OBJECT_MAPPER.readTree(src).getNodeType();
         } catch (Exception e) {
@@ -112,7 +113,7 @@ public class JacksonUtil {
      * @author dude
      * @date 2020/7/20
      **/
-    static Map<String, Object> json2Map(String src) {
+    public static <T> Map<String, T> json2Map(String src) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, Object.class);
         try {
             return OBJECT_MAPPER.readValue(src, javaType);
@@ -122,8 +123,13 @@ public class JacksonUtil {
         }
     }
 
+    public static <T> Map<String, String> object2Map(T obj) {
+        return json2Map(object2Json(obj));
+    }
+
     public static void main(String[] args) {
         log.info(new BaseResponse<Object>(ErrorCodeEnum.OK).toString());
+        log.info(object2Map(new BaseResponse<Object>(ErrorCodeEnum.OK)).toString());
         log.info(object2JsonPretty(new BaseResponse<Object>(ErrorCodeEnum.OK).toString()));
         log.info(Objects.requireNonNull(json2Object("{\"code\":555,\"msg\":\"JSON转换异常\"}", BaseResponse.class)).toString());
         log.info("{}", isJsonObjValid("[{\"a\":1}]"));

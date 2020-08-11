@@ -30,7 +30,7 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
     public String businessExceptionHandler(BusinessException e) {
-        log.error("业务异常==> code: {}, msg: {}", e.code, e.code);
+        log.debug("业务异常==> code: {}, msg: {}", e.code, e.code);
         return JacksonUtil.object2Json(new BaseResponse<>(e.code, e.msg));
     }
 

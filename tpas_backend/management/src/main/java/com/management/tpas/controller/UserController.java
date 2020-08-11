@@ -1,16 +1,23 @@
 package com.management.tpas.controller;
 
+import com.management.common.config.JwtConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
 import com.management.common.utils.JacksonUtil;
+import com.management.common.utils.JwtUtil;
+import com.management.common.utils.RedisUtil;
 import com.management.tpas.enums.UserTypeEnum;
 import com.management.tpas.model.LoginMsgModel;
+import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.TeacherMsgService;
 import com.management.tpas.service.impl.AdminMsgServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
+import java.util.Map;
+import static com.management.common.config.GlobalConst.*;
 
 /**
  * @author dude
@@ -42,17 +49,21 @@ public class UserController {
         }
         // 判断用户类型
         UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(loginMsgModel.getUserType());
+        // 用户类型错误
         if (null == userTypeEnum) {
             return JacksonUtil.object2Json(new BaseResponse<Object>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg));
         }
+        // 获取账号信息,生成jwt和设置缓存
         switch (userTypeEnum) {
             case USER_TYPE_TEACHER: {
-                return JacksonUtil.object2Json(new BaseResponse<Object>(teacherMsgService.getByLoginMsg(loginMsgModel)));
+                return teacherMsgService.getByLoginMsg(loginMsgModel);
             }
             case USER_TYPE_ADMIN: {
-                return JacksonUtil.object2Json(new BaseResponse<Object>(adminMsgService.getByLoginMsg(loginMsgModel)));
+                return adminMsgService.getByLoginMsg(loginMsgModel);
+            }
+            default: {
+                return JacksonUtil.object2Json(new BaseResponse<Object>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg));
             }
         }
-        return JacksonUtil.object2Json(new BaseResponse<Object>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg));
     }
 }

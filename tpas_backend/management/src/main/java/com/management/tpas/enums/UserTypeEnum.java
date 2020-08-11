@@ -9,13 +9,16 @@ package com.management.tpas.enums;
  **/
 public enum UserTypeEnum {
 
-    USER_TYPE_TEACHER(0),
-    USER_TYPE_ADMIN(1);
+    USER_TYPE_TEACHER(0, "Teacher"),
+    USER_TYPE_ADMIN(1, "Admin");
 
     public int flag;
 
-    UserTypeEnum(int flag) {
+    public String info;
+
+    UserTypeEnum(int flag, String info) {
         this.flag = flag;
+        this.info = info;
     }
 
     public static UserTypeEnum getByFlag(int flag) {
@@ -35,4 +38,11 @@ public enum UserTypeEnum {
         this.flag = flag;
     }
 
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }
