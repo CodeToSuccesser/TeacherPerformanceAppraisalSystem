@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" style="width:300px">
       <el-form-item label="教师姓名">
         <el-input v-model="ruleForm.realname" :disabled="true" maxlength="30" />
       </el-form-item>
@@ -8,10 +8,10 @@
         <el-input v-model="ruleForm.username" maxlength="30" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" maxlength="30" />
+        <el-input v-model="ruleForm.password" maxlength="30" show-password />
       </el-form-item>
       <el-form-item label="确认密码" prop="checkPassword">
-        <el-input v-model="ruleForm.checkPassword" maxlength="30" />
+        <el-input v-model="ruleForm.checkPassword" maxlength="30" show-password />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="ruleForm.email" />
