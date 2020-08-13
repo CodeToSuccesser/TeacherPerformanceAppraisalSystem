@@ -5,7 +5,6 @@ import com.management.common.config.GlobalConst;
 import com.management.common.config.JwtConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
-import com.management.common.model.BaseResponse;
 import com.management.common.utils.BeanMapper;
 import com.management.common.utils.JacksonUtil;
 import com.management.common.utils.JwtUtil;
@@ -20,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +63,7 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
      **/
     @Override
     @Transactional
-    public String getByLoginMsg(LoginMsgModel loginMsgModel) {
+    public Map<String, String> getByLoginMsg(LoginMsgModel loginMsgModel) {
         TeacherMsg teacherMsg = teacherMsgMapper.selectByLogName(loginMsgModel.getLogName());
         // 账号不存在 或 密码错误
         if (null == teacherMsg || !teacherMsg.getLogPassword().equals(loginMsgModel.getLogPassword())) {
@@ -82,6 +81,6 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
         jwtMap.put(GlobalConst.TOKEN_NAME, token);
         redisTemplate.opsForValue().set(key, JacksonUtil.object2Json(jwtMap), JwtConfig.EXPIRE_TIME);
 
-        return JacksonUtil.object2Json(new BaseResponse<>(jwtMap));
+        return jwtMap;
     }
 }

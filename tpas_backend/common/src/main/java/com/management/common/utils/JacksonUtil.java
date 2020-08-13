@@ -128,7 +128,6 @@ public class JacksonUtil {
     }
 
     public static void main(String[] args) {
-        log.info(new BaseResponse<Object>(ErrorCodeEnum.OK).toString());
         log.info(object2Map(new BaseResponse<Object>(ErrorCodeEnum.OK)).toString());
         log.info(object2JsonPretty(new BaseResponse<Object>(ErrorCodeEnum.OK).toString()));
         log.info(Objects.requireNonNull(json2Object("{\"code\":555,\"msg\":\"JSON转换异常\"}", BaseResponse.class)).toString());

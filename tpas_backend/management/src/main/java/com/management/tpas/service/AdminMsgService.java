@@ -2,9 +2,9 @@ package com.management.tpas.service;
 
 import com.management.common.base.BaseService;
 import com.management.tpas.entity.AdminMsg;
-import com.management.tpas.model.AdminMsgModel;
 import com.management.tpas.model.LoginMsgModel;
-import com.management.tpas.model.UserMsgModel;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -24,6 +24,6 @@ public interface AdminMsgService extends BaseService<AdminMsg> {
      * @author dude
      * @date 2020/8/9
      **/
-    String getByLoginMsg(LoginMsgModel loginMsgModel);
+    Map<String, String> getByLoginMsg(LoginMsgModel loginMsgModel);
 
 }

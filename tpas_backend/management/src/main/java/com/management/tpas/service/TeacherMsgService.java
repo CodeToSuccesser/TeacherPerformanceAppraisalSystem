@@ -4,8 +4,9 @@ import com.management.common.base.BaseService;
 import com.management.tpas.entity.TeacherMsg;
 import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.model.UserMsgModel;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -28,6 +29,6 @@ public interface TeacherMsgService extends BaseService<TeacherMsg> {
      * @author dude
      * @date 2020/8/10
      **/
-    String getByLoginMsg(LoginMsgModel loginMsgModel);
+    Map getByLoginMsg(LoginMsgModel loginMsgModel);
 
 }
