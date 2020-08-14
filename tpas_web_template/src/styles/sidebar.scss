@@ -20,6 +20,8 @@
     z-index: 1001;
     overflow: hidden;
 
+    box-shadow: 0px 0px 20px #DCDFE6;//侧边栏阴影
+
     // reset element-ui css
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
