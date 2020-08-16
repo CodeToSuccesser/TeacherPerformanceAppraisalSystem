@@ -4,9 +4,6 @@ import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
 import com.management.common.utils.JacksonUtil;
 import com.management.tpas.model.ExampleModel;
-import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.service.TeacherMsgService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ExampleController {
 
-    @Autowired
-    private TeacherMsgService teacherMsgService;
-
     @PostMapping("/test")
     public String myTest(@RequestBody ExampleModel exampleModel) {
         if(null == exampleModel.getFlag()){
@@ -32,9 +26,4 @@ public class ExampleController {
         return JacksonUtil.object2Json(new BaseResponse<Object>(exampleModel));
     }
 
-    @PostMapping("/insertTeacher")
-    public BaseResponse insertTeacher(@RequestBody TeacherMsgModel teacherMsgModel){
-        teacherMsgService.insertTeacherMsg(teacherMsgModel);
-        return new BaseResponse();
-    }
 }

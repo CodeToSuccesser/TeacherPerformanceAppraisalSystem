@@ -3,6 +3,7 @@ package com.management.tpas.service;
 import com.management.common.base.BaseService;
 import com.management.tpas.entity.TeacherMsg;
 import com.management.tpas.model.LoginMsgModel;
+import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,6 @@ import java.util.Map;
 @Service
 public interface TeacherMsgService extends BaseService<TeacherMsg> {
 
-    void insertTeacherMsg(TeacherMsgModel teacherMsgModel);
-
     /**
      * @description 验证登录信息, 返回账号信息
      * @param loginMsgModel 登录信息
@@ -30,5 +29,14 @@ public interface TeacherMsgService extends BaseService<TeacherMsg> {
      * @date 2020/8/10
      **/
     Map getByLoginMsg(LoginMsgModel loginMsgModel);
+
+    /**
+     * @param registerMsgModel
+     * @Description 插入一条教师信息
+     * @Return TeacherMsgModel
+     * @Author peihua.wu
+     * @Date 2020/8/16
+     **/
+    TeacherMsgModel insertTeacherMsg(RegisterMsgModel registerMsgModel);
 
 }

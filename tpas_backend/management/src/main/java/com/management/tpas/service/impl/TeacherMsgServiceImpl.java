@@ -12,9 +12,12 @@ import com.management.tpas.dao.TeacherMsgMapper;
 import com.management.tpas.entity.TeacherMsg;
 import com.management.tpas.enums.UserTypeEnum;
 import com.management.tpas.model.LoginMsgModel;
+import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.TeacherMsgService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -35,24 +38,13 @@ import java.util.Map;
 public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, TeacherMsg>
         implements TeacherMsgService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeacherMsgServiceImpl.class);
+
     @Autowired
     private TeacherMsgMapper teacherMsgMapper;
     
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
-    @Transactional
-    @Override
-    public void insertTeacherMsg(TeacherMsgModel teacherMsgModel) {
-        //插入前先检查是否存在相同的登录名
-        if (teacherMsgMapper.selectByLogName(teacherMsgModel.getLogName()) != null) {
-            throw new BusinessException(ErrorCodeEnum.DUPLICATE_OBJECT_EXIST);
-        }
-
-        teacherMsgModel.setCreateTime(new Date());
-        teacherMsgModel.setUpdateTime(new Date());
-        teacherMsgMapper.insert(BeanMapper.map(teacherMsgModel, TeacherMsg.class));
-    }
 
     /**
      * @param loginMsgModel 登录信息
@@ -83,4 +75,26 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
 
         return jwtMap;
     }
+
+    @Transactional
+    @Override
+    public TeacherMsgModel insertTeacherMsg(RegisterMsgModel registerMsgModel) {
+        //插入前先检查是否存在相同的登录名
+        if (teacherMsgMapper.selectByLogName(registerMsgModel.getLogName()) != null) {
+            throw new BusinessException(ErrorCodeEnum.DUPLICATE_OBJECT_EXIST);
+        }
+
+        TeacherMsg teacherMsg = new TeacherMsg();
+        teacherMsg.setTeacherName(registerMsgModel.getRegisterName());
+        teacherMsg.setLogName(registerMsgModel.getLogName());
+        teacherMsg.setLogPassword(registerMsgModel.getPassword());
+        teacherMsg.setCreateTime(new Date());
+        teacherMsg.setUpdateTime(new Date());
+        teacherMsgMapper.insert(teacherMsg);
+
+        LOGGER.info("id:" + teacherMsg.getId());
+        LOGGER.info("message:" + teacherMsg);
+        return BeanMapper.map(teacherMsgMapper.selectById(teacherMsg.getId()), TeacherMsgModel.class);
+    }
+
 }

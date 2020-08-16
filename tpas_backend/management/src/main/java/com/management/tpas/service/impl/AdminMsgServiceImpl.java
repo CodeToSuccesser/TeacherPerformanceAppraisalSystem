@@ -11,13 +11,17 @@ import com.management.common.utils.JwtUtil;
 import com.management.tpas.dao.AdminMsgMapper;
 import com.management.tpas.entity.AdminMsg;
 import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.model.AdminMsgModel;
 import com.management.tpas.model.LoginMsgModel;
+import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.AdminMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -59,4 +63,25 @@ public class AdminMsgServiceImpl extends BaseServiceImpl<AdminMsgMapper, AdminMs
 
         return jwtMap;
     }
+
+    @Transactional
+    @Override
+    public AdminMsgModel insertAdmin(RegisterMsgModel registerMsgModel) {
+        //判断该用户名是否被注册
+        if (adminMsgMapper.selectByLogName(registerMsgModel.getLogName()) != null) {
+            throw new BusinessException(ErrorCodeEnum.DUPLICATE_OBJECT_EXIST.code,
+                ErrorCodeEnum.DUPLICATE_OBJECT_EXIST.msg);
+        }
+
+        AdminMsg adminMsg = new AdminMsg();
+        adminMsg.setAdminName(registerMsgModel.getRegisterName());
+        adminMsg.setLogName(registerMsgModel.getLogName());
+        adminMsg.setLogPassword(registerMsgModel.getPassword());
+
+        adminMsg.setCreateTime(new Date());
+        adminMsg.setUpdateTime(new Date());
+        adminMsgMapper.insert(adminMsg);
+        return BeanMapper.map(adminMsgMapper.selectById(adminMsg.getId()), AdminMsgModel.class);
+    }
+
 }
