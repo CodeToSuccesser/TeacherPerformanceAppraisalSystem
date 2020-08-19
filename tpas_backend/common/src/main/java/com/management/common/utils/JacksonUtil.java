@@ -26,20 +26,25 @@ import java.util.TimeZone;
  **/
 public class JacksonUtil {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) // 遇到未知属性是否抛出异常 ，默认是抛出异常的
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false) //如果是空对象的时候,不抛异常
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL) //属性为null的不转换
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")) //设置时间的格式化和时区
+            .setTimeZone(TimeZone.getDefault());
 
     private static final Logger log = LoggerFactory.getLogger(JacksonUtil.class);
 
     static {
-        // 遇到未知属性是否抛出异常 ，默认是抛出异常的
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //属性为null的不转换
-        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        //如果是空对象的时候,不抛异常
-        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        //设置时间的格式化和时区
-        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        OBJECT_MAPPER.setTimeZone(TimeZone.getDefault());
+
+//        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//
+//        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//
+//        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//
+//        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+//        OBJECT_MAPPER.setTimeZone(TimeZone.getDefault());
     }
 
     /**

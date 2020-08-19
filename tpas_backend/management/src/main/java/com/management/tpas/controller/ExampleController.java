@@ -20,8 +20,8 @@ public class ExampleController {
 
     @PostMapping("/test")
     public String myTest(@RequestBody ExampleModel exampleModel) {
-        if(null == exampleModel.getFlag()){
-            return JacksonUtil.object2Json(new BaseResponse<Object>(ErrorCodeEnum.NO_PERMISSION.code, ErrorCodeEnum.NO_PERMISSION.msg));
+        if (null == exampleModel.getFlag()) {
+            return JacksonUtil.object2Json(new BaseResponse<Object>(ErrorCodeEnum.LOGIN_TIME_OUT.code, ErrorCodeEnum.LOGIN_TIME_OUT.msg));
         }
         return JacksonUtil.object2Json(new BaseResponse<Object>(exampleModel));
     }

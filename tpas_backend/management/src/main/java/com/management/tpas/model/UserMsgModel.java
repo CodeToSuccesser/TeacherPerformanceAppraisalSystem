@@ -1,5 +1,9 @@
 package com.management.tpas.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,46 +13,51 @@ import java.util.Date;
  * @description TODO
  * @date 2020/8/9
  **/
-public class UserMsgModel {
+public class UserMsgModel implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-    private Long id;
+    @JsonSerialize(using = com.fasterxml.jackson.databind.ser.std.ToStringSerializer.class)
+    private Long id = 0L;
 
     /**
      * 管理员姓名
      */
-    private String userName;
+    private String userName = "";
 
     /**
      * 唯一登录名, 默认教务员工号
      */
-    private String logName;
+    private String logName = "";
 
     /**
      * 联系方式, 手机号/邮箱, 可为空
      */
-    private String contact;
+    private String contact = "";
 
     /**
      * 头像图片url, 可为空
      */
-    private String portrait;
+    private String portrait = "";
 
     /**
      * 用户类型，0 教师， 1 管理员
      */
-    private Integer userType;
+    private Integer userType = -1;
 
     /**
      * 数据最新操作时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
+    private String token = "";
 
     public Long getId() {
         return id;
@@ -114,6 +123,14 @@ public class UserMsgModel {
         this.userType = userType;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "UserMsgModel{" +
@@ -125,6 +142,7 @@ public class UserMsgModel {
                 ", userType=" + userType +
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

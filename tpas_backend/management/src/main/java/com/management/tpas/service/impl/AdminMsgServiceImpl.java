@@ -2,12 +2,11 @@ package com.management.tpas.service.impl;
 
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.config.GlobalConst;
-import com.management.common.config.JwtConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
 import com.management.common.utils.JacksonUtil;
-import com.management.common.utils.JwtUtil;
+import com.management.tpas.config.JwtConfig;
 import com.management.tpas.dao.AdminMsgMapper;
 import com.management.tpas.entity.AdminMsg;
 import com.management.tpas.enums.UserTypeEnum;
@@ -16,13 +15,14 @@ import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.AdminMsgService;
+import com.management.tpas.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -39,10 +39,10 @@ public class AdminMsgServiceImpl extends BaseServiceImpl<AdminMsgMapper, AdminMs
     private AdminMsgMapper adminMsgMapper;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, UserMsgModel> redisTemplate;
 
     @Override
-    public Map<String, String> getByLoginMsg(LoginMsgModel loginMsgModel) {
+    public UserMsgModel getByLoginMsg(LoginMsgModel loginMsgModel) {
         AdminMsg adminMsg = adminMsgMapper.selectByLogName(loginMsgModel.getLogName());
         // 账号不存在 或 密码错误
         if (null == adminMsg || !adminMsg.getLogPassword().equals(loginMsgModel.getLogPassword())) {
@@ -54,14 +54,14 @@ public class AdminMsgServiceImpl extends BaseServiceImpl<AdminMsgMapper, AdminMs
         userMsgModel.setUserName(adminMsg.getAdminName());
         userMsgModel.setUserType(UserTypeEnum.USER_TYPE_ADMIN.flag);
         // 生成jwt和设置缓存
-        Map<String, String> jwtMap;
-        jwtMap = JacksonUtil.object2Map(userMsgModel);// 用户信息转为map
         String key = GlobalConst.REDIS_KEY_PREFIX + userMsgModel.getUserType().toString() + userMsgModel.getId().toString();
-        String token = JwtUtil.createJWT(JacksonUtil.object2Json(jwtMap), JwtConfig.JWT_SECRET);
-        jwtMap.put(GlobalConst.TOKEN_NAME, token);
-        redisTemplate.opsForValue().set(key, JacksonUtil.object2Json(jwtMap), JwtConfig.EXPIRE_TIME);
+        String token = JwtUtil.createJWT(JacksonUtil.object2Json(userMsgModel), JwtConfig.JWT_SECRET);
+        userMsgModel.setToken(token);
+        redisTemplate.opsForValue().set(key, userMsgModel);
+        //更新过期时间
+        redisTemplate.expire(key, JwtConfig.EXPIRE_TIME, TimeUnit.HOURS);
 
-        return jwtMap;
+        return userMsgModel;
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class AdminMsgServiceImpl extends BaseServiceImpl<AdminMsgMapper, AdminMs
         //判断该用户名是否被注册
         if (adminMsgMapper.selectByLogName(registerMsgModel.getLogName()) != null) {
             throw new BusinessException(ErrorCodeEnum.DUPLICATE_OBJECT_EXIST.code,
-                ErrorCodeEnum.DUPLICATE_OBJECT_EXIST.msg);
+                    ErrorCodeEnum.DUPLICATE_OBJECT_EXIST.msg);
         }
 
         AdminMsg adminMsg = new AdminMsg();

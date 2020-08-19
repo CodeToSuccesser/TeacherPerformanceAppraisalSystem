@@ -5,9 +5,8 @@ import com.management.tpas.entity.TeacherMsg;
 import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
+import com.management.tpas.model.UserMsgModel;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * <p>
@@ -21,14 +20,13 @@ import java.util.Map;
 public interface TeacherMsgService extends BaseService<TeacherMsg> {
 
     /**
-     * @description 验证登录信息, 返回账号信息
      * @param loginMsgModel 登录信息
      * @return String
-     *
+     * @description 验证登录信息, 返回账号信息
      * @author dude
      * @date 2020/8/10
      **/
-    Map getByLoginMsg(LoginMsgModel loginMsgModel);
+    UserMsgModel getByLoginMsg(LoginMsgModel loginMsgModel);
 
     /**
      * @param registerMsgModel

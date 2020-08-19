@@ -21,7 +21,12 @@ public class GlobalConst {
     public static final String USER_TYPE_KEY = "userType";
 
     /**
-     * token令牌字段
+     * redis存储token令牌字段
      **/
-    public static final String TOKEN_NAME = "token";
+    public static final String TOKEN_NAME = "Authorization";
+
+    /**
+     * redis过期时间 1hour
+     **/
+    public static final Long REDIS_TIME_OUT = 3600L;
 }

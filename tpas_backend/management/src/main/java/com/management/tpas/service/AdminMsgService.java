@@ -5,8 +5,7 @@ import com.management.tpas.entity.AdminMsg;
 import com.management.tpas.model.AdminMsgModel;
 import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.RegisterMsgModel;
-
-import java.util.Map;
+import com.management.tpas.model.UserMsgModel;
 
 /**
  * <p>
@@ -19,14 +18,13 @@ import java.util.Map;
 public interface AdminMsgService extends BaseService<AdminMsg> {
 
     /**
-     * @description 由登录信息获取账号
      * @param loginMsgModel 登录信息
      * @return String
-     *
+     * @description 由登录信息获取账号
      * @author dude
      * @date 2020/8/9
      **/
-    Map<String, String> getByLoginMsg(LoginMsgModel loginMsgModel);
+    UserMsgModel getByLoginMsg(LoginMsgModel loginMsgModel);
 
     /**
      * @param registerMsgModel

@@ -1,10 +1,9 @@
-package com.management.common.utils;
+package com.management.tpas.utils;
 
-import com.management.common.config.JwtConfig;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.management.common.enums.ErrorCodeEnum;
+import com.management.common.exception.BusinessException;
+import com.management.tpas.config.JwtConfig;
+import io.jsonwebtoken.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.SecretKey;
@@ -63,12 +62,21 @@ public class JwtUtil {
      * @author dude
      * @date 2020/8/9
      **/
-    public static Claims parseJWT(String jwt) throws Exception {
+    public static Claims parseJWT(String jwt) {
         // 生成签名的签名秘钥
         SecretKey key = generalKey(JwtConfig.JWT_SECRET);
-        return Jwts.parser() // defaultJwtParser
-                .setSigningKey(key) // 设置秘钥
-                .parseClaimsJws(jwt) // 设置解密对象
-                .getBody();
+        try {
+            Jws<Claims> a = Jwts.parser() // defaultJwtParser
+                    .setSigningKey(key) // 设置秘钥
+                    .parseClaimsJws(jwt);
+
+            return Jwts.parser() // defaultJwtParser
+                    .setSigningKey(key) // 设置秘钥
+                    .parseClaimsJws(jwt) // 设置解密对象
+                    .getBody();
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCodeEnum.TOKEN_ERROR.code, ErrorCodeEnum.TOKEN_ERROR.msg);
+        }
+
     }
 }

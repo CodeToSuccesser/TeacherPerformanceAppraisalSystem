@@ -44,7 +44,7 @@ public class UserController {
     @PostMapping("/login")
     public BaseResponse<?> login(@RequestBody LoginMsgModel loginMsgModel) {
         if (null == loginMsgModel || StringUtils.isBlank(loginMsgModel.getLogName()) || StringUtils
-            .isBlank(loginMsgModel.getLogPassword()) || null == loginMsgModel.getUserType()) {
+                .isBlank(loginMsgModel.getLogPassword()) || null == loginMsgModel.getUserType()) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
         }
         // 判断用户类型
@@ -102,8 +102,8 @@ public class UserController {
 
     private UserTypeEnum validRegisterMsgModelAndGetType(RegisterMsgModel registerMsgModel) {
         if (registerMsgModel == null || StringUtils.isBlank(registerMsgModel.getLogName()) || StringUtils
-            .isBlank(registerMsgModel.getRegisterName()) || StringUtils.isBlank(registerMsgModel.getPassword())
-            || registerMsgModel.getType() == null) {
+                .isBlank(registerMsgModel.getRegisterName()) || StringUtils.isBlank(registerMsgModel.getPassword())
+                || registerMsgModel.getType() == null) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
         }
 
