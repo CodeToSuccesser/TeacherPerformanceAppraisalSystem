@@ -7,14 +7,15 @@ spring:
     url: jdbc:mysql://39.108.78.152:3306/teacher_performance_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: tpas_admin
     password: AaBb2020!
-    initialSize: 10
-    maxWait: 250
-    keepAlive: true
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    minIdle: 8
-    maxActive: 10
+    druid:
+      initialSize: 10
+      maxWait: 250
+      keepAlive: true
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      minIdle: 8
+      maxActive: 10
   redis:
     database: 0 # 数据库索引(默认为 0)
     host: 39.108.78.152
