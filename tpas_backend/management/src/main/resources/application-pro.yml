@@ -37,3 +37,11 @@ mybatis-plus:
 server:
   port: 8080
 
+# jwt令牌配置
+jwt:
+  jwt-secret: 6tzgvki3FUAQmVat0xhFSggFOTSsVHkk # 秘钥
+  expire-time: 1 # 有效小时数
+
+logging:
+  level:
+    com.management.tpas.dao: debug
