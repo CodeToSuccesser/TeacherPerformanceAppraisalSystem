@@ -48,7 +48,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定该Main Class为全局的唯一入口 -->
-                    <mainClass>com.management.tpas</mainClass>
+                    <mainClass>com.management.tpas.Main</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>
