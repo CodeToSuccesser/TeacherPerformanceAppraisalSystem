@@ -197,7 +197,7 @@ $input_shadow: #F9F0FE;
   .login-form {
     position: relative;
     width: 520px;
-    max-width: 100%;
+    max-width: 80%;
     margin: auto;
     padding: 100px 40px 0;
     overflow: hidden;
