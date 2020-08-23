@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div :class="isMobile">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -91,6 +91,11 @@ export default {
       radio: 'T'
     }
   },
+  computed: {
+    isMobile() {
+      return this.$store.state.app.device === 'mobile' ? 'login-container-mobile' : 'login-container'
+    }
+  },
   watch: {
     $route: {
       handler: function(route) {
@@ -142,13 +147,13 @@ $bg_light: #DBE2EF;
 $bg_from: #F9F7F7;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
+  .login-container .el-input .login-container-mobile input {
     color: $cursor;
   }
 }
 
 /* reset element-ui css */
-.login-container {
+.login-container ,.login-container-mobile{
   .el-input {
     display: inline-block;
     height: 47px;
@@ -212,8 +217,76 @@ $input_shadow: #F9F0FE;
     border-radius: 20px;
 
     .input {
-      box-shadow: 0 0 2px 2px $input_shadow;
-      border-radius: 18px;
+    }
+
+    .buttom {
+      width:100%;
+      margin-bottom:30px;
+      background-color: $bg_drak;
+      border-radius: 4px;
+    }
+  }
+
+  .tips {
+    font-size: 14px;
+    margin-bottom: 10px;
+
+    span {
+      &:first-of-type {
+        margin-right: 16px;
+      }
+    }
+  }
+
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+  }
+
+  .title-container {
+    position: relative;
+
+    .title {
+      font-size: 26px;
+      color: #454545;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.login-container-mobile {
+  min-height: 100%;
+  width: 100%;
+  max-height: 100%;
+  background: linear-gradient(to bottom, $bg_drak 50%, $bg_light 50%);
+  overflow: hidden;
+  justify-content: center;
+  display: flex;
+
+  .login-form {
+    position: relative;
+    width: 520px;
+    max-width: 100%;
+    margin: auto;
+    padding: 65px 50px 0;
+    overflow: hidden;
+
+    .input {
     }
 
     .buttom {

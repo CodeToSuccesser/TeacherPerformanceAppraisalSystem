@@ -44,18 +44,6 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
-    component: Layout,
-    redirect: '/form',
-    children: [{
-      path: 'form',
-      name: '个人中心',
-      component: () => import('@/views/form/index'),
-      meta: { title: '个人中心', icon: 'user' }
-    }]
-  },
-
-  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
@@ -84,25 +72,12 @@ export const constantRoutes = [
   },
 
   {
-    path: '/table',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: '考核结果',
-        component: () => import('@/views/table/index'),
-        meta: { title: '考核结果', icon: 'form' }
-      }
-    ]
-  },
-
-  {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
     name: '我的修改',
     meta: {
-      title: '我的修改', icon: 'nested'},
+      title: '我的修改', icon: 'nested' },
     children: [
       {
         path: 'menu1',
@@ -117,6 +92,31 @@ export const constantRoutes = [
         meta: { title: '进行中', icon: 'list' }
       }
     ]
+  },
+
+  {
+    path: '/table',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: '考核结果',
+        component: () => import('@/views/table/index'),
+        meta: { title: '考核结果', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/form',
+    children: [{
+      path: 'form',
+      name: '个人中心',
+      component: () => import('@/views/form/index'),
+      meta: { title: '个人中心', icon: 'user' }
+    }]
   },
 
   // 404 page must be placed at the end !!!
