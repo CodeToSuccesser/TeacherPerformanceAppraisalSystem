@@ -2,10 +2,11 @@ package com.management.tpas.utils;
 
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
+import com.management.common.utils.JacksonUtil;
 import com.management.tpas.config.JwtConfig;
+import com.management.tpas.model.UserMsgModel;
 import io.jsonwebtoken.*;
 import org.apache.tomcat.util.codec.binary.Base64;
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
@@ -77,6 +78,21 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new BusinessException(ErrorCodeEnum.TOKEN_ERROR.code, ErrorCodeEnum.TOKEN_ERROR.msg);
         }
+    }
 
+    /**
+     * @description 根据令牌解析用户信息
+     * @param token 令牌
+     * @return java.lang.String
+     *
+     * @author dude
+     * @date 2020/9/3
+     **/
+    public static UserMsgModel getUserMsgByToken(String token) {
+        String subject = parseJWT(token).getSubject();
+        if(subject == null){
+            return null;
+        }
+        return JacksonUtil.json2Object(subject, UserMsgModel.class);
     }
 }

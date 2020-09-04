@@ -64,6 +64,16 @@ public class UserLog implements Serializable {
     public UserLog() {
     }
 
+    public UserLog(String ip, Long userId, Integer userType, String url, String param, String resultCode, String resultMsg) {
+        this.ip = ip;
+        this.userId = userId;
+        this.userType = userType;
+        this.url = url;
+        this.param = param;
+        this.resultCode = resultCode;
+        this.resultMsg = resultMsg;
+    }
+
     public Long getId() {
         return id;
     }

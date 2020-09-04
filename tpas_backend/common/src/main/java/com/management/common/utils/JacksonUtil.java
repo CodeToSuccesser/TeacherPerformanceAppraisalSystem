@@ -128,7 +128,7 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> Map<String, String> object2Map(T obj) {
+    public static <T> Map<String, Object> object2Map(T obj) {
         return json2Map(object2Json(obj));
     }
 
