@@ -2,6 +2,8 @@ package com.management.common.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.management.common.enums.ErrorCodeEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,23 +14,18 @@ import java.io.Serializable;
  * @description 返回前端统一模板重构
  * @date 2020/7/20
  **/
+@ApiModel(value = "返回前端统一模板", description = "返回前端统一模板")
 public class BaseResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 返回状态码
-     */
+    @ApiModelProperty(value = "返回状态码")
     private Integer code;
 
-    /**
-     * 返回消息
-     */
+    @ApiModelProperty(value = "返回消息")
     private String msg;
 
-    /**
-     * 返回数据内容
-     */
+    @ApiModelProperty(value = "返回数据内容")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 

@@ -10,6 +10,10 @@ import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
 import com.management.tpas.service.TeacherMsgService;
 import com.management.tpas.service.impl.AdminMsgServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description 用户登录接口
  * @date 2020/8/9
  **/
+@Api(tags = {"用户登录权限相关接口"})
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -42,6 +47,9 @@ public class UserController {
      * @date 2020/8/9
      **/
     @PostMapping("/login")
+    @ApiOperation("登录处理接口")
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> login(@RequestBody LoginMsgModel loginMsgModel) {
         if (null == loginMsgModel || StringUtils.isBlank(loginMsgModel.getLogName()) || StringUtils
                 .isBlank(loginMsgModel.getLogPassword()) || null == loginMsgModel.getUserType()) {
@@ -75,6 +83,10 @@ public class UserController {
      * @Date 2020/8/16
      **/
     @PostMapping("/insertUser")
+    @ApiOperation("插入一条用户")
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = AdminMsgModel.class),
+            @ApiResponse(code = 0, message = "ok", response = TeacherMsgModel.class),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> insertUser(@RequestBody RegisterMsgModel registerMsgModel) {
         UserTypeEnum userTypeEnum = validRegisterMsgModelAndGetType(registerMsgModel);
 

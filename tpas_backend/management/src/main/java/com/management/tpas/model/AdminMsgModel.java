@@ -1,6 +1,8 @@
 package com.management.tpas.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -11,46 +13,34 @@ import java.util.Date;
  * @description 管理员账号信息model
  * @date 2020/8/9
  **/
+@ApiModel(value = "管理员账号信息model", description = "管理员账号信息model")
 public class AdminMsgModel {
 
     private static final long serialVersionUID=1L;
 
-    /**
-     * 主键
-     */
+    @ApiModelProperty(value = "主键")
     private Long id;
 
-    /**
-     * 管理员姓名
-     */
+    @ApiModelProperty(value = "管理员姓名")
     private String adminName;
 
-    /**
-     * 唯一登录名, 默认教务员工号
-     */
+    @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
     private String logName;
 
-    /**
-     * 联系方式, 手机号/邮箱, 可为空
-     */
+    @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
     private String contact;
 
-    /**
-     * 头像图片url, 可为空
-     */
+    @ApiModelProperty(value = "头像图片url, 可为空")
     private String portrait;
 
-    /**
-     * 账号逻辑删除标识, 0 无删除, 1 已删除
-     */
+    @ApiModelProperty(value = "账号逻辑删除标识, 0 无删除, 1 已删除")
     private Integer isDeleted;
 
-    /**
-     * 数据最新操作时间
-     */
+    @ApiModelProperty(value = "数据最新操作时间, yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    @ApiModelProperty(value = "数据新建时间, yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 

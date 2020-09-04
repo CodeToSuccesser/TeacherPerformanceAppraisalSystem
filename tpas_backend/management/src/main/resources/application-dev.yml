@@ -46,3 +46,7 @@ jwt:
 logging:
   level:
     com.management.tpas.dao: debug
+
+# 配置swagger开关，关闭生产环境swagger
+swagger:
+  enable: true

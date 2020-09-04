@@ -2,6 +2,9 @@ package com.management.tpas.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,49 +16,34 @@ import java.util.Date;
  * @author peihua.wu
  * @since 2020-08-01
  */
+@ApiModel(value = "管理员账号信息表", description = "管理员账号信息表")
 public class AdminMsg implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-    /**
-     * 主键
-     */
+    @ApiModelProperty(value = "id主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 管理员姓名
-     */
+    @ApiModelProperty(value = "管理员姓名")
     private String adminName;
 
-    /**
-     * 唯一登录名, 默认教务员工号
-     */
+    @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
     private String logName;
 
-    /**
-     * 登录密码, 初始密码123456
-     */
+    @ApiModelProperty(value = "登录密码, 初始密码123456")
     private String logPassword;
 
-    /**
-     * 联系方式, 手机号/邮箱, 可为空
-     */
+    @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
     private String contact;
 
-    /**
-     * 头像图片url, 可为空
-     */
+    @ApiModelProperty(value = "头像图片url, 可为空")
     private String portrait;
 
-    /**
-     * 账号逻辑删除标识, 0 无删除, 1 已删除
-     */
+    @ApiModelProperty(value = "账号逻辑删除标识, 0 无删除, 1 已删除")
     private Integer isDeleted;
 
-    /**
-     * 数据最新操作时间
-     */
+    @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
     private Date createTime;

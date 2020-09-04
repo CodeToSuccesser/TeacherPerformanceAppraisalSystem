@@ -46,3 +46,6 @@ jwt:
 logging:
   level:
     com.management.tpas.dao: debug
+
+swagger:
+  enable: false

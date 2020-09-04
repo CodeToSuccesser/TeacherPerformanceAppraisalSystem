@@ -51,16 +51,18 @@ public class UserOperationLogAdvice<T> implements ResponseBodyAdvice<T> {
                              Class<? extends HttpMessageConverter<?>> aClass,
                              ServerHttpRequest serverHttpRequest,
                              ServerHttpResponse serverHttpResponse) {
-        log.info(serverHttpRequest.getClass().toString());
-        log.info(serverHttpResponse.getClass().toString());
-        log.info(body.getClass().toString());
         if (!(serverHttpRequest instanceof ServletServerHttpRequest)
                 || !(serverHttpResponse instanceof ServletServerHttpResponse)
                 || !(body instanceof BaseResponse)) {
             return body;
         }
+        // 排除不处理接口 /error, /swagger
+        String path = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest().getServletPath();
+        if(path.contains("/error") || path.contains("swagger")){
+            return body;
+        }
+
         // 获取请求url、ip、参数信息
-        String url = serverHttpRequest.getURI().getPath();
         String ip = serverHttpRequest.getRemoteAddress().toString();
         String param = Utils.getBody(((ServletServerHttpRequest) serverHttpRequest).getServletRequest());
 
@@ -96,7 +98,7 @@ public class UserOperationLogAdvice<T> implements ResponseBodyAdvice<T> {
                 ip,
                 userMsg.getId(),
                 userMsg.getUserType(),
-                url,
+                path,
                 param,
                 resultCode,
                 resultMsg);

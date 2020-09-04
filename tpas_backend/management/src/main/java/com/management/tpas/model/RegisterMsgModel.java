@@ -1,36 +1,32 @@
 package com.management.tpas.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author Pietra
  * @version 1.0
  * @classname RegisterMsgModel
- * @description TODO
+ * @description 用户注册信息model
  * @date 2020/8/16
  **/
+@ApiModel(value = "用户注册信息model", description = "用户注册信息model")
 public class RegisterMsgModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @description 用户姓名
-     **/
+    @ApiModelProperty(value = "用户姓名")
     private String registerName;
 
-    /**
-     * @description 登录名，唯一
-     **/
+    @ApiModelProperty(value = "登录名，唯一")
     private String logName;
 
-    /**
-     * @description 登录密码
-     **/
+    @ApiModelProperty(value = "登录密码")
     private String password;
 
-    /**
-     * @description 注册用户类型
-     **/
+    @ApiModelProperty(value = "注册用户类型")
     private Integer type;
 
     public String getRegisterName() {

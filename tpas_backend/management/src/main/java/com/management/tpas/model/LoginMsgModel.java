@@ -1,5 +1,8 @@
 package com.management.tpas.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author dude
  * @version 1.0
@@ -7,23 +10,18 @@ package com.management.tpas.model;
  * @description 登录信息model
  * @date 2020/8/9
  **/
+@ApiModel(value = "登录信息model", description = "登录信息model")
 public class LoginMsgModel {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @description 登录名
-     **/
+    @ApiModelProperty(value = "登录名")
     private String logName;
 
-    /**
-     * @description 登录密码
-     **/
+    @ApiModelProperty(value = "登录密码")
     private String logPassword;
 
-    /**
-     * @description 用户类型，0 教师， 1 管理员
-     **/
+    @ApiModelProperty(value = "用户类型，0 教师， 1 管理员")
     private Integer userType;
 
     public String getLogName() {
