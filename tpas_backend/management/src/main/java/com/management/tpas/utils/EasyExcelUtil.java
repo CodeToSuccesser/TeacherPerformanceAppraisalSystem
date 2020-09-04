@@ -17,7 +17,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 /**
  * easyexcel工具类 -- Excel解析
  *
- * @author Lynch
+ * @author pwh
  */
 public class EasyExcelUtil {
     /**
