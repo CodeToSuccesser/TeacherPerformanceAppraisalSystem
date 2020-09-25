@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" style="width:300px">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" style="width:300px">
       <el-form-item label="教师姓名">
-        <el-input v-model="ruleForm.realname" :disabled="true" maxlength="30" />
+        <el-input v-model="ruleForm.realName" :disabled="true" maxlength="30" />
       </el-form-item>
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="ruleForm.username" maxlength="30" />
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model="ruleForm.userName" maxlength="30" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password" maxlength="30" show-password />
@@ -24,11 +24,11 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')" >修改</el-button><!--disabled功能未完成-->
+        <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button><!--disabled功能未完成-->
       </el-form-item>
     </el-form>
   </div>
@@ -39,36 +39,36 @@ export default {
   data() {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
-    
+    }
+
     return {
       ruleForm: {
-        realname: '王小明',
-        username: '小明',
-        password: '******',
-        checkPassword: '******',
-        email: '*****@**.com',
+        realName: '',
+        userName: '',
+        password: '',
+        checkPassword: '',
+        email: '',
         imageUrl: ''
       },
       rules: {
-        username: [
-          { required: true, message: "请输入用户名",  trigger: 'blur' },
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请输入密码",  trigger: 'blur'}
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         checkPassword: [
-          { required: true, validator: validatePass2,  trigger: 'blur'}
+          { required: true, validator: validatePass2, trigger: 'blur' }
         ],
         email: [
-          { required: true, message: "请输入邮箱", trigger: 'blur'}
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
         ]
       }
     }
@@ -77,29 +77,29 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$message('修改成功！');
+          this.$message('修改成功！')
         } else {
-          this.$message('修改失败！');
-          return false;
+          this.$message('修改失败！')
+          return false
         }
-      });
+      })
     },
-    
-    //用户头像上传
+
+    // 用户头像上传
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        this.$message.error('上传头像图片只能是 JPG 格式!')
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+        this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt2M
     }
   }
 }

@@ -30,11 +30,13 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, type } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ logName: username.trim(), logPassword: password, userType: type }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_NAME', data.userName)
+        commit('SET_AVATAR', 'https://lh3.googleusercontent.com/proxy/r1jtn8QNYoYs4bL5pw1fXRyNI39Nvu3i6vGn4N6ybEiNkDqFPWDlneCLbxaW99iKsitYz_34qb7LJPVWklcM2cmiH1vtihakHbCSP9j_knqhjvwK_AI')
         setToken(data.token)
         resolve()
       }).catch(error => {

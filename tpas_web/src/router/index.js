@@ -27,8 +27,7 @@ import Layout from '@/layout'
 
 /**
  * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
+ * 教师角色
  */
 export const constantRoutes = [
   {
@@ -111,6 +110,94 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/form',
+    children: [
+      {
+        path: 'form',
+        name: '个人中心',
+        component: () => import('@/views/form/index'),
+        meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
+  },
+
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+/**
+ * asyncRoutes
+ * 管理员角色
+ */
+export const asyncRoutes = [
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/table',
+    name: '教学管理',
+    meta: { title: '教学管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'table',
+        name: '课时信息',
+        component: () => import('@/views/table/index'),
+        meta: { title: '课时信息', icon: 'table' }
+      },
+      {
+        path: 'dashboard',
+        name: '论文指导信息',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '论文指导信息', icon: 'education' }
+      },
+      {
+        path: 'tree',
+        name: '实习带队信息',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '实习带队信息', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/nested',
+    component: Layout,
+    redirect: '/nested/menu1',
+    name: '我的修改',
+    meta: {
+      title: '我的修改', icon: 'nested' },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: '已完成',
+        meta: { title: '已完成', icon: 'clipboard' }
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        name: '进行中',
+        meta: { title: '进行中', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/table',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: '考核结果',
+        component: () => import('@/views/table/index'),
+        meta: { title: '考核结果', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/form',
     children: [{
       path: 'form',
       name: '个人中心',
@@ -121,6 +208,7 @@ export const constantRoutes = [
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+
 ]
 
 const createRouter = () => new Router({

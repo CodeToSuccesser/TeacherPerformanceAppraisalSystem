@@ -46,8 +46,10 @@
       <el-link type="primary" class="tips">Forget Password?</el-link>
 
       <el-form-item style="background: transparent">
-        <el-radio v-model="radio" label="T">Teacher</el-radio>
-        <el-radio v-model="radio" label="A">Admin</el-radio>
+        <el-radio-group v-model="loginForm.type">
+          <el-radio label="0">Teacher</el-radio>
+          <el-radio label="1">Admin</el-radio>
+        </el-radio-group>
       </el-form-item>
 
       <el-button :loading="loading" type="primary" class="buttom" @click.native.prevent="handleLogin">Login</el-button>
@@ -57,29 +59,32 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
+      // if (!validUsername(value)) {
+      //   callback(new Error('Please enter the correct user name'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
+      // if (value.length < 6) {
+      //   callback(new Error('The password can not be less than 6 digits'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     return {
       loginForm: {
         // username: 'admin',
-        // password: '111111'
+        // password: '111111',
+        type: '0'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -88,7 +93,7 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      radio: 'T'
+      radio: '0'
     }
   },
   computed: {
@@ -118,6 +123,7 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          this.loginForm.type = Number(this.loginForm.type)
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
