@@ -1,12 +1,15 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import da from "element-ui/src/locale/lang/da";
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    account: '',
+    avatar: '',
+    contact: ''
   }
 }
 
@@ -24,6 +27,12 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ACCOUNT: (state, account) => {
+    state.account = account
+  },
+  SET_CONTACT: (state, contact) => {
+    state.contact = contact
   }
 }
 
@@ -36,7 +45,9 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.userName)
-        commit('SET_AVATAR', 'https://lh3.googleusercontent.com/proxy/r1jtn8QNYoYs4bL5pw1fXRyNI39Nvu3i6vGn4N6ybEiNkDqFPWDlneCLbxaW99iKsitYz_34qb7LJPVWklcM2cmiH1vtihakHbCSP9j_knqhjvwK_AI')
+        commit('SET_AVATAR', data.avatar)
+        commit('SET_ACCOUNT', data.logName)
+        commit('SET_CONTACT', data.contact)
         setToken(data.token)
         resolve()
       }).catch(error => {

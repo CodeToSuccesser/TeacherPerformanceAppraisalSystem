@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" style="width:300px">
-      <el-form-item label="用户名" prop="userName">
+      <el-form-item label="用户名">
         <el-input v-model="ruleForm.userName" :disabled="true" maxlength="30"/>
       </el-form-item>
-      <el-form-item label="教师姓名">
+      <el-form-item label="教师姓名" prop="realName">
         <el-input v-model="ruleForm.realName" maxlength="30"/>
       </el-form-item>
       <el-form-item label="密码" prop="password">
@@ -13,8 +13,8 @@
       <el-form-item label="确认密码" prop="checkPassword">
         <el-input v-model="ruleForm.checkPassword" maxlength="30" show-password />
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="ruleForm.email" />
+      <el-form-item label="联系方式" prop="contact">
+        <el-input v-model="ruleForm.contact" />
       </el-form-item>
       <el-form-item label="头像">
         <el-upload
@@ -50,14 +50,14 @@ export default {
     return {
       ruleForm: {
         realName: this.$store.getters.name,
-        userName: '',
+        userName: this.$store.getters.account,
         password: '',
         checkPassword: '',
-        email: '',
+        contact: this.$store.getters.contact,
         imageUrl: this.$store.getters.avatar
       },
       rules: {
-        userName: [
+        realName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
         ],
@@ -67,7 +67,7 @@ export default {
         checkPassword: [
           { required: true, validator: validatePass2, trigger: 'blur' }
         ],
-        email: [
+        contact: [
           { required: true, message: '请输入邮箱', trigger: 'blur' }
         ]
       }
