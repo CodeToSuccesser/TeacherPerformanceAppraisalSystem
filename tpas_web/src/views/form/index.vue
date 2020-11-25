@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" style="width:300px">
-      <el-form-item label="教师姓名">
-        <el-input v-model="ruleForm.realName" :disabled="true" maxlength="30" />
-      </el-form-item>
       <el-form-item label="用户名" prop="userName">
-        <el-input v-model="ruleForm.userName" maxlength="30" />
+        <el-input v-model="ruleForm.userName" :disabled="true" maxlength="30"/>
+      </el-form-item>
+      <el-form-item label="教师姓名">
+        <el-input v-model="ruleForm.realName" maxlength="30"/>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password" maxlength="30" show-password />
@@ -49,12 +49,12 @@ export default {
 
     return {
       ruleForm: {
-        realName: '',
+        realName: this.$store.getters.name,
         userName: '',
         password: '',
         checkPassword: '',
         email: '',
-        imageUrl: ''
+        imageUrl: this.$store.getters.avatar
       },
       rules: {
         userName: [
