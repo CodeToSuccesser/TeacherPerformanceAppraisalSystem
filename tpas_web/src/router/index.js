@@ -43,50 +43,50 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/course',
     component: Layout,
-    redirect: '/example/table',
+    redirect: '/course/course-hour',
     name: '教学管理',
     meta: { title: '教学管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
+        path: 'course-hour',
         name: '课时信息',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/course/course-hour'),
         meta: { title: '课时信息', icon: 'table' }
       },
       {
-        path: 'dashboard',
+        path: 'paper',
         name: '论文指导信息',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/course/paper'),
         meta: { title: '论文指导信息', icon: 'education' }
       },
       {
-        path: 'tree',
+        path: 'job',
         name: '实习带队信息',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/course/job'),
         meta: { title: '实习带队信息', icon: 'tree' }
       }
     ]
   },
 
   {
-    path: '/nested',
+    path: '/modify',
     component: Layout,
-    redirect: '/nested/menu1',
+    redirect: '/modify/finished',
     name: '我的修改',
     meta: {
       title: '我的修改', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        path: 'finished',
+        component: () => import('@/views/modify/finished'), // Parent router-view
         name: '已完成',
         meta: { title: '已完成', icon: 'clipboard' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
+        path: 'modifying',
+        component: () => import('@/views/modify/modifying'),
         name: '进行中',
         meta: { title: '进行中', icon: 'list' }
       }
@@ -94,13 +94,13 @@ export const constantRoutes = [
   },
 
   {
-    path: '/table',
+    path: '/assess',
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: 'assess',
         name: '考核结果',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/assess/index'),
         meta: { title: '考核结果', icon: 'form' }
       }
     ]
@@ -109,12 +109,12 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/form',
+    redirect: '/info',
     children: [
       {
-        path: 'form',
+        path: 'info',
         name: '个人中心',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/info/index'),
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
@@ -131,50 +131,50 @@ export const constantRoutes = [
 export const asyncRoutes = [
 
   {
-    path: '/example',
+    path: '/course',
     component: Layout,
-    redirect: '/example/table',
+    redirect: '/course/course-hour',
     name: '教学管理',
     meta: { title: '教学管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
+        path: 'course-hour',
         name: '课时信息',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/course/course-hour'),
         meta: { title: '课时信息', icon: 'table' }
       },
       {
-        path: 'dashboard',
+        path: 'paper',
         name: '论文指导信息',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/course/paper'),
         meta: { title: '论文指导信息', icon: 'education' }
       },
       {
-        path: 'tree',
+        path: 'job',
         name: '实习带队信息',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/course/job'),
         meta: { title: '实习带队信息', icon: 'tree' }
       }
     ]
   },
 
   {
-    path: '/nested',
+    path: '/modify',
     component: Layout,
-    redirect: '/nested/menu1',
+    redirect: '/modify/finished',
     name: '我的修改',
     meta: {
       title: '我的修改', icon: 'nested' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        path: 'finished',
+        component: () => import('@/views/modify/finished'), // Parent router-view
         name: '已完成',
         meta: { title: '已完成', icon: 'clipboard' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
+        path: 'modifying',
+        component: () => import('@/views/modify/modifying'),
         name: '进行中',
         meta: { title: '进行中', icon: 'list' }
       }
@@ -182,13 +182,13 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/table',
+    path: '/assess',
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: 'assess',
         name: '考核结果',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/assess/index'),
         meta: { title: '考核结果', icon: 'form' }
       }
     ]
@@ -197,13 +197,15 @@ export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/form',
-    children: [{
-      path: 'form',
-      name: '个人中心',
-      component: () => import('@/views/form/index'),
-      meta: { title: '个人中心', icon: 'user' }
-    }]
+    redirect: '/info',
+    children: [
+      {
+        path: 'info',
+        name: '个人中心',
+        component: () => import('@/views/info/index'),
+        meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
   },
 
   // 404 page must be placed at the end !!!
