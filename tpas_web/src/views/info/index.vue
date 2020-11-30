@@ -5,18 +5,18 @@
         <el-input v-model="ruleForm.userName" :disabled="true" maxlength="30"/>
       </el-form-item>
       <el-form-item label="教师姓名" prop="realName">
-        <el-input v-model="ruleForm.realName" maxlength="30"/>
+        <el-input v-model="ruleForm.realName" :disabled="true" maxlength="30"/>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item v-if="modifyInfo.modifyInfoVisible" label="密码" prop="password">
         <el-input v-model="ruleForm.password" maxlength="30" show-password />
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPassword">
+      <el-form-item v-if="modifyInfo.modifyInfoVisible" label="确认密码" prop="checkPassword">
         <el-input v-model="ruleForm.checkPassword" maxlength="30" show-password />
       </el-form-item>
       <el-form-item label="联系方式" prop="contact">
         <el-input v-model="ruleForm.contact" />
       </el-form-item>
-      <el-form-item label="头像">
+      <el-form-item v-if="modifyInfo.modifyInfoVisible" label="头像">
         <el-upload
           class="avatar-uploader"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -27,8 +27,12 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button><!--disabled功能未完成-->
+      <el-form-item v-if="modifyInfo.modifyInfoVisible">
+        <el-button type="primary" @click="modifyInfoStatus()">取消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button><!--disabled功能未完成-->
+      </el-form-item>
+      <el-form-item v-else>
+        <el-button type="primary" @click="modifyInfoStatus()">修改</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -70,6 +74,10 @@ export default {
         contact: [
           { required: true, message: '请输入邮箱', trigger: 'blur' }
         ]
+      },
+      modifyInfo: {
+        modifyInfoVisible: false,
+        modifyInfoLoading: false
       }
     }
   },
@@ -100,6 +108,9 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
+    },
+    modifyInfoStatus() {
+      this.modifyInfo.modifyInfoVisible = !this.modifyInfo.modifyInfoVisible
     }
   }
 }
