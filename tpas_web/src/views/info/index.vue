@@ -7,14 +7,14 @@
       <el-form-item label="教师姓名" prop="realName">
         <el-input v-model="ruleForm.realName" :disabled="true" maxlength="30"/>
       </el-form-item>
+      <el-form-item label="联系方式" prop="contact">
+        <el-input v-model="ruleForm.contact" />
+      </el-form-item>
       <el-form-item v-if="modifyInfo.modifyInfoVisible" label="密码" prop="password">
         <el-input v-model="ruleForm.password" maxlength="30" show-password />
       </el-form-item>
       <el-form-item v-if="modifyInfo.modifyInfoVisible" label="确认密码" prop="checkPassword">
         <el-input v-model="ruleForm.checkPassword" maxlength="30" show-password />
-      </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" />
       </el-form-item>
       <el-form-item v-if="modifyInfo.modifyInfoVisible" label="头像">
         <el-upload
