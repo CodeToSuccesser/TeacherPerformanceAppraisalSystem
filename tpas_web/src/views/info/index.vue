@@ -53,12 +53,12 @@ export default {
 
     return {
       ruleForm: {
-        realName: this.$store.getters.name,
-        userName: this.$store.getters.account,
+        realName: this.$store.getters.name === '' ? sessionStorage.getItem('name') : this.$store.getters.name,
+        userName: this.$store.getters.account === '' ? sessionStorage.getItem('account') : this.$store.getters.account,
         password: '',
         checkPassword: '',
-        contact: this.$store.getters.contact,
-        imageUrl: this.$store.getters.avatar
+        contact: this.$store.getters.contact === '' ? sessionStorage.getItem('contact') : this.$store.getters.contact,
+        imageUrl: this.$store.getters.avatar === '' ? sessionStorage.getItem('avatar') : this.$store.getters.avatar
       },
       rules: {
         realName: [

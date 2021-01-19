@@ -7,7 +7,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
  */
 function hasPermission(role, route) {
   if (route.meta && route.meta.roles) {
-    return route.meta.roles.indexOf(role) > -1
+    return route.meta.roles.indexOf(parseInt(role)) > -1
   } else {
     return true
   }

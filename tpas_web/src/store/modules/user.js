@@ -51,7 +51,7 @@ const actions = {
         commit('SET_AVATAR', data.avatar)
         commit('SET_ACCOUNT', data.logName)
         commit('SET_CONTACT', data.contact)
-        commit('SET_USER_TYPE',data.userType)
+        commit('SET_USER_TYPE', data.userType)
         setToken(data.token)
         resolve()
       }).catch(error => {

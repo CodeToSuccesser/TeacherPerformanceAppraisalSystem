@@ -13,7 +13,7 @@
     <el-button type="primary" size="small" class="button-add" @click="applyJobDialogVisible = true">申请新增</el-button>
 
     <el-table :data="jobInfo" stripe style="width: 100% " :border="true" fit>
-      <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px"/>
+      <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px" />
       <el-table-column :resizable="false" prop="teacherName" sortable label="教师姓名" />
       <el-table-column :resizable="false" prop="normalPractice" sortable label="师范实习带队人数" />
       <el-table-column :resizable="false" prop="nonNormalPractice" sortable label="非师范实习带队人数" />
@@ -28,7 +28,6 @@
         </template>
       </el-table-column>
     </el-table>
-
 
     <el-dialog title="实习带队信息修改" :visible.sync="jobDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="jobForm">

@@ -34,13 +34,11 @@ router.beforeEach(async(to, from, next) => {
       if (addRoutes === undefined || addRoutes.length <= 0) {
         try {
           // 根据用户角色加载路由
-          const role = store.getters.userType
-          const accessRoutes = await store.dispatch(
+          const role = (store.getters.userType === undefined || store.getters.userType === '') ? sessionStorage.getItem('userType') : store.getters.userType
+          await store.dispatch(
             'permission/generateRoutes',
             role
           )
-          accessRoutes.forEach(router => {
-          })
           // 动态加载路由
           router.addRoutes(store.getters.routes)
           next({ ...to, replace: true })
@@ -48,7 +46,7 @@ router.beforeEach(async(to, from, next) => {
           // 重置token并跳转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
+          next(`/login`)
           NProgress.done()
         }
       } else {
@@ -62,7 +60,7 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       // 跳转到登录页需重新登录
-      next(`/login?redirect=${to.path}`)
+      next(`/login`)
       NProgress.done()
     }
   }

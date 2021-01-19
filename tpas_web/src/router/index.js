@@ -121,6 +121,7 @@ export const asyncRoutes = [
     meta: {
       title: '考核结果', icon: 'form', roles: [0, 1]
     },
+    name: '考核结果',
     redirect: '/assess',
     component: Layout,
     children: [
@@ -133,18 +134,8 @@ export const asyncRoutes = [
     ]
   },
 
-  // {
-  //   path: 'course/course-hour-detail',
-  //   component: () => import('@/views/course/course-hour-detail'),
-  //   alwaysShow: false,
-  //   redirect: '/course/course-hour-detail',
-  //   meta: {
-  //     title: '课时信息详情', icon: 'user'
-  //   }
-  // },
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true, meta: {}}
+  { path: '*', redirect: '/404', name: '404', hidden: true, meta: {}}
 
 ]
 
