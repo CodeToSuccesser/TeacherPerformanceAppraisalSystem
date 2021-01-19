@@ -10,48 +10,58 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
+// 进入一个页面时会触发该事件
+// 即将要进入的路由
+// 正要离开的路由
 router.beforeEach(async(to, from, next) => {
-  // start progress bar
+  // 加载进度
   NProgress.start()
 
-  // set page title
+  // 设置页面标题
   document.title = getPageTitle(to.meta.title)
 
-  // determine whether the user has logged in
-  const hasToken = getToken()
+  // 此处进行鉴权操作
+  const token = getToken()
 
-  if (hasToken) {
+  if (token) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
+      // 系统根路由
+      Message('您已登录,如需切换用户请退出重新登录')
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
-        next()
-      } else {
+      const addRoutes = store.getters.addRoutes
+      if (addRoutes === undefined || addRoutes.length <= 0) {
         try {
-          // get user info
-          // await store.dispatch('user/getInfo')
-
-          next()
+          // 根据用户角色加载路由
+          const role = store.getters.userType
+          const accessRoutes = await store.dispatch(
+            'permission/generateRoutes',
+            role
+          )
+          accessRoutes.forEach(router => {
+          })
+          // 动态加载路由
+          router.addRoutes(store.getters.routes)
+          next({ ...to, replace: true })
         } catch (error) {
-          // remove token and go to login page to re-login
+          // 重置token并跳转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
+      } else {
+        next()
       }
     }
   } else {
-    /* has no token*/
-
+    // 没有token的情况
     if (whiteList.indexOf(to.path) !== -1) {
-      // in the free login whitelist, go directly
+      // 免登陆列表，直接跳转
       next()
     } else {
-      // other pages that do not have permission to access are redirected to the login page.
+      // 跳转到登录页需重新登录
       next(`/login?redirect=${to.path}`)
       NProgress.done()
     }

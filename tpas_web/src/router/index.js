@@ -27,7 +27,7 @@ import Layout from '@/layout'
 
 /**
  * constantRoutes
- * 教师角色
+ * 默认路由列表
  */
 export const constantRoutes = [
   {
@@ -43,70 +43,6 @@ export const constantRoutes = [
   },
 
   {
-    path: '/course',
-    component: Layout,
-    redirect: '/course/course-hour',
-    name: '教学管理',
-    meta: { title: '教学管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'course-hour',
-        name: '课时信息',
-        component: () => import('@/views/course/course-hour'),
-        meta: { title: '课时信息', icon: 'table' }
-      },
-      {
-        path: 'paper',
-        name: '论文指导信息',
-        component: () => import('@/views/course/paper'),
-        meta: { title: '论文指导信息', icon: 'education' }
-      },
-      {
-        path: 'job',
-        name: '实习带队信息',
-        component: () => import('@/views/course/job'),
-        meta: { title: '实习带队信息', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/modify',
-    component: Layout,
-    redirect: '/modify/finished',
-    name: '我的修改',
-    meta: {
-      title: '我的修改', icon: 'nested' },
-    children: [
-      {
-        path: 'finished',
-        component: () => import('@/views/modify/finished'), // Parent router-view
-        name: '已完成',
-        meta: { title: '已完成', icon: 'clipboard' }
-      },
-      {
-        path: 'modifying',
-        component: () => import('@/views/modify/modifying'),
-        name: '进行中',
-        meta: { title: '进行中', icon: 'list' }
-      }
-    ]
-  },
-
-  {
-    path: '/assess',
-    component: Layout,
-    children: [
-      {
-        path: 'assess',
-        name: '考核结果',
-        component: () => import('@/views/assess/index'),
-        meta: { title: '考核结果', icon: 'form' }
-      }
-    ]
-  },
-
-  {
     path: '/',
     component: Layout,
     redirect: '/info',
@@ -118,15 +54,12 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 /**
  * asyncRoutes
- * 管理员角色
+ * 权限校验路由列表
  */
 export const asyncRoutes = [
 
@@ -134,26 +67,27 @@ export const asyncRoutes = [
     path: '/course',
     component: Layout,
     redirect: '/course/course-hour',
+    alwaysShow: true,
     name: '教学管理',
-    meta: { title: '教学管理', icon: 'el-icon-s-help' },
+    meta: { title: '教学管理', icon: 'el-icon-s-help', roles: [0, 1] },
     children: [
       {
         path: 'course-hour',
         name: '课时信息',
         component: () => import('@/views/course/course-hour'),
-        meta: { title: '课时信息', icon: 'table' }
+        meta: { title: '课时信息', icon: 'table', roles: [0, 1] }
       },
       {
         path: 'paper',
         name: '论文指导信息',
         component: () => import('@/views/course/paper'),
-        meta: { title: '论文指导信息', icon: 'education' }
+        meta: { title: '论文指导信息', icon: 'education', roles: [0, 1] }
       },
       {
         path: 'job',
         name: '实习带队信息',
         component: () => import('@/views/course/job'),
-        meta: { title: '实习带队信息', icon: 'tree' }
+        meta: { title: '实习带队信息', icon: 'tree', roles: [0, 1] }
       }
     ]
   },
@@ -164,52 +98,43 @@ export const asyncRoutes = [
     redirect: '/modify/finished',
     name: '我的修改',
     meta: {
-      title: '我的修改', icon: 'nested' },
+      title: '我的修改', icon: 'nested', roles: [0, 1]
+    },
     children: [
       {
         path: 'finished',
         component: () => import('@/views/modify/finished'), // Parent router-view
         name: '已完成',
-        meta: { title: '已完成', icon: 'clipboard' }
+        meta: { title: '已完成', icon: 'clipboard', roles: [0, 1] }
       },
       {
         path: 'modifying',
         component: () => import('@/views/modify/modifying'),
         name: '进行中',
-        meta: { title: '进行中', icon: 'list' }
+        meta: { title: '进行中', icon: 'list', roles: [0, 1] }
       }
     ]
   },
 
   {
     path: '/assess',
-    component: Layout,
-    children: [
-      {
-        path: 'assess',
-        name: '考核结果',
-        component: () => import('@/views/assess/index'),
-        meta: { title: '考核结果', icon: 'form' }
-      }
-    ]
+    meta: {
+      title: '考核结果', icon: 'form', roles: [0, 1]
+    },
+    component: () => import('@/views/assess/index')
   },
 
   {
-    path: '/',
-    component: Layout,
-    redirect: '/info',
-    children: [
-      {
-        path: 'info',
-        name: '个人中心',
-        component: () => import('@/views/info/index'),
-        meta: { title: '个人中心', icon: 'user' }
-      }
-    ]
+    path: 'course/course-hour-detail',
+    component: () => import('@/views/course/course-hour-detail'),
+    redirect: '/course/course-hour-detail',
+    meta: {
+      title: '课时信息详情', icon: 'user', roles: [0, 1]
+    }
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true, meta: {}}
 
 ]
 

@@ -1,7 +1,6 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import da from "element-ui/src/locale/lang/da";
 
 const getDefaultState = () => {
   return {
@@ -9,7 +8,8 @@ const getDefaultState = () => {
     name: '',
     account: '',
     avatar: '',
-    contact: ''
+    contact: '',
+    userType: ''
   }
 }
 
@@ -33,6 +33,9 @@ const mutations = {
   },
   SET_CONTACT: (state, contact) => {
     state.contact = contact
+  },
+  SET_USER_TYPE: (state, userType) => {
+    state.userType = userType
   }
 }
 
@@ -48,6 +51,7 @@ const actions = {
         commit('SET_AVATAR', data.avatar)
         commit('SET_ACCOUNT', data.logName)
         commit('SET_CONTACT', data.contact)
+        commit('SET_USER_TYPE',data.userType)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -80,14 +84,6 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      // logout(state.token).then(() => {
-      //   removeToken() // must remove  token  first
-      //   resetRouter()
-      //   commit('RESET_STATE')
-      //   resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
       removeToken()
       resetRouter()
       commit('RESET_STATE')
