@@ -149,9 +149,4 @@ export default {
     float: right;
   }
 
-  .courseHourDialog {
-    width: 70%;
-    height: 80%;
-    top: 5vh;
-  }
 </style>

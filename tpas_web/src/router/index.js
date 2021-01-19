@@ -121,7 +121,16 @@ export const asyncRoutes = [
     meta: {
       title: '考核结果', icon: 'form', roles: [0, 1]
     },
-    component: () => import('@/views/assess/index')
+    redirect: '/assess',
+    component: Layout,
+    children: [
+      {
+        path: 'assess',
+        name: '考核结果',
+        component: () => import('@/views/assess/index'),
+        meta: { title: '考核结果', icon: 'form', roles: [0, 1] }
+      }
+    ]
   },
 
   // {
