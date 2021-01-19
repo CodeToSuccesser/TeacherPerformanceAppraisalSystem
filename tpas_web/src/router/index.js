@@ -124,14 +124,15 @@ export const asyncRoutes = [
     component: () => import('@/views/assess/index')
   },
 
-  {
-    path: 'course/course-hour-detail',
-    component: () => import('@/views/course/course-hour-detail'),
-    redirect: '/course/course-hour-detail',
-    meta: {
-      title: '课时信息详情', icon: 'user', roles: [0, 1]
-    }
-  },
+  // {
+  //   path: 'course/course-hour-detail',
+  //   component: () => import('@/views/course/course-hour-detail'),
+  //   alwaysShow: false,
+  //   redirect: '/course/course-hour-detail',
+  //   meta: {
+  //     title: '课时信息详情', icon: 'user'
+  //   }
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true, meta: {}}
