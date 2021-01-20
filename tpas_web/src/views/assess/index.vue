@@ -1,19 +1,21 @@
 <template>
   <div class="app-container">
-    <el-select v-model="value" placeholder="年度" class="selector-year">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-
-    <el-select v-model="value" placeholder="学期" class="selector-term">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-
-    <el-button type="primary" size="small" class="button-find">查找</el-button>
-
-    <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
 
     <el-tabs v-model="activeName">
       <el-tab-pane label="授课学时" name="courseHour">
+        <el-select v-model="value" placeholder="年度" class="selector-year">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-select v-model="value" placeholder="学期" class="selector-term">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-button type="primary" size="small" class="button-find">查找</el-button>
+
+        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
+
         <el-table :data="courseScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
           <el-table-column :resizable="false" prop="id" sortable label="序号" width="110px" />
           <el-table-column :resizable="false" prop="courseHourId" sortable label="课时信息编号" />
@@ -25,6 +27,19 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="论文指导" name="paper">
+        <el-select v-model="value" placeholder="年度" class="selector-year">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-select v-model="value" placeholder="学期" class="selector-term">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-button type="primary" size="small" class="button-find">查找</el-button>
+
+        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
+
         <el-table :data="paperScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
           <el-table-column :resizable="false" prop="id" sortable label="序号" width="110px" />
           <el-table-column :resizable="false" prop="paperId" sortable label="论文指导信息编号" />
@@ -36,6 +51,19 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="实习带队" name="intern">
+        <el-select v-model="value" placeholder="年度" class="selector-year">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-select v-model="value" placeholder="学期" class="selector-term">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+
+        <el-button type="primary" size="small" class="button-find">查找</el-button>
+
+        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
+
         <el-table :data="internScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
           <el-table-column :resizable="false" prop="id" sortable label="序号" width="110px" />
           <el-table-column :resizable="false" prop="internId" sortable label="实习指信息编码" />
@@ -68,7 +96,8 @@ export default {
       internScoreInfo: [{
         id: ''
       }],
-      activeName: 'courseHour'
+      activeName: 'courseHour',
+      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
 
     }
   },

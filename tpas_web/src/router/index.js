@@ -134,6 +134,78 @@ export const asyncRoutes = [
     ]
   },
 
+  {
+    path: '/courseManage',
+    meta: {
+      title: '课程管理', icon: 'form', roles: [1]
+    },
+    name: '课程管理',
+    redirect: '/courseManage',
+    component: Layout,
+    children: [
+      {
+        path: 'courseManage',
+        name: '课程管理',
+        component: () => import('@/views/courserManage/index'),
+        meta: { title: '课程管理', icon: 'form', roles: [1] }
+      }
+    ]
+  },
+
+  {
+    path: '/userManage',
+    meta: {
+      title: '用户管理', icon: 'form', roles: [1]
+    },
+    name: '用户管理',
+    redirect: '/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'userManage',
+        name: '用户管理',
+        component: () => import('@/views/userManage/index'),
+        meta: { title: '用户管理', icon: 'form', roles: [1] }
+      }
+    ]
+  },
+
+  {
+    path: '/aduitManage',
+    meta: {
+      title: '操作记录', icon: 'form', roles: [0, 1]
+    },
+    name: '操作记录',
+    redirect: '/aduitManage',
+    component: Layout,
+    children: [
+      {
+        path: 'aduitManage',
+        name: '操作记录',
+        component: () => import('@/views/aduitManage/index'),
+        meta: { title: '操作记录', icon: 'form', roles: [0, 1] }
+      }
+    ]
+  },
+
+  {
+    path: '/systemManage',
+    meta: {
+      title: '系统管理', icon: 'form', roles: [1]
+    },
+    name: '系统管理',
+    redirect: '/systemManage',
+    component: Layout,
+    children: [
+      {
+        path: 'systemManage',
+        name: '系统管理',
+        component: () => import('@/views/systemManage/index'),
+        meta: { title: '系统管理', icon: 'form', roles: [1] }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', name: '404', hidden: true, meta: {}}
 

@@ -11,6 +11,8 @@
     <el-button type="primary" size="small" class="button-find">查找</el-button>
 
     <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">申请新增</el-button>
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
 
     <el-table :data="paperInfo" stripe style="width: 100% " :border="true" fit>
       <el-table-column :resizable="false" prop="id" sortable label="序号" />
@@ -104,7 +106,8 @@ export default {
         schoolYear: '',
         remark: ''
       },
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
     }
   },
   methods: {

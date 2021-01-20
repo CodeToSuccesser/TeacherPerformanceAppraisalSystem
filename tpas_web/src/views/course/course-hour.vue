@@ -12,6 +12,9 @@
 
     <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
 
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+
     <el-table :data="courseHourInfo" stripe style="width: 100% " :border="true" fit>
       <el-table-column :resizable="false" prop="id" sortable label="序号" />
       <el-table-column :resizable="false" prop="courseName" sortable label="课程名称" />
@@ -193,8 +196,8 @@ export default {
         expNumber: '',
         expPerNumber: ''
       },
-      formLabelWidth: '120px'
-
+      formLabelWidth: '120px',
+      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
     }
   },
   methods: {

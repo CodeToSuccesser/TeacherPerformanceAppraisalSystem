@@ -11,6 +11,8 @@
     <el-button type="primary" size="small" class="button-find">查找</el-button>
 
     <el-button type="primary" size="small" class="button-add" @click="applyJobDialogVisible = true">申请新增</el-button>
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importJob">导入</el-button>
+    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportJob">导出</el-button>
 
     <el-table :data="jobInfo" stripe style="width: 100% " :border="true" fit>
       <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px" />
@@ -114,7 +116,8 @@ export default {
         schoolYear: '',
         remark: ''
       },
-      formLabelWidth: '140px'
+      formLabelWidth: '140px',
+      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
     }
   },
   methods: {
