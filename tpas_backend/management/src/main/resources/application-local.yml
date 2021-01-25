@@ -49,3 +49,10 @@ logging:
 
 swagger:
   enable: true
+
+#默认支持文件上传。
+spring.http.multipart.enabled: true
+#最大支持文件大小
+spring.http.multipart.max-file-size: 1Mb
+#最大支持请求大小
+spring.http.multipart.max-request-size: 10Mb

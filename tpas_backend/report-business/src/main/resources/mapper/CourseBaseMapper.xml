@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.CourseBaseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.CourseBase">
+        <id column="id" property="id" />
+        <result column="course_name" property="courseName" />
+        <result column="course_character" property="courseCharacter" />
+        <result column="course_type" property="courseType" />
+        <result column="course_cridet" property="courseCridet" />
+        <result column="total_hours" property="totalHours" />
+        <result column="institute" property="institute" />
+        <result column="first_class_time" property="firstClassTime" />
+        <result column="is_bilingual" property="isBilingual" />
+        <result column="new_textbook_time" property="newTextbookTime" />
+        <result column="soft_hard" property="softHard" />
+        <result column="student_type" property="studentType" />
+        <result column="admin_id" property="adminId" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, course_name, course_character, course_type, course_cridet, total_hours, institute, first_class_time, is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark, update_time, create_time
+    </sql>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into course_base(course_name,course_character,course_type,course_cridet,total_hours,institute,is_bilingual,new_textbook_time,soft_hard,student_type,admin_id,remark) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.courseName},#{item.courseCharacter},#{item.courseType},#{item.courseCridet},
+            #{item.totalHours},#{item.institute},#{item.isBilingual},#{item.newTextbookTime},
+            #{item.softHard},#{item.studentType},#{item.adminId},#{item.remark})
+        </foreach>
+    </insert>
+
+</mapper>
