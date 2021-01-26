@@ -1,6 +1,5 @@
 package com.business.tpas.constant;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +11,7 @@ public class CourseBaseMap {
 
     public static Map<String, Integer> courseBaseMap = new HashMap<>();
 
-    @PostConstruct
-    public void initMap(){
+    static {
         courseBaseMap.put(CourseCharacterEnum.COMPULSORY.key, CourseCharacterEnum.COMPULSORY.value);
         courseBaseMap.put(CourseCharacterEnum.ELECTIVE.key, CourseCharacterEnum.ELECTIVE.value);
         courseBaseMap.put(CourseTypeEnum.GENERAL_EDUCATION.key, CourseTypeEnum.GENERAL_EDUCATION.value);
