@@ -1,16 +1,17 @@
 package com.business.tpas.constant;
 
 /**
- * @description 课程基本信息enum
+ * @description 课程性质, 必修课, 选修课
  **/
-public enum CourseBaseEnum {
+public enum CourseCharacterEnum {
 
-    DEFAULT("", 0); // 默认值
+    COMPULSORY("必修课", 0),
+    ELECTIVE("选修课", 1);
 
     public String key;
     public int value;
 
-    CourseBaseEnum(String key, int value) {
+    CourseCharacterEnum(String key, int value) {
         this.key = key;
         this.value = value;
     }

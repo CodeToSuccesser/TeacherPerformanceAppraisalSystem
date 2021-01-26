@@ -1,16 +1,16 @@
 package com.business.tpas.constant;
 
 /**
- * @description 课程基本信息enum
+ * @description 软硬件课程, 软件, 硬件
  **/
-public enum CourseBaseEnum {
-
-    DEFAULT("", 0); // 默认值
+public enum SoftHardEnum {
+    SOFT_COURSE("软件", 0),
+    HARD_COURSE("硬件", 1);
 
     public String key;
     public int value;
 
-    CourseBaseEnum(String key, int value) {
+    SoftHardEnum(String key, int value) {
         this.key = key;
         this.value = value;
     }

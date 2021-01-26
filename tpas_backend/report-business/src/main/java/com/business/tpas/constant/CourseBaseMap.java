@@ -10,23 +10,23 @@ import java.util.Map;
  **/
 public class CourseBaseMap {
 
-    public static Map<String, CourseBaseEnum> courseBaseEnumMap = new HashMap<>();
+    public static Map<String, Integer> courseBaseMap = new HashMap<>();
 
     @PostConstruct
     public void initMap(){
-        courseBaseEnumMap.put(CourseBaseEnum.COMPULSORY.key, CourseBaseEnum.COMPULSORY);
-        courseBaseEnumMap.put(CourseBaseEnum.ELECTIVE.key, CourseBaseEnum.ELECTIVE);
-        courseBaseEnumMap.put(CourseBaseEnum.GENERAL_EDUCATION.key, CourseBaseEnum.GENERAL_EDUCATION);
-        courseBaseEnumMap.put(CourseBaseEnum.GRADUATE_STUDENT.key, CourseBaseEnum.GRADUATE_STUDENT);
-        courseBaseEnumMap.put(CourseBaseEnum.HARD_COURSE.key, CourseBaseEnum.HARD_COURSE);
-        courseBaseEnumMap.put(CourseBaseEnum.IS_BILINGUAL.key, CourseBaseEnum.IS_BILINGUAL);
-        courseBaseEnumMap.put(CourseBaseEnum.JUNIOR_COLLEGE_STUDENT.key, CourseBaseEnum.JUNIOR_COLLEGE_STUDENT);
-        courseBaseEnumMap.put(CourseBaseEnum.NOT_BILINGUAL.key, CourseBaseEnum.NOT_BILINGUAL);
-        courseBaseEnumMap.put(CourseBaseEnum.PRACTICE_TEACHING.key, CourseBaseEnum.PRACTICE_TEACHING);
-        courseBaseEnumMap.put(CourseBaseEnum.PROFESSIONAL_CORE.key, CourseBaseEnum.PROFESSIONAL_CORE);
-        courseBaseEnumMap.put(CourseBaseEnum.PROFESSIONAL_DIRECTION.key, CourseBaseEnum.PROFESSIONAL_DIRECTION);
-        courseBaseEnumMap.put(CourseBaseEnum.SOFT_COURSE.key, CourseBaseEnum.SOFT_COURSE);
-        courseBaseEnumMap.put(CourseBaseEnum.TEACHER_EDUCATION.key, CourseBaseEnum.TEACHER_EDUCATION);
-        courseBaseEnumMap.put(CourseBaseEnum.UNDERGRADUATES.key, CourseBaseEnum.UNDERGRADUATES);
+        courseBaseMap.put(CourseCharacterEnum.COMPULSORY.key, CourseCharacterEnum.COMPULSORY.value);
+        courseBaseMap.put(CourseCharacterEnum.ELECTIVE.key, CourseCharacterEnum.ELECTIVE.value);
+        courseBaseMap.put(CourseTypeEnum.GENERAL_EDUCATION.key, CourseTypeEnum.GENERAL_EDUCATION.value);
+        courseBaseMap.put(StudentTypeEnum.GRADUATE_STUDENT.key, StudentTypeEnum.GRADUATE_STUDENT.value);
+        courseBaseMap.put(SoftHardEnum.HARD_COURSE.key, SoftHardEnum.HARD_COURSE.value);
+        courseBaseMap.put(IsBilingualEnum.IS_BILINGUAL.key, IsBilingualEnum.IS_BILINGUAL.value);
+        courseBaseMap.put(StudentTypeEnum.JUNIOR_COLLEGE_STUDENT.key, StudentTypeEnum.JUNIOR_COLLEGE_STUDENT.value);
+        courseBaseMap.put(IsBilingualEnum.NOT_BILINGUAL.key, IsBilingualEnum.NOT_BILINGUAL.value);
+        courseBaseMap.put(CourseTypeEnum.PRACTICE_TEACHING.key, CourseTypeEnum.PRACTICE_TEACHING.value);
+        courseBaseMap.put(CourseTypeEnum.PROFESSIONAL_CORE.key, CourseTypeEnum.PROFESSIONAL_CORE.value);
+        courseBaseMap.put(CourseTypeEnum.PROFESSIONAL_DIRECTION.key, CourseTypeEnum.PROFESSIONAL_DIRECTION.value);
+        courseBaseMap.put(SoftHardEnum.SOFT_COURSE.key, SoftHardEnum.SOFT_COURSE.value);
+        courseBaseMap.put(CourseTypeEnum.TEACHER_EDUCATION.key, CourseTypeEnum.TEACHER_EDUCATION.value);
+        courseBaseMap.put(StudentTypeEnum.UNDERGRADUATES.key, StudentTypeEnum.UNDERGRADUATES.value);
     }
 }

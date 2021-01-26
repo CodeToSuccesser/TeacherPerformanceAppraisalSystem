@@ -1,16 +1,19 @@
 package com.business.tpas.constant;
 
 /**
- * @description 课程基本信息enum
+ * @description 学生类型, 本科生,专科生,研究生
  **/
-public enum CourseBaseEnum {
+public enum StudentTypeEnum {
 
-    DEFAULT("", 0); // 默认值
+
+    UNDERGRADUATES("本科生", 0),
+    JUNIOR_COLLEGE_STUDENT("专科生", 1),
+    GRADUATE_STUDENT("研究生", 2);
 
     public String key;
     public int value;
 
-    CourseBaseEnum(String key, int value) {
+    StudentTypeEnum(String key, int value) {
         this.key = key;
         this.value = value;
     }

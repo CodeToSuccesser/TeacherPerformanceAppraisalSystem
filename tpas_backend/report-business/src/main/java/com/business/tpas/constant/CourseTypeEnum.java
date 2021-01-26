@@ -1,16 +1,21 @@
 package com.business.tpas.constant;
 
 /**
- * @description 课程基本信息enum
+ * @description 课程类别, 专业方向,专业核心,教师教育,实践教学,大类教育
  **/
-public enum CourseBaseEnum {
+public enum CourseTypeEnum {
 
-    DEFAULT("", 0); // 默认值
+
+    PROFESSIONAL_DIRECTION("专业方向课程", 0),
+    PROFESSIONAL_CORE("专业核心课程", 1),
+    TEACHER_EDUCATION("教师教育课程", 2),
+    PRACTICE_TEACHING("实践教学", 3),
+    GENERAL_EDUCATION("学科大类课程", 4);
 
     public String key;
     public int value;
 
-    CourseBaseEnum(String key, int value) {
+    CourseTypeEnum(String key, int value) {
         this.key = key;
         this.value = value;
     }

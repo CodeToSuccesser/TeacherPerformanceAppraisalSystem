@@ -1,16 +1,17 @@
 package com.business.tpas.constant;
 
 /**
- * @description 课程基本信息enum
+ * @description 否双语授课, 是, 否
  **/
-public enum CourseBaseEnum {
+public enum IsBilingualEnum {
 
-    DEFAULT("", 0); // 默认值
+    IS_BILINGUAL("是", 0),
+    NOT_BILINGUAL("否", 1);
 
     public String key;
     public int value;
 
-    CourseBaseEnum(String key, int value) {
+    IsBilingualEnum(String key, int value) {
         this.key = key;
         this.value = value;
     }
@@ -30,4 +31,5 @@ public enum CourseBaseEnum {
     public void setValue(int value) {
         this.value = value;
     }
+
 }

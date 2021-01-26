@@ -36,4 +36,31 @@
         </foreach>
     </insert>
 
+    <select id="selectCourseBase" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from course_base cb
+        <where>
+        <if test="courseName != null and courseName != ''">
+            and cb.course_name = #{courseName}
+        </if>
+        <if test="courseCharacter != null and courseCharacter != ''">
+            and cb.course_character = #{courseCharacter}
+        </if>
+        <if test="courseType != null and courseType != ''">
+            and cb.course_type = #{courseType}
+        </if>
+        <if test="isBilingual != null and isBilingual != ''">
+            and cb.is_bilingual = #{isBilingual}
+        </if>
+        <if test="softHard != null and softHard != ''">
+            and cb.soft_hard = #{softHard}
+        </if>
+         <if test="studentType != null and studentType !=''">
+             and cb.student_type = #{studentType}
+         </if>
+         <if test="institute != null and institute != ''">
+             and cb.institute = #{institute}
+         </if>
+        </where>
+    </select>
+
 </mapper>

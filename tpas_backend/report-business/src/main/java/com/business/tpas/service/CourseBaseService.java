@@ -2,6 +2,7 @@ package com.business.tpas.service;
 
 import com.business.tpas.entity.CourseBase;
 import com.business.tpas.model.CourseBaseModel;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 
 import java.util.List;
@@ -30,5 +31,20 @@ public interface CourseBaseService extends BaseService<CourseBase> {
      * @param courseBases
      */
     public void insertBatchCourseBaseInfo(List<CourseBase> courseBases);
+
+    /**
+     * 根据条件分页获取课程基本信息
+     * @param courseName
+     * @param courseCharacter
+     * @param courseType
+     * @param institute
+     * @param softHard
+     * @param studentType
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public PageInfo<CourseBaseModel> getCourseBaseInfo(String courseName, Integer courseCharacter, Integer courseType,
+        String institute, Integer softHard, Integer studentType, Integer isBilingual, Integer pageSize, Integer pageNum);
 
 }
