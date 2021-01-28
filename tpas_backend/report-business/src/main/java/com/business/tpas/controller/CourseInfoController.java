@@ -32,7 +32,7 @@ import java.net.URLEncoder;
  **/
 @RestController
 @RequestMapping("/course/info")
-@Api(tags = {"用户登录权限相关接口"})
+@Api(tags = {"管理员课程管理相关接口"})
 public class CourseInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseInfoController.class);
@@ -47,7 +47,7 @@ public class CourseInfoController {
     /**
      * @description 导入课程管理文件模板
      */
-    @ApiOperation(value = "导入课程管理文件模板", notes = "导入课程管理文件模板")
+    @ApiOperation(value = "下载课程管理文件模板", notes = "下载课程管理文件模板")
     @GetMapping("/download/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {

@@ -1,4 +1,4 @@
-package com.management.tpas.config;
+package com.management.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,12 +28,29 @@ public class SwaggerConfig {
     public Docket createManagementApi(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .enable(swaggerEnable)
-                .pathMapping("/user")
+                .pathMapping("/")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.management.tpas.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.management.tpas"))
                 .paths(PathSelectors.any())
-                .build().apiInfo(new ApiInfoBuilder()
-                .title("TPAS后台登录权限管理-API文档")
-                .build());
+                .build()
+                .groupName("权限管理")
+                .apiInfo(new ApiInfoBuilder()
+                        .title("TPAS后台登录权限管理-API文档")
+                        .build());
+    }
+
+    @Bean
+    public Docket createReportApi(){
+        return new Docket(DocumentationType.SWAGGER_2)
+                .enable(swaggerEnable)
+                .pathMapping("/")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.business.tpas.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("报表管理")
+                .apiInfo(new ApiInfoBuilder()
+                        .title("TPAS后台报表管理-API文档")
+                        .build());
     }
 }

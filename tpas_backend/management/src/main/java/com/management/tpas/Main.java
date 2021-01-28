@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableConfigurationProperties
 @SpringBootApplication(scanBasePackages = {"com.management", "com.business"}, exclude = {DataSourceAutoConfiguration.class, MultipartAutoConfiguration.class})
-@ConfigurationPropertiesScan(basePackages = {"com.management"}) @MapperScan(basePackages = {"com.management.tpas.dao","com.business.tpas.dao"})
+@ConfigurationPropertiesScan(basePackages = {"com.management", "com.business"}) @MapperScan(basePackages = {"com.**.tpas.dao"})
 @ServletComponentScan
 public class Main extends SpringBootServletInitializer {
 

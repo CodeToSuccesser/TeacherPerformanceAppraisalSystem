@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>management</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${com.management.management.version}</version>
     <name>management</name>
     <description>后台管理模块</description>
 
@@ -19,8 +19,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <com.management.common.version>1.0.0-SNAPSHOT</com.management.common.version>
-        <com.management.report.business.version>1.0.0-SNAPSHOT</com.management.report.business.version>
     </properties>
 
     <dependencies>

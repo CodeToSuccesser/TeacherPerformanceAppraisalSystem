@@ -18,7 +18,7 @@
 
     <groupId>com.management</groupId>
     <artifactId>tpas_backend</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${com.management.tpas_backend.version}</version>
     <name>cms_management</name>
     <description>tpas_backend</description>
     <packaging>pom</packaging>
@@ -27,15 +27,57 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <com.management.tpas_backend.version>1.0.0-SNAPSHOT</com.management.tpas_backend.version>
+        <com.management.management.version>1.0.0-SNAPSHOT</com.management.management.version>
+        <com.management.common.version>1.0.0-SNAPSHOT</com.management.common.version>
+        <com.management.report.business.version>1.0.0-SNAPSHOT</com.management.report.business.version>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
+        <com.alibaba.druid.version>1.1.18</com.alibaba.druid.version>
+        <com.baomidou.mybatis-plus-boot-starter.version>3.1.1</com.baomidou.mybatis-plus-boot-starter.version>
+        <com.baomidou.mybatis-plus-generator.version>3.3.2</com.baomidou.mybatis-plus-generator.version>
+        <org.apache.velocity.version>2.2</org.apache.velocity.version>
+        <swagger.version>2.9.2</swagger.version>
+        <io.swagger.version>1.5.22</io.swagger.version>
+        <ma.glasnost.orika.version>1.5.2</ma.glasnost.orika.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+        <com.alibaba.easyexcel.version>2.2.6</com.alibaba.easyexcel.version>
         <pagehelper.version>1.2.10</pagehelper.version>
         <commons.fileupload.version>1.2.1</commons.fileupload.version>
         <commons.io.version>1.3.2</commons.io.version>
         <spring.webmvc.version>5.2.7.RELEASE</spring.webmvc.version>
-        <!--        <swagger.version>2.9.2</swagger.version>-->
-        <!--        <httpclient.version>4.3.5</httpclient.version>-->
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- 数据库连接池druid依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${com.alibaba.druid.version}</version>
+        </dependency>
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
         <!-- redis依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,86 +103,69 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- MyBatis Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.1.1</version>
+            <version>${com.baomidou.mybatis-plus-boot-starter.version}</version>
         </dependency>
-
-        <!-- 数据库连接池druid依赖 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.18</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>${com.baomidou.mybatis-plus-generator.version}</version>
         </dependency>
-
-        <!-- 对象转换组件 -->
+        <!-- mybatisplus逆向工程需要模板引擎，用freemaker也行 -->
         <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-            <version>1.5.2</version>
-        </dependency>
-
-        <!-- jwt令牌工具 -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>${org.apache.velocity.version}</version>
         </dependency>
 
         <!-- swagger工具 -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
+            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
+            <version>${swagger.version}</version>
         </dependency>
         <!-- 取代swagger引入的1.5.20版本，修复访问swagger首页时报错 -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.5.22</version>
+            <version>${io.swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
-            <version>1.5.22</version>
+            <version>${io.swagger.version}</version>
         </dependency>
+
+        <!-- 对象转换组件 -->
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+            <version>${ma.glasnost.orika.version}</version>
+        </dependency>
+
+        <!-- jwt令牌工具 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${io.jsonwebtoken.version}</version>
+        </dependency>
+
         <!-- easyexcel -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
-            <version>2.2.6</version>
+            <version>${com.alibaba.easyexcel.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.github.pagehelper</groupId>-->
-<!--            <artifactId>pagehelper</artifactId>-->
-<!--            <version>${pagehelper.version}</version>-->
-<!--        </dependency>-->
+        <!-- 分页 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
@@ -166,7 +191,6 @@
             <artifactId>commons-io</artifactId>
             <version>${commons.io.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -177,6 +201,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.webmvc.version}</version>
         </dependency>
+
     </dependencies>
 
 

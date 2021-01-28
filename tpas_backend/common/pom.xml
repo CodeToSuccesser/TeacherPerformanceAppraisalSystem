@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>common</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${com.management.common.version}</version>
     <description>基础模块</description>
 
     <properties>
@@ -19,30 +19,4 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-<dependencies>
-    <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-
-    <!-- mp 依赖 -->
-    <dependency>
-        <groupId>com.baomidou</groupId>
-        <artifactId>mybatis-plus-generator</artifactId>
-        <version>3.3.2</version>
-    </dependency>
-    <!-- mybatisplus逆向工程需要模板引擎，用freemaker也行 -->
-    <dependency>
-        <groupId>org.apache.velocity</groupId>
-        <artifactId>velocity-engine-core</artifactId>
-        <version>2.2</version>
-    </dependency>
-    <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-annotations</artifactId>
-        <version>1.5.22</version>
-    </dependency>
-
-</dependencies>
-    
 </project>

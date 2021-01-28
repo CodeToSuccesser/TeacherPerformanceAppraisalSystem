@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -32,6 +33,7 @@ import java.util.Map;
  * @date 2020/8/19
  **/
 @RestControllerAdvice
+@Order(1)
 public class UserOperationLogAdvice<T> implements ResponseBodyAdvice<T> {
 
     private static final Logger log = LoggerFactory.getLogger(UserOperationLogAdvice.class);
