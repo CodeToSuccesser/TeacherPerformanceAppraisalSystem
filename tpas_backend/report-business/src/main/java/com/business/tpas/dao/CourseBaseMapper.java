@@ -1,6 +1,8 @@
 package com.business.tpas.dao;
 
 import com.business.tpas.entity.CourseBase;
+import com.business.tpas.model.CourseBaseModel;
+import com.business.tpas.model.CourseInfoSearchModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -26,16 +28,8 @@ public interface CourseBaseMapper extends BaseDao<CourseBase> {
 
     /**
      * 根据条件查找课程基本信息
-     * @param courseName
-     * @param courseCharacter
-     * @param courseType
-     * @param institute
-     * @param softHard
-     * @param studentType
+     * @param searchModel 搜索条件
      * @return
      */
-    List<CourseBase> selectCourseBase(@Param("courseName") String courseName,
-        @Param("courseCharacter") Integer courseCharacter, @Param("courseType") Integer courseType,
-        @Param("institute") String institute, @Param("softHard") Integer softHard,
-        @Param("studentType") Integer studentType, @Param("isBilingual") Integer isBilingual);
+    List<CourseBaseModel> selectCourseBase(@Param("data") CourseInfoSearchModel searchModel);
 }

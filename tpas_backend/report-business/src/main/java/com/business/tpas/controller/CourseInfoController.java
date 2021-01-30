@@ -3,6 +3,7 @@ package com.business.tpas.controller;
 import com.alibaba.excel.EasyExcel;
 import com.business.tpas.listener.CourseBaseUploadListener;
 import com.business.tpas.model.CourseBaseModel;
+import com.business.tpas.model.CourseInfoSearchModel;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
@@ -98,18 +99,8 @@ public class CourseInfoController {
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseModel .class),
         @ApiResponse(code = 500, message = "系统错误")})
     @GetMapping("/getCourseInfo")
-    public BaseResponse<?> getCourseInfo(@RequestParam(value = "courseName", required = false) String courseName,
-        @RequestParam(value = "courseCharacter", required = false) Integer courseCharacter,
-        @RequestParam(value = "courseType", required = false) Integer courseType,
-        @RequestParam(value = "institute", required = false) String institute,
-        @RequestParam(value = "softHard", required = false) Integer softHard,
-        @RequestParam(value = "studentType", required = false) Integer studentType,
-        @RequestParam(value = "isBilingual", required = false) Integer isBilingual,
-        @RequestParam(value = "pageSize", required = false, defaultValue = "25") Integer pageSize,
-        @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum) {
-        PageInfo<CourseBaseModel> courseBaseModelPage = courseBaseService
-            .getCourseBaseInfo(courseName, courseCharacter, courseType, institute, softHard, studentType, isBilingual,
-                pageSize, pageNum);
+    public BaseResponse<?> getCourseInfo(@RequestBody CourseInfoSearchModel searchModel) {
+        PageInfo<CourseBaseModel> courseBaseModelPage = courseBaseService.getCourseBaseInfo(searchModel);
         return new BaseResponse<>(courseBaseModelPage);
     }
 }

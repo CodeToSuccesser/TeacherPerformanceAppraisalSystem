@@ -22,6 +22,25 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.CourseBaseModel">
+        <id column="id" property="id" />
+        <result column="course_name" property="courseName" />
+        <result column="course_character" property="courseCharacter" />
+        <result column="course_type" property="courseType" />
+        <result column="course_cridet" property="courseCridet" />
+        <result column="total_hours" property="totalHours" />
+        <result column="institute" property="institute" />
+        <result column="first_class_time" property="firstClassTime" />
+        <result column="is_bilingual" property="isBilingual" />
+        <result column="new_textbook_time" property="newTextbookTime" />
+        <result column="soft_hard" property="softHard" />
+        <result column="student_type" property="studentType" />
+        <result column="admin_id" property="adminId" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, course_name, course_character, course_type, course_cridet, total_hours, institute, first_class_time, is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark, update_time, create_time
@@ -36,29 +55,30 @@
         </foreach>
     </insert>
 
-    <select id="selectCourseBase" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from course_base cb
+    <select id="selectCourseBase" resultMap="ModelResultMap">
+        select <include refid="Base_Column_List"/>
+        from course_base cb
         <where>
-        <if test="courseName != null and courseName != ''">
-            and cb.course_name = #{courseName}
+        <if test="data.courseName != null and data.courseName != ''">
+            and cb.course_name = #{data.courseName}
         </if>
-        <if test="courseCharacter != null and courseCharacter != ''">
-            and cb.course_character = #{courseCharacter}
+        <if test="data.courseCharacter != null">
+            and cb.course_character = #{data.courseCharacter}
         </if>
-        <if test="courseType != null and courseType != ''">
-            and cb.course_type = #{courseType}
+        <if test="data.courseType != null">
+            and cb.course_type = #{data.courseType}
         </if>
-        <if test="isBilingual != null and isBilingual != ''">
-            and cb.is_bilingual = #{isBilingual}
+        <if test="data.isBilingual != null">
+            and cb.is_bilingual = #{data.isBilingual}
         </if>
-        <if test="softHard != null and softHard != ''">
-            and cb.soft_hard = #{softHard}
+        <if test="data.softHard != null">
+            and cb.soft_hard = #{data.softHard}
         </if>
-         <if test="studentType != null and studentType !=''">
-             and cb.student_type = #{studentType}
+         <if test="data.studentType != null">
+             and cb.student_type = #{data.studentType}
          </if>
-         <if test="institute != null and institute != ''">
-             and cb.institute = #{institute}
+         <if test="data.institute != null and data.institute != ''">
+             and cb.institute = #{data.institute}
          </if>
         </where>
     </select>

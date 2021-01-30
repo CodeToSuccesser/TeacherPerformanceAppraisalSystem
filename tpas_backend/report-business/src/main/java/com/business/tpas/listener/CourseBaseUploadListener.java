@@ -5,6 +5,7 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.business.tpas.entity.CourseBase;
 import com.business.tpas.model.CourseBaseModel;
 import com.business.tpas.service.CourseBaseService;
+import com.management.common.utils.BeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class CourseBaseUploadListener extends AnalysisEventListener<CourseBaseMo
      */
     @Override
     public void invoke(CourseBaseModel courseBaseModel, AnalysisContext analysisContext) {
-        list.add(courseBaseService.convertImportCourseInfo(courseBaseModel));
+        list.add(BeanMapper.map(courseBaseModel, CourseBase.class));
         // 达到BATCH_COUNT，存储一次数据库，防止OOM
         if (list.size() >= BATCH_COUNT) {
             courseBaseService.insertBatchCourseBaseInfo(list);

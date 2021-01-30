@@ -1,5 +1,7 @@
 package com.business.tpas.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -9,79 +11,48 @@ import java.util.Date;
  * @classname CourseBaseModel
  * @description 课程基本信息模型层，用于前端数据交互
  **/
+@ApiModel(value = "课程基本信息模型层", description = "课程基本信息模型层")
 public class CourseBaseModel {
 
-    /**
-     * 课程名称
-     */
+    @ApiModelProperty(value = "id")
+    private String id;
+    @ApiModelProperty(value = "课程名称")
     private String courseName;
-
-    /**
-     * 课程性质, 必修课, 选修课
-     */
-    private String courseCharacter;
-
-    /**
-     * 课程类别,  专业方向,专业核心,教师教育,实践教学,大类教育
-     */
-    private String courseType;
-
-    /**
-     * 学分
-     */
+    @ApiModelProperty(value = "课程性质, 0 必修, 1 选修")
+    private Integer courseCharacter;
+    @ApiModelProperty(value = "课程类别/专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育'")
+    private Integer courseType;
+    @ApiModelProperty(value = "学分")
     private BigDecimal courseCridet;
-
-    /**
-     * 总学时数
-     */
+    @ApiModelProperty(value = "总学时数")
     private BigDecimal totalHours;
-
-    /**
-     * 开课学院
-     */
+    @ApiModelProperty(value = "开课学院")
     private String institute;
-
-    /**
-     * 首次开课时间, 默认为信息录入时间
-     */
+    @ApiModelProperty(value = "首次开课时间, 默认为信息录入时间")
     private Date firstClassTime;
-
-    /**
-     * 是否双语授课, 是, 否
-     */
-    private String isBilingual;
-
-    /**
-     * 选用教材时间, 默认为信息录入时间
-     */
+    @ApiModelProperty(value = "是否双语授课,0 非双语, 1 双语")
+    private Integer isBilingual;
+    @ApiModelProperty(value = "选用教材时间, 默认为信息录入时间")
     private Date newTextbookTime;
-
-    /**
-     * 软硬件课程, 软件, 硬件
-     */
-    private String softHard;
-
-    /**
-     * 学生类型, 本科生,专科生,研究生
-     */
-    private String studentType;
-
-    /**
-     * 管理员编号
-     */
+    @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
+    private Integer softHard;
+    @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生\"")
+    private Integer studentType;
+    @ApiModelProperty(value = "管理员编号")
     private Long adminId;
-
-    /**
-     * 备注
-     */
+    @ApiModelProperty(value = "备注")
     private String remark;
-
-    /**
-     * 数据最新操作时间
-     */
+    @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
-
     private Date createTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCourseName() {
         return courseName;
@@ -91,19 +62,19 @@ public class CourseBaseModel {
         this.courseName = courseName;
     }
 
-    public String getCourseCharacter() {
+    public Integer getCourseCharacter() {
         return courseCharacter;
     }
 
-    public void setCourseCharacter(String courseCharacter) {
+    public void setCourseCharacter(Integer courseCharacter) {
         this.courseCharacter = courseCharacter;
     }
 
-    public String getCourseType() {
+    public Integer getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(String courseType) {
+    public void setCourseType(Integer courseType) {
         this.courseType = courseType;
     }
 
@@ -139,11 +110,11 @@ public class CourseBaseModel {
         this.firstClassTime = firstClassTime;
     }
 
-    public String getIsBilingual() {
+    public Integer getIsBilingual() {
         return isBilingual;
     }
 
-    public void setIsBilingual(String isBilingual) {
+    public void setIsBilingual(Integer isBilingual) {
         this.isBilingual = isBilingual;
     }
 
@@ -188,29 +159,29 @@ public class CourseBaseModel {
     }
 
 
-    public String getSoftHard() {
+    public Integer getSoftHard() {
         return softHard;
     }
 
-    public void setSoftHard(String softHard) {
+    public void setSoftHard(Integer softHard) {
         this.softHard = softHard;
     }
 
-    public String getStudentType() {
+    public Integer getStudentType() {
         return studentType;
     }
 
-    public void setStudentType(String studentType) {
+    public void setStudentType(Integer studentType) {
         this.studentType = studentType;
     }
 
     @Override
     public String toString() {
         return "CourseBaseModel{" + "courseName='" + courseName + '\'' + ", courseCharacter='" + courseCharacter + '\''
-            + ", courseType='" + courseType + '\'' + ", courseCridet=" + courseCridet + ", totalHours=" + totalHours
-            + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime + ", isBilingual=" + isBilingual
-            + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard + ", studentType=" + studentType
-            + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime="
-            + createTime + '}';
+                + ", courseType='" + courseType + '\'' + ", courseCridet=" + courseCridet + ", totalHours=" + totalHours
+                + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime + ", isBilingual=" + isBilingual
+                + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard + ", studentType=" + studentType
+                + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime="
+                + createTime + '}';
     }
 }
