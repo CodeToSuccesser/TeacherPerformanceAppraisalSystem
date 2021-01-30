@@ -45,15 +45,15 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "首次开课时间, 默认为信息录入时间")
     private Date firstClassTime;
     @ApiModelProperty(value = "是否双语授课,0 非双语, 1 双语")
-    private Integer isBilingual;
+    private Integer isBilingual = 0;
     @ApiModelProperty(value = "选用教材时间, 默认为信息录入时间")
     private Date newTextbookTime;
     @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
-    private Integer softHard;
-    @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生\"")
-    private Integer studentType;
+    private Integer softHard = 0;
+    @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生")
+    private Integer studentType = 0;
     @ApiModelProperty(value = "管理员编号")
-    private Long adminId;
+    private Long adminId = 0L;
     @ApiModelProperty(value = "备注")
     private String remark;
     @ApiModelProperty(value = "数据最新操作时间")
