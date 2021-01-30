@@ -29,4 +29,12 @@ public class GlobalConst {
      * redis过期时间 1hour
      **/
     public static final Long REDIS_TIME_OUT = 3600L;
+
+    /**
+     * 文件传输请求content-type
+     *
+     * @author dude
+     * @date 2021/1/31
+     **/
+    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 }

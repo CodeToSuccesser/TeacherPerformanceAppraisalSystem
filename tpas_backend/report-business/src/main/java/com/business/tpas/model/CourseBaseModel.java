@@ -1,5 +1,7 @@
 package com.business.tpas.model;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.management.common.config.EasyExcelContentCoverUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
@@ -16,16 +18,28 @@ public class CourseBaseModel {
 
     @ApiModelProperty(value = "id")
     private String id;
+
+    @ExcelProperty("课程名称")
     @ApiModelProperty(value = "课程名称")
     private String courseName;
+
+    @ExcelProperty(value = "课程性质", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "课程性质, 0 必修, 1 选修")
     private Integer courseCharacter;
+
+    @ExcelProperty(value = "课程类别", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "课程类别/专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育'")
     private Integer courseType;
+
+    @ExcelProperty("学分")
     @ApiModelProperty(value = "学分")
     private BigDecimal courseCridet;
+
+    @ExcelProperty("总学时")
     @ApiModelProperty(value = "总学时数")
     private BigDecimal totalHours;
+
+    @ExcelProperty("开课学院")
     @ApiModelProperty(value = "开课学院")
     private String institute;
     @ApiModelProperty(value = "首次开课时间, 默认为信息录入时间")

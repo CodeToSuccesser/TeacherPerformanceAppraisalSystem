@@ -1,13 +1,12 @@
 package com.management.tpas.intercepter;
 
-import com.management.common.enums.ErrorCodeEnum;
-import com.management.common.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import static com.management.common.utils.CommonUtil.requestIsUploadFile;
 
 /**
  * @author dude
@@ -23,30 +22,17 @@ public class RequestBodyFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestBodyFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        try {
-            ServletRequest requestWrapper = null;
-            if (servletRequest instanceof HttpServletRequest) {
-                requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
-            }
-            if (requestWrapper == null) {
-                filterChain.doFilter(servletRequest, servletResponse);
-            } else {
-                filterChain.doFilter(requestWrapper, servletResponse);
-            }
-        } catch (Exception e) {
-            LOGGER.error("error doFilter: {}", e.getMessage());
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
+        ServletRequest requestWrapper = null;
+        Boolean isUploadFile = requestIsUploadFile(servletRequest);
+        if (servletRequest instanceof HttpServletRequest && !isUploadFile) {
+            requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
+        }
+        if (requestWrapper == null) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            filterChain.doFilter(requestWrapper, servletResponse);
         }
     }
 
-    @Override
-    public void destroy() {
-
-    }
 }
