@@ -40,6 +40,10 @@ public class CourseBaseUploadListener extends AnalysisEventListener<CourseBaseMo
     @Override
     public void invoke(CourseBaseModel courseBaseModel, AnalysisContext analysisContext) {
         list.add(BeanMapper.map(courseBaseModel, CourseBase.class));
+
+        // TODO 获取用户ID
+        Long adminId = 0L;
+        list.forEach(item -> item.setAdminId(adminId));
         // 达到BATCH_COUNT，存储一次数据库，防止OOM
         if (list.size() >= BATCH_COUNT) {
             courseBaseService.insertBatchCourseBaseInfo(list);

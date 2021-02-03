@@ -1,4 +1,4 @@
-package com.management.common.enums;
+package com.business.tpas.enums;
 
 import java.util.Arrays;
 

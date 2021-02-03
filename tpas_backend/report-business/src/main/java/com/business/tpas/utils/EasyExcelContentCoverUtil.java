@@ -1,12 +1,11 @@
-package com.management.common.config;
+package com.business.tpas.utils;
 
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
-import com.management.common.enums.CourseCharacterEnum;
-import com.management.common.enums.CourseTypeEnum;
+import com.business.tpas.enums.*;
 
 /**
  * @author dude
@@ -45,6 +44,15 @@ public class EasyExcelContentCoverUtil implements Converter<Integer> {
             }
             case "courseType": {
                 return CourseTypeEnum.getEnumByValue(stringValue).getCode();
+            }
+            case "isBilingual": {
+                return IsBilingualEnum.getEnumByValue(stringValue).getCode();
+            }
+            case "softHard": {
+                return SoftHardEnum.getEnumByValue(stringValue).getCode();
+            }
+            case "studentType": {
+                return StudentTypeEnum.getEnumByValue(stringValue).getCode();
             }
             default: {
                 return 0;

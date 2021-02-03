@@ -39,7 +39,6 @@ public class CourseInfoController {
     private static final Logger logger = LoggerFactory.getLogger(CourseInfoController.class);
 
     private static final String contentType = "application/vnd.ms-excel";
-    private static final String encoding = "utf-8";
     private static final String filePath = "template/课程信息模板.xls";
 
     @Autowired

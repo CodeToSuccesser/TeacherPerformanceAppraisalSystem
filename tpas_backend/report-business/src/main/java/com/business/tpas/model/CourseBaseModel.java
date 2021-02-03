@@ -1,7 +1,7 @@
 package com.business.tpas.model;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.management.common.config.EasyExcelContentCoverUtil;
+import com.business.tpas.utils.EasyExcelContentCoverUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ public class CourseBaseModel {
     private Integer courseCharacter;
 
     @ExcelProperty(value = "课程类别", converter = EasyExcelContentCoverUtil.class)
-    @ApiModelProperty(value = "课程类别/专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育'")
+    @ApiModelProperty(value = "课程类别, 0专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育'")
     private Integer courseType;
 
     @ExcelProperty("学分")
@@ -42,22 +42,37 @@ public class CourseBaseModel {
     @ExcelProperty("开课学院")
     @ApiModelProperty(value = "开课学院")
     private String institute;
+
+    @ExcelProperty("首次开课时间")
     @ApiModelProperty(value = "首次开课时间, 默认为信息录入时间")
     private Date firstClassTime;
+
+    @ExcelProperty(value = "是否双语授课", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "是否双语授课,0 非双语, 1 双语")
     private Integer isBilingual = 0;
+
+    @ExcelProperty("选用教材时间")
     @ApiModelProperty(value = "选用教材时间, 默认为信息录入时间")
     private Date newTextbookTime;
+
+    @ExcelProperty(value = "软硬件课程", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
     private Integer softHard = 0;
+
+    @ExcelProperty(value = "学生类型", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生")
     private Integer studentType = 0;
+
     @ApiModelProperty(value = "管理员编号")
-    private Long adminId = 0L;
+    private Long adminId;
+
+    @ExcelProperty(value = "备注")
     @ApiModelProperty(value = "备注")
     private String remark;
+
     @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
+
     private Date createTime;
 
     public String getId() {
