@@ -22,11 +22,13 @@ public class BusinessException extends RuntimeException {
     public String msg;
 
     public BusinessException() {
+        super();
         this.code = ErrorCodeEnum.EXCEPTION.code;
         this.msg = ErrorCodeEnum.EXCEPTION.msg;
     }
 
     public BusinessException(Integer code, String msg) {
+        super(msg);
         this.code = code;
         this.msg = msg;
     }
@@ -34,6 +36,12 @@ public class BusinessException extends RuntimeException {
     public BusinessException(ErrorCodeEnum errorCodeEnum) {
         this.code = errorCodeEnum.code;
         this.msg = errorCodeEnum.msg;
+    }
+
+    public BusinessException(Integer code, String msg, Throwable cause) {
+        super(msg, cause);
+        this.code = code;
+        this.msg = msg;
     }
 
     @Override
