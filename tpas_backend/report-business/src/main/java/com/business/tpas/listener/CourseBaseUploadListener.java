@@ -6,6 +6,7 @@ import com.business.tpas.entity.CourseBase;
 import com.business.tpas.model.CourseBaseModel;
 import com.business.tpas.service.CourseBaseService;
 import com.management.common.utils.BeanMapper;
+import com.management.tpas.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +42,7 @@ public class CourseBaseUploadListener extends AnalysisEventListener<CourseBaseMo
     public void invoke(CourseBaseModel courseBaseModel, AnalysisContext analysisContext) {
         list.add(BeanMapper.map(courseBaseModel, CourseBase.class));
 
-        // TODO 获取用户ID
-        Long adminId = 0L;
+        Long adminId = UserUtil.getUserId();
         list.forEach(item -> item.setAdminId(adminId));
         // 达到BATCH_COUNT，存储一次数据库，防止OOM
         if (list.size() >= BATCH_COUNT) {

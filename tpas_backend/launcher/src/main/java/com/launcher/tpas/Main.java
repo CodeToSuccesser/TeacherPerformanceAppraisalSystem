@@ -1,4 +1,4 @@
-package com.management.tpas;
+package com.launcher.tpas;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -19,8 +19,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableConfigurationProperties
 @SpringBootApplication(scanBasePackages = {"com.management", "com.business"}, exclude = {DataSourceAutoConfiguration.class, MultipartAutoConfiguration.class})
-@ConfigurationPropertiesScan(basePackages = {"com.management", "com.business"}) @MapperScan(basePackages = {"com.**.tpas.dao"})
-@ServletComponentScan
+@ConfigurationPropertiesScan(basePackages = {"com.management", "com.business"})
+@MapperScan(basePackages = {"com.**.tpas.dao"})
+@ServletComponentScan(basePackages = {"com.management"})
 public class Main extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

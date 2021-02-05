@@ -22,7 +22,8 @@ import static com.management.common.utils.CommonUtil.requestIsUploadFile;
  * 自定义RequestWrapper，用于拦截器获取请求参数
  * @date 2020/9/4
  **/
-@WebFilter(urlPatterns = {"/*"}, filterName = "requestBodyFilter") public class RequestBodyFilter implements Filter {
+@WebFilter(urlPatterns = {"/*"}, filterName = "requestBodyFilter")
+public class RequestBodyFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestBodyFilter.class);
 

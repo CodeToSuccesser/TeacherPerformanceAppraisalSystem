@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.tpas</groupId>
+		<artifactId>tpas_backend</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>launcher</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>launcher</name>
+	<description>启动模块</description>
+
+	<dependencies>
+		<!-- 引入report_bussiness -->
+		<dependency>
+			<groupId>com.tpas</groupId>
+			<artifactId>report-business</artifactId>
+			<version>${com.tpas.report.business.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- 引入management -->
+		<dependency>
+			<groupId>com.tpas</groupId>
+			<artifactId>management</artifactId>
+			<version>${com.tpas.management.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 指定该Main Class为全局的唯一入口 -->
+					<mainClass>com.launcher.tpas.Main</mainClass>
+					<layout>ZIP</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

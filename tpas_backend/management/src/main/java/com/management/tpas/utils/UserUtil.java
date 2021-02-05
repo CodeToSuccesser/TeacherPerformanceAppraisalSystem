@@ -25,6 +25,14 @@ public class UserUtil {
     }
 
     /**
+     * 获取请求用户ID，若为NULL，则返回默认值0L
+     * @return
+     */
+    public static Long getUserId() {
+        return userThreadLocal.get().getId() == null ? 0L : userThreadLocal.get().getId();
+    }
+
+    /**
      * 设置用户名
      *
      * @param userMsgModel
