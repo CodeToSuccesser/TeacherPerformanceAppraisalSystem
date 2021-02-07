@@ -35,10 +35,6 @@ public enum IsBilingualEnum {
     }
 
     public static boolean isExistByCode(Integer code) {
-        for (IsBilingualEnum tmp : IsBilingualEnum.values()) {
-            if (tmp.code.equals(code))
-                return true;
-        }
-        return false;
+        return Arrays.stream(IsBilingualEnum.values()).anyMatch(it -> it.code.equals(code));
     }
 }

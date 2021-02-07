@@ -36,10 +36,6 @@ public enum StudentTypeEnum {
     }
 
     public static boolean isExistByCode(Integer code) {
-        for (StudentTypeEnum tmp : StudentTypeEnum.values()) {
-            if (tmp.code.equals(code))
-                return true;
-        }
-        return false;
+        return Arrays.stream(StudentTypeEnum.values()).anyMatch(it -> it.code.equals(code));
     }
 }

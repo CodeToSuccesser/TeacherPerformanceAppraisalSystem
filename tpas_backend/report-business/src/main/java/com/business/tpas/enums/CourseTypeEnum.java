@@ -53,11 +53,7 @@ public enum CourseTypeEnum {
     }
 
     public static boolean isExistByCode(Integer code) {
-        for (CourseTypeEnum tmp : CourseTypeEnum.values()) {
-            if (tmp.code.equals(code))
-                return true;
-        }
-        return false;
+        return Arrays.stream(CourseTypeEnum.values()).anyMatch(it -> it.code.equals(code));
     }
 
 }
