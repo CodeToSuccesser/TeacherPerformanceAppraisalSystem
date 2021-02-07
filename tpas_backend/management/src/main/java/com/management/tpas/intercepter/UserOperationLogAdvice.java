@@ -1,12 +1,11 @@
 package com.management.tpas.intercepter;
 
-import com.management.common.config.GlobalConst;
 import com.management.common.model.BaseResponse;
 import com.management.common.utils.JacksonUtil;
 import com.management.tpas.dao.UserLogMapper;
 import com.management.tpas.entity.UserLog;
 import com.management.tpas.model.UserMsgModel;
-import com.management.tpas.utils.JwtUtil;
+import com.management.tpas.utils.UserUtil;
 import com.management.tpas.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,6 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,15 +71,8 @@ public class UserOperationLogAdvice<T> implements ResponseBodyAdvice<T> {
         String resultMsg = responseBody.getOrDefault("msg", new Object()).toString();
 
         // 获取用户信息
-        List<String> headerList = serverHttpRequest.getHeaders().get(GlobalConst.TOKEN_NAME);
-        String token = null;
-        if (null != headerList && headerList.size() > 0) {
-            token = headerList.get(0);
-        }
-        UserMsgModel userMsg = null;
-        if (null != token) { // 已登录用户请求，由token解析
-            userMsg = JwtUtil.getUserMsgByToken(token);
-        }
+        UserMsgModel userMsg = UserUtil.getUserMsg();
+
         // 新登录用户，由请求信息解析
         if (userMsg == null) {
             try {

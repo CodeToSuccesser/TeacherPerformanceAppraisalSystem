@@ -1,17 +1,11 @@
 package com.management.tpas.intercepter;
 
-import com.management.tpas.model.UserMsgModel;
-import com.management.tpas.utils.JwtUtil;
-import com.management.tpas.utils.UserUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 import static com.management.common.utils.CommonUtil.requestIsUploadFile;
 
 /**

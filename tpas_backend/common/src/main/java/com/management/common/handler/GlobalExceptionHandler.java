@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BusinessException.class)
     public BaseResponse<?> businessExceptionHandler(
         BusinessException e) {
-        log.error("Exception ==> ", e);
+        log.error("Exception ==> {}, {}", e.code, e.msg);
         return new BaseResponse<>(e.code, e.msg);
     }
 
