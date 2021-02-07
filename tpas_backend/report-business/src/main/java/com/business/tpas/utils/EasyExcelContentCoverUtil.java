@@ -6,6 +6,8 @@ import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.business.tpas.enums.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dude
@@ -15,6 +17,9 @@ import com.business.tpas.enums.*;
  * @date 2021/1/31
  **/
 public class EasyExcelContentCoverUtil implements Converter<Integer> {
+
+    private static final Logger logger = LoggerFactory.getLogger(EasyExcelContentCoverUtil.class);
+
     @Override
     public Class supportJavaTypeKey() {
         return Integer.class;
@@ -60,8 +65,6 @@ public class EasyExcelContentCoverUtil implements Converter<Integer> {
         }
     }
     /**
-     * 这里是写的时候会调用 不用管
-     *
      * @param value
      *            NotNull
      * @param contentProperty
@@ -72,7 +75,34 @@ public class EasyExcelContentCoverUtil implements Converter<Integer> {
      */
     @Override
     public CellData convertToExcelData(Integer value, ExcelContentProperty contentProperty,
-                                       GlobalConfiguration globalConfiguration) {
-        return new CellData(value);
+        GlobalConfiguration globalConfiguration) {
+        String strVal = "";
+        switch (contentProperty.getField().getName()) {
+            case "courseCharacter": {
+                strVal = CourseCharacterEnum.getEnumByCode(value).getValue();
+                break;
+            }
+            case "courseType": {
+                strVal = CourseTypeEnum.getEnumByCode(value).getValue();
+                break;
+            }
+            case "isBilingual": {
+                strVal = IsBilingualEnum.getEnumByCode(value).getValue();
+                break;
+            }
+            case "softHard": {
+                strVal = SoftHardEnum.getEnumByCode(value).getValue();
+                break;
+            }
+            case "studentType": {
+                strVal = StudentTypeEnum.getEnumByCode(value).getValue();
+                break;
+            }
+            default: {
+                logger.warn(String.format("unknown property: [%s]  during converting data to excel",
+                    contentProperty.getField().getName()));
+            }
+        }
+        return new CellData(strVal);
     }
 }

@@ -33,4 +33,12 @@ public enum IsBilingualEnum {
     public static IsBilingualEnum getEnumByValue(String value) {
         return Arrays.stream(values()).filter(it -> it.value.equals(value)).findFirst().orElse(NOT_BILINGUAL);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        for (IsBilingualEnum tmp : IsBilingualEnum.values()) {
+            if (tmp.code.equals(code))
+                return true;
+        }
+        return false;
+    }
 }

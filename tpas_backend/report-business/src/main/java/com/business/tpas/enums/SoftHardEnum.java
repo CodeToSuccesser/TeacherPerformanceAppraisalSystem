@@ -33,4 +33,12 @@ public enum SoftHardEnum {
     public static SoftHardEnum getEnumByValue(String value) {
         return Arrays.stream(values()).filter(it -> it.value.equals(value)).findFirst().orElse(SOFT);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        for (SoftHardEnum tmp : SoftHardEnum.values()) {
+            if (tmp.code.equals(code))
+                return true;
+        }
+        return false;
+    }
 }

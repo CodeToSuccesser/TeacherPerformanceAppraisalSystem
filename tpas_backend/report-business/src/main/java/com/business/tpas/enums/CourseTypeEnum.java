@@ -13,13 +13,13 @@ public enum CourseTypeEnum {
 
     MAJOR(0, "专业方向课程"),
 
-    CORE(0, "专业核心课程"),
+    CORE(1, "专业核心课程"),
 
-    NORMAL(1, "教师教育课程"),
+    NORMAL(2, "教师教育课程"),
 
-    ACTIVE(2, "实践教学"),
+    ACTIVE(3, "实践教学"),
 
-    CLASS(3, "学科大类课程");
+    CLASS(4, "学科大类课程");
 
     private final Integer code;
 
@@ -51,4 +51,13 @@ public enum CourseTypeEnum {
                 .findFirst()
                 .orElse(CORE);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        for (CourseTypeEnum tmp : CourseTypeEnum.values()) {
+            if (tmp.code.equals(code))
+                return true;
+        }
+        return false;
+    }
+
 }

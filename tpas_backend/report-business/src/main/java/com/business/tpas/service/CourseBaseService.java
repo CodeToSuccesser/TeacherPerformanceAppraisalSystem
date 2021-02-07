@@ -30,6 +30,25 @@ public interface CourseBaseService extends BaseService<CourseBase> {
      * @param searchModel 搜索条件
      * @return 分页
      */
-    PageInfo<CourseBaseModel> getCourseBaseInfo(CourseInfoSearchModel searchModel);
+    PageInfo<CourseBaseModel> getCourseBaseInfoByPage(CourseInfoSearchModel searchModel);
+
+    /**
+     * 根据条件获取所有课程基本信息
+     * @param searchModel
+     * @return
+     */
+    List<CourseBaseModel> getCourseBaseInfo(CourseInfoSearchModel searchModel);
+
+    /**
+     * 修改课程基本信息
+     * @param courseBaseModel
+     */
+    void modifyCourseBaseInfo(CourseBaseModel courseBaseModel);
+
+    /**
+     * 批量删除课程信息
+     * @param ids
+     */
+    void deleteCourseBaseInfos(List<Long> ids);
 
 }

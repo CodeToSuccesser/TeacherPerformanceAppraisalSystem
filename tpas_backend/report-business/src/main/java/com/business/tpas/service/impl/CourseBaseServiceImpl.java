@@ -1,20 +1,22 @@
 package com.business.tpas.service.impl;
 
-import com.business.tpas.constant.*;
 import com.business.tpas.dao.CourseBaseMapper;
 import com.business.tpas.entity.CourseBase;
 import com.business.tpas.model.CourseBaseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
 import com.business.tpas.service.CourseBaseService;
+import com.business.tpas.service.CourseHoursService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
+import com.management.common.enums.ErrorCodeEnum;
+import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,17 +33,52 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
     @Autowired
     private CourseBaseMapper courseBaseMapper;
 
+    @Autowired
+    private CourseHoursService courseHoursService;
+
     @Transactional
     @Override
     public void insertBatchCourseBaseInfo(List<CourseBase> courseBases) {
         courseBaseMapper.saveBatch(courseBases);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public PageInfo<CourseBaseModel> getCourseBaseInfo(CourseInfoSearchModel searchModel) {
+    public PageInfo<CourseBaseModel> getCourseBaseInfoByPage(CourseInfoSearchModel searchModel) {
         PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
         List<CourseBaseModel> courseBases = courseBaseMapper.selectCourseBase(searchModel);
         return new PageInfo<>(courseBases);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CourseBaseModel> getCourseBaseInfo(CourseInfoSearchModel searchModel) {
+        return courseBaseMapper.selectCourseBase(searchModel);
+    }
+
+    @Transactional
+    @Override
+    public void modifyCourseBaseInfo(CourseBaseModel courseBaseModel) {
+        CourseBase courseBase = courseBaseMapper.selectById(courseBaseModel.getId());
+        if (courseBase == null)
+            throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, ErrorCodeEnum.OBJECT_NOT_FOUND.msg);
+        courseBaseMapper.updateById(BeanMapper.map(courseBaseModel, CourseBase.class));
+    }
+
+    @Transactional
+    @Override
+    public void deleteCourseBaseInfos(List<Long> ids) {
+        filterIdsCanBeDeleted(ids);
+        courseBaseMapper.deleteBatchIds(ids);
+    }
+
+    /**
+     * 过滤除课时信息中关联的课程记录，不做删除
+     *
+     * @param ids
+     */
+    private void filterIdsCanBeDeleted(List<Long> ids) {
+        ids.removeIf(id -> !CollectionUtils.isEmpty(courseHoursService.selectByCourseId(id)));
     }
 
 }

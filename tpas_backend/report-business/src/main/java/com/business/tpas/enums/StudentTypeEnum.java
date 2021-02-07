@@ -34,4 +34,12 @@ public enum StudentTypeEnum {
     public static StudentTypeEnum getEnumByValue(String value) {
         return Arrays.stream(values()).filter(it -> it.value.equals(value)).findFirst().orElse(UNDERGRADUATES);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        for (StudentTypeEnum tmp : StudentTypeEnum.values()) {
+            if (tmp.code.equals(code))
+                return true;
+        }
+        return false;
+    }
 }

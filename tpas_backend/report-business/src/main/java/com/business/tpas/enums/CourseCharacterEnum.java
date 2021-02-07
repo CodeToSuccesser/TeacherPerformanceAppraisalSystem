@@ -46,4 +46,12 @@ public enum CourseCharacterEnum {
                 .findFirst()
                 .orElse(MUST_COURSE);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        for (CourseCharacterEnum tmp : CourseCharacterEnum.values()) {
+            if (tmp.code.equals(code))
+                return true;
+        }
+        return false;
+    }
 }

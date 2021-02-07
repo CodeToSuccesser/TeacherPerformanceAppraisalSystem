@@ -1,5 +1,6 @@
 package com.business.tpas.model;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.business.tpas.utils.EasyExcelContentCoverUtil;
 import io.swagger.annotations.ApiModel;
@@ -16,8 +17,9 @@ import java.util.Date;
 @ApiModel(value = "课程基本信息模型层", description = "课程基本信息模型层")
 public class CourseBaseModel {
 
+    @ExcelIgnore
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ExcelProperty("课程名称")
     @ApiModelProperty(value = "课程名称")
@@ -63,6 +65,7 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生")
     private Integer studentType = 0;
 
+    @ExcelIgnore
     @ApiModelProperty(value = "管理员编号")
     private Long adminId;
 
@@ -70,16 +73,18 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ExcelIgnore
     @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
+    @ExcelIgnore
     private Date createTime;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
