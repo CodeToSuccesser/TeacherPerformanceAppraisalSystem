@@ -28,7 +28,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
     @Override
     public List<CourseHours> selectByCourseId(Long id) {
         Map<String, Object> map = new HashMap<>();
-        map.put("courseId", id);
+        map.put("course_id", id);
 
         return courseHoursMapper.selectByMap(map);
     }
