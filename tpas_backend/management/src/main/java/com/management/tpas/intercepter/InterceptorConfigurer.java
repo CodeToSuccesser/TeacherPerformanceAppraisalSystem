@@ -18,9 +18,12 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptor loginInterceptor;
 
+    @Autowired
+    private ParamInterceptor paramInterceptor;
+
     /**
      * @description 拦截器配置
-     * @param registry
+     * @param registry 拦截配置
      * @return void
      *
      * @author dude
@@ -28,14 +31,28 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
      **/
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
+        int order = 1;
+
         // 登录拦截
         registry.addInterceptor(loginInterceptor)
-                .order(1)
+                .order(order++)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/swagger-resources/**")
                 .excludePathPatterns("/swagger/**")
                 .excludePathPatterns("/swagger-ui.html")
                 .excludePathPatterns("/error");
+
+        // 参数处理拦截
+        registry.addInterceptor(paramInterceptor)
+                .order(order)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/swagger-resources/**")
+                .excludePathPatterns("/swagger/**")
+                .excludePathPatterns("/swagger-ui.html")
+                .excludePathPatterns("/error");
+
     }
 }

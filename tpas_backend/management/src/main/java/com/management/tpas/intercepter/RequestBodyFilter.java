@@ -28,25 +28,11 @@ public class RequestBodyFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestBodyFilter.class);
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-        throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         ServletRequest requestWrapper = null;
         Boolean isUploadFile = requestIsUploadFile(servletRequest);
-
-        if (servletRequest instanceof HttpServletRequest) {
-            if (!isUploadFile) {
-                requestWrapper = new RequestWrapper((HttpServletRequest)servletRequest);
-            }
-            // 存储请求用户信息
-            String token = ((HttpServletRequest)servletRequest).getHeader("Authorization");
-            if (StringUtils.isBlank(token)) {
-                LOGGER.warn("can not get request token from 'Authorization', regard as system request");
-                UserMsgModel userMsgModel = new UserMsgModel();
-                userMsgModel.setUserName("sys");
-                UserUtil.setUserMsg(userMsgModel);
-            } else {
-                UserUtil.setUserMsg(JwtUtil.getUserMsgByToken(token));
-            }
+        if (servletRequest instanceof HttpServletRequest && !isUploadFile) {
+            requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
         }
 
         if (requestWrapper == null) {
