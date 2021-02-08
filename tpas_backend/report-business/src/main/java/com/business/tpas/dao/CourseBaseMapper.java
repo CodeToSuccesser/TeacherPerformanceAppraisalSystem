@@ -59,4 +59,11 @@ public interface CourseBaseMapper extends BaseDao<CourseBase> {
      * @return
      */
     CourseBase selectByCourseName(@Param("courseName")String courseName);
+
+    /**
+     * 根据课程编号查找课程信息记录
+     * @param courseCode
+     * @return
+     */
+    CourseBase selectByCourseCode(@Param("courseCode")String courseCode);
 }

@@ -9,7 +9,7 @@ import com.business.tpas.enums.IsBilingualEnum;
 import com.business.tpas.enums.StudentTypeEnum;
 import com.business.tpas.listener.CourseBaseUploadListener;
 import com.business.tpas.model.CourseBaseModel;
-import com.business.tpas.model.CourseBaseUploadResponseModel;
+import com.business.tpas.model.UploadResponseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.utils.FileUtil;
@@ -82,7 +82,7 @@ public class CourseInfoController {
      */
     @PostMapping("/upload")
     @ApiOperation(value = "导入课程信息文件", notes = "导入课程信息文件")
-    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseUploadResponseModel.class),
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = UploadResponseModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
     public BaseResponse<?> uploadCourseInfo(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -102,7 +102,7 @@ public class CourseInfoController {
         Integer successCount = courseBaseUploadListener.getSuccessCount();
 
         return new BaseResponse<>(
-            new CourseBaseUploadResponseModel(rejectList, successCount, rejectCount, successCount + rejectCount));
+            new UploadResponseModel<>(rejectList, successCount, rejectCount, successCount + rejectCount));
     }
 
     @ApiOperation(value = "导出课程信息文件", notes = "导出课程信息文件")

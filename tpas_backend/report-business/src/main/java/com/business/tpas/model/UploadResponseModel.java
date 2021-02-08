@@ -5,15 +5,15 @@ import io.swagger.annotations.ApiModel;
 import java.util.List;
 
 /**
- * @description 课程信息文件导入返回模型层
+ * @description 文件导入返回模型层
  **/
-@ApiModel(value = "课程信息文件导入返回模型层", description = "课程信息文件导入返回模型层")
-public class CourseBaseUploadResponseModel {
+@ApiModel(value = "文件导入返回模型层", description = "文件导入返回模型层")
+public class UploadResponseModel<T> {
 
     /**
      * 导入失败或拒绝导入记录
      */
-    private List<CourseBaseModel> courseBaseModels;
+    private List<T> rejectList;
 
     /**
      * 导入成功数
@@ -30,20 +30,20 @@ public class CourseBaseUploadResponseModel {
      */
     private Integer totalCount;
 
-    public CourseBaseUploadResponseModel(List<CourseBaseModel> courseBaseModels, Integer successCount,
+    public UploadResponseModel(List<T> rejectList, Integer successCount,
         Integer failCount, Integer totalCount) {
-        this.courseBaseModels = courseBaseModels;
+        this.rejectList = rejectList;
         this.successCount = successCount;
         this.failCount = failCount;
         this.totalCount = totalCount;
     }
 
-    public List<CourseBaseModel> getCourseBaseModels() {
-        return courseBaseModels;
+    public List<T> getRejectList() {
+        return rejectList;
     }
 
-    public void setCourseBaseModels(List<CourseBaseModel> courseBaseModels) {
-        this.courseBaseModels = courseBaseModels;
+    public void setRejectList(List<T> rejectList) {
+        this.rejectList = rejectList;
     }
 
     public Integer getSuccessCount() {
@@ -72,7 +72,7 @@ public class CourseBaseUploadResponseModel {
 
     @Override
     public String toString() {
-        return "CourseBaseUploadResponseModel{" + "courseBaseModels=" + courseBaseModels + ", successCount="
-            + successCount + ", failCount=" + failCount + ", totalCount=" + totalCount + '}';
+        return "UploadResponseModel{" + "rejectList=" + rejectList + ", successCount=" + successCount + ", failCount="
+            + failCount + ", totalCount=" + totalCount + '}';
     }
 }

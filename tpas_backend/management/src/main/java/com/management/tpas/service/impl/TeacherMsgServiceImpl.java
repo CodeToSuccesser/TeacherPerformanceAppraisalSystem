@@ -97,4 +97,9 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
         return BeanMapper.map(teacherMsgMapper.selectById(teacherMsg.getId()), TeacherMsgModel.class);
     }
 
+    @Override
+    public TeacherMsgModel getByTeacherLogName(String logName) {
+        return BeanMapper.map(teacherMsgMapper.selectByLogName(logName), TeacherMsgModel.class);
+    }
+
 }

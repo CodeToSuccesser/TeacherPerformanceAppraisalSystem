@@ -71,4 +71,6 @@ public interface CourseBaseService extends BaseService<CourseBase> {
      */
     int countCourseBaseByCourseCode(String courseCode);
 
+    CourseBaseModel getByCourseCode(String courseCode);
+
 }

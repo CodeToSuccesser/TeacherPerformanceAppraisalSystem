@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
  * @description easyexcel表内容转换
  * @date 2021/1/31
  **/
-public class EasyExcelContentCoverUtil implements Converter<Integer> {
+public class CourseBaseContentConverter implements Converter<Integer> {
 
-    private static final Logger logger = LoggerFactory.getLogger(EasyExcelContentCoverUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CourseBaseContentConverter.class);
 
     @Override
     public Class supportJavaTypeKey() {

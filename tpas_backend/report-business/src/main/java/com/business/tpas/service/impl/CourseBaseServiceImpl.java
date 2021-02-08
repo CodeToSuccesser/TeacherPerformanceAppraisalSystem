@@ -39,6 +39,8 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
     @Transactional
     @Override
     public void insertBatchCourseBaseInfo(List<CourseBase> courseBases) {
+        if(CollectionUtils.isEmpty(courseBases))
+            return;
         courseBaseMapper.saveBatch(courseBases);
     }
 
@@ -88,6 +90,11 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
     @Override
     public int countCourseBaseByCourseCode(String courseCode) {
         return courseBaseMapper.countByCourseCode(courseCode);
+    }
+
+    @Override
+    public CourseBaseModel getByCourseCode(String courseCode) {
+        return BeanMapper.map(courseBaseMapper.selectByCourseCode(courseCode), CourseBaseModel.class);
     }
 
     /**

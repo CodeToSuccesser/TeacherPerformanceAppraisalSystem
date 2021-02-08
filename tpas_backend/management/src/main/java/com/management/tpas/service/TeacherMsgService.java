@@ -37,4 +37,11 @@ public interface TeacherMsgService extends BaseService<TeacherMsg> {
      **/
     TeacherMsgModel insertTeacherMsg(RegisterMsgModel registerMsgModel);
 
+    /**
+     * 根据教师登录名获取教师信息
+     * @param logName
+     * @return
+     */
+    TeacherMsgModel getByTeacherLogName(String logName);
+
 }
