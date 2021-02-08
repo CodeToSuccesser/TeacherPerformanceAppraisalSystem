@@ -32,4 +32,17 @@ public interface CourseBaseMapper extends BaseDao<CourseBase> {
      * @return
      */
     List<CourseBaseModel> selectCourseBase(@Param("data") CourseInfoSearchModel searchModel);
+
+    /**
+     * 根据课程名查找已存在的数量
+     * @param courseName
+     * @return
+     */
+    int countByCourseName(@Param("courseName") String courseName);
+
+    /**
+     * 插入课程信息
+     * @param courseBase
+     */
+    void insertCourseBase(@Param("data") CourseBase courseBase);
 }

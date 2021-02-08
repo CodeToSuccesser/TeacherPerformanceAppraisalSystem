@@ -72,7 +72,6 @@ public class CourseInfoController {
             FileUtil.downloadFile(response, file);
 
         } catch (IOException e) {
-            logger.error("fail to download course info upload template", e);
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
         }
     }
@@ -146,6 +145,18 @@ public class CourseInfoController {
         courseBaseService.deleteCourseBaseInfos(ids);
         return new BaseResponse<>();
     }
+
+    @ApiOperation(value = "插入单条课程信息记录" ,notes = "插入单条课程信息记录")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok")})
+    @PostMapping("/insert")
+    public BaseResponse<?> insertCourseInfo(@RequestBody CourseBaseModel courseBaseModel) {
+        if (StringUtils.isBlank(courseBaseModel.getCourseName())) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "课程名为空");
+        }
+        courseBaseService.insertCourseBaseInfo(courseBaseModel);
+        return new BaseResponse<>();
+    }
+
 
     /**
      * 校验请求参数

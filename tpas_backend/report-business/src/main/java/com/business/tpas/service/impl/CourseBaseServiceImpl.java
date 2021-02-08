@@ -72,6 +72,14 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
         courseBaseMapper.deleteBatchIds(ids);
     }
 
+    @Override
+    public void insertCourseBaseInfo(CourseBaseModel courseBaseModel) {
+        if (courseBaseMapper.countByCourseName(courseBaseModel.getCourseName()) != 0) {
+            throw new BusinessException(ErrorCodeEnum.OBJECT_EXISTED.code, "课程记录已存在");
+        }
+        courseBaseMapper.insertCourseBase(BeanMapper.map(courseBaseModel, CourseBase.class));
+    }
+
     /**
      * 过滤除课时信息中关联的课程记录，不做删除
      *

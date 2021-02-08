@@ -34,6 +34,7 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum.msg);
         this.code = errorCodeEnum.code;
         this.msg = errorCodeEnum.msg;
     }

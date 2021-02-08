@@ -12,6 +12,7 @@ public enum ErrorCodeEnum {
     OK(200, "OK"),
     EXCEPTION(500, "系统错误"),
     OBJECT_NOT_FOUND(506, "找不到记录"),
+    OBJECT_EXISTED(507, "记录已存在"),
     JSON_CONVERT_ERROR(555, "JSON转换异常"),
     DUPLICATE_OBJECT_EXIST(409, "logName已存在"),
     PARAM_IS_EMPTY(411, "请求参数为空"),

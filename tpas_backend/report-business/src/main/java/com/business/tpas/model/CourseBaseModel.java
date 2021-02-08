@@ -51,7 +51,7 @@ public class CourseBaseModel {
 
     @ExcelProperty(value = "是否双语授课", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "是否双语授课,0 非双语, 1 双语")
-    private Integer isBilingual = 0;
+    private Integer isBilingual;
 
     @ExcelProperty("选用教材时间")
     @ApiModelProperty(value = "选用教材时间, 默认为信息录入时间")
@@ -59,11 +59,11 @@ public class CourseBaseModel {
 
     @ExcelProperty(value = "软硬件课程", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
-    private Integer softHard = 0;
+    private Integer softHard;
 
     @ExcelProperty(value = "学生类型", converter = EasyExcelContentCoverUtil.class)
     @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生")
-    private Integer studentType = 0;
+    private Integer studentType;
 
     @ExcelIgnore
     @ApiModelProperty(value = "管理员编号")

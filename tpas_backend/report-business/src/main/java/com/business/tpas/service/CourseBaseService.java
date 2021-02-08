@@ -51,4 +51,10 @@ public interface CourseBaseService extends BaseService<CourseBase> {
      */
     void deleteCourseBaseInfos(List<Long> ids);
 
+    /**
+     * 插入课程信息
+     * @param courseBaseModel
+     */
+    void insertCourseBaseInfo(CourseBaseModel courseBaseModel);
+
 }
