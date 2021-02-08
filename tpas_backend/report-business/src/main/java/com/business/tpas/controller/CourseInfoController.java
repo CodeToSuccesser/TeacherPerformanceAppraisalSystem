@@ -2,12 +2,14 @@ package com.business.tpas.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.business.tpas.constant.Constant;
 import com.business.tpas.enums.CourseCharacterEnum;
 import com.business.tpas.enums.CourseTypeEnum;
 import com.business.tpas.enums.IsBilingualEnum;
 import com.business.tpas.enums.StudentTypeEnum;
 import com.business.tpas.listener.CourseBaseUploadListener;
 import com.business.tpas.model.CourseBaseModel;
+import com.business.tpas.model.CourseBaseUploadResponseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.utils.FileUtil;
@@ -31,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -46,9 +47,7 @@ public class CourseInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseInfoController.class);
 
-    private static final String contentType = "application/vnd.ms-excel";
     private static final String filePath = "template/课程信息模板.xls";
-    private static final String encoding = "UTF-8";
 
     @Autowired
     private CourseBaseService courseBaseService;
@@ -66,9 +65,9 @@ public class CourseInfoController {
                 throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
             }
 
-            response.setContentType(contentType);
+            response.setContentType(Constant.EASYEXCEL_CONTENT_TYPE);
             response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(file.getName(), encoding));
+                "attachment;filename=" + URLEncoder.encode(file.getName(), Constant.EASYEXCEL_ENCODING));
             FileUtil.downloadFile(response, file);
 
         } catch (IOException e) {
@@ -83,22 +82,27 @@ public class CourseInfoController {
      */
     @PostMapping("/upload")
     @ApiOperation(value = "导入课程信息文件", notes = "导入课程信息文件")
-    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok"),
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseUploadResponseModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
     public BaseResponse<?> uploadCourseInfo(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             logger.error("upload file is empty");
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
         }
+        final CourseBaseUploadListener courseBaseUploadListener = new CourseBaseUploadListener(courseBaseService);
         try {
-            EasyExcel
-                .read(file.getInputStream(), CourseBaseModel.class, new CourseBaseUploadListener(courseBaseService))
-                .sheet().doRead();
+            EasyExcel.read(file.getInputStream(), CourseBaseModel.class, courseBaseUploadListener).sheet().doRead();
         } catch (IOException e) {
-            logger.error("fail to upload course info file", e);
+            logger.error("fail to upload course info file");
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
         }
-        return new BaseResponse<>();
+
+        List<CourseBaseModel> rejectList = courseBaseUploadListener.getRejectInsertList();
+        Integer rejectCount = rejectList.size();
+        Integer successCount = courseBaseUploadListener.getSuccessCount();
+
+        return new BaseResponse<>(
+            new CourseBaseUploadResponseModel(rejectList, successCount, rejectCount, successCount + rejectCount));
     }
 
     @ApiOperation(value = "导出课程信息文件", notes = "导出课程信息文件")
@@ -107,21 +111,18 @@ public class CourseInfoController {
         throws IOException {
         List<CourseBaseModel> courseBaseModels = courseBaseService.getCourseBaseInfo(searchModel);
 
-        try {
-            response.setContentType(contentType);
-            response.setCharacterEncoding(encoding);
-            String fileName = URLEncoder.encode("课程信息导出文件", "UTF-8");
-            response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-            EasyExcel.write(response.getOutputStream(), CourseBaseModel.class).sheet("课程信息")
-                // 设置字段宽度为自动调整
-                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).doWrite(courseBaseModels);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        response.setContentType(Constant.EASYEXCEL_CONTENT_TYPE);
+        response.setCharacterEncoding(Constant.EASYEXCEL_ENCODING);
+        String fileName = URLEncoder.encode("课程信息导出文件", Constant.EASYEXCEL_ENCODING);
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), CourseBaseModel.class).sheet("课程信息")
+            // 设置字段宽度为自动调整
+            .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).doWrite(courseBaseModels);
+
     }
 
     @ApiOperation(value = "根据条件查询课程信息", notes = "根据条件查询课程信息")
-    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseModel .class),
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
     @GetMapping("/getCourseInfo")
     public BaseResponse<?> getCourseInfo(@RequestBody CourseInfoSearchModel searchModel) {
@@ -131,9 +132,10 @@ public class CourseInfoController {
 
     @ApiOperation(value = "修改单条课程信息", notes = "修改单条课程信息")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
-    @PostMapping("/modify")
-    public BaseResponse<?> modifyCourseBaseInfo(@RequestBody CourseBaseModel courseBaseModel) {
+    @PostMapping("/{id}/modify")
+    public BaseResponse<?> modifyCourseBaseInfo(@PathVariable("id") Long id, @RequestBody CourseBaseModel courseBaseModel) {
         validateCourseBaseModelParam(courseBaseModel);
+        courseBaseModel.setId(id);
         courseBaseService.modifyCourseBaseInfo(courseBaseModel);
         return new BaseResponse<>();
     }
@@ -150,9 +152,7 @@ public class CourseInfoController {
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok")})
     @PostMapping("/insert")
     public BaseResponse<?> insertCourseInfo(@RequestBody CourseBaseModel courseBaseModel) {
-        if (StringUtils.isBlank(courseBaseModel.getCourseName())) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "课程名为空");
-        }
+        validateCourseBaseModelParam(courseBaseModel);
         courseBaseService.insertCourseBaseInfo(courseBaseModel);
         return new BaseResponse<>();
     }
@@ -164,11 +164,11 @@ public class CourseInfoController {
      * @param courseBaseModel
      */
     private void validateCourseBaseModelParam(CourseBaseModel courseBaseModel) {
-        if (courseBaseModel.getId() == null) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "课程信息ID为空");
-        }
         if (StringUtils.isBlank(courseBaseModel.getCourseName())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "课程名为空");
+        }
+        if (StringUtils.isBlank(courseBaseModel.getCourseCode())) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "课程编号为空");
         }
         if (courseBaseModel.getCourseType() != null && !CourseTypeEnum.isExistByCode(courseBaseModel.getCourseType())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "不存在该课程类型");

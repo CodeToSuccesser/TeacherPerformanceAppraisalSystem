@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.business.tpas.entity.CourseBase">
         <id column="id" property="id" />
         <result column="course_name" property="courseName" />
+        <result column="course_code" property="courseCode" />
         <result column="course_character" property="courseCharacter" />
         <result column="course_type" property="courseType" />
         <result column="course_cridet" property="courseCridet" />
@@ -25,6 +26,7 @@
     <resultMap id="ModelResultMap" type="com.business.tpas.model.CourseBaseModel">
         <id column="id" property="id" />
         <result column="course_name" property="courseName" />
+        <result column="course_code" property="courseCode" />
         <result column="course_character" property="courseCharacter" />
         <result column="course_type" property="courseType" />
         <result column="course_cridet" property="courseCridet" />
@@ -43,14 +45,14 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, course_name, course_character, course_type, course_cridet, total_hours, institute, first_class_time, is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark, update_time, create_time
+        id, course_name, course_code, course_character, course_type, course_cridet, total_hours, institute, first_class_time, is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark, update_time, create_time
     </sql>
 
     <insert id="saveBatch" parameterType="java.util.List">
         <foreach collection="list" item="data" index="index" separator=";">
             insert into course_base
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                course_name,course_cridet,total_hours,institute,new_textbook_time,admin_id,remark
+                course_name,course_code,course_cridet,total_hours,institute,new_textbook_time,admin_id,remark
                 <if test="data.courseCharacter != null">,course_character</if>
                 <if test="data.courseType != null">,course_type</if>
                 <if test="data.isBilingual != null">,is_bilingual</if>
@@ -59,7 +61,7 @@
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{data.courseName}, #{data.courseCridet}, #{data.totalHours}, #{data.institute}, #{data.newTextbookTime},
+                #{data.courseName}, #{data.courseCode},#{data.courseCridet}, #{data.totalHours}, #{data.institute}, #{data.newTextbookTime},
                 #{data.adminId}, #{data.remark}
                 <if test="data.courseCharacter != null">, #{data.courseCharacter}</if>
                 <if test="data.courseType != null"> ,#{data.courseType}</if>
@@ -76,6 +78,9 @@
         <where>
         <if test="data.courseName != null and data.courseName != ''">
             and cb.course_name = #{data.courseName}
+        </if>
+        <if test="data.courseCode != null and data.courseCode != ''">
+            and cb.course_code = #{data.courseCode}
         </if>
         <if test="data.courseCharacter != null">
             and cb.course_character = #{data.courseCharacter}
@@ -103,11 +108,16 @@
         select count(*) from course_base cb
         where cb.course_name = #{courseName}
     </select>
+
+    <select id="countByCourseCode" resultType="java.lang.Integer">
+        select count(*) from course_base cb
+        where cb.course_code = #{courseCode}
+    </select>
     
     <insert id="insertCourseBase">
         insert into course_base
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            course_name,course_cridet,total_hours,institute,new_textbook_time,admin_id,remark
+            course_name,course_code,course_cridet,total_hours,institute,new_textbook_time,admin_id,remark
             <if test="data.courseCharacter != null">,course_character</if>
             <if test="data.courseType != null">,course_type</if>
             <if test="data.isBilingual != null">,is_bilingual</if>
@@ -116,7 +126,7 @@
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{data.courseName}, #{data.courseCridet}, #{data.totalHours}, #{data.institute}, #{data.newTextbookTime},
+            #{data.courseName}, #{data.courseCode},#{data.courseCridet}, #{data.totalHours}, #{data.institute}, #{data.newTextbookTime},
             #{data.adminId}, #{data.remark}
             <if test="data.courseCharacter != null">, #{data.courseCharacter}</if>
             <if test="data.courseType != null"> ,#{data.courseType}</if>
@@ -125,5 +135,20 @@
             <if test="data.studentType != null">, #{data.studentType}</if>
         </trim>
     </insert>
+
+    <select id="selectByCourseName" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from course_base cb
+        where cb.course_name = #{courseName}
+        order by cb.id desc
+        limit 1
+    </select>
+
+    <select id="selectByCourseCode" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from course_base cb
+        where cb.course_code = #{courseCode}
+        limit 1
+    </select>
 
 </mapper>

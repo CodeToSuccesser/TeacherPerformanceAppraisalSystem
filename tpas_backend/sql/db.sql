@@ -58,7 +58,8 @@ CREATE TABLE `major`(
 CREATE TABLE `course_base`(
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`course_name` VARCHAR(128) NOT NULL COMMENT '课程名称',
-	`course_character` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '课程性质, 默认0 必修, 1 选修',
+    `course_code` VARCHAR(32) NOT NULL COMMENT '课程编码, 唯一',
+    `course_character` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '课程性质, 默认0 必修, 1 选修',
 	`course_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '课程类别, 默认0 专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育',
 	`course_cridet` DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '学分',
 	`total_hours` DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '总学时数',
@@ -72,7 +73,8 @@ CREATE TABLE `course_base`(
 	`remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据最新操作时间',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`id`),
+    UNIQUE KEY cb_cc_uniq(`course_code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='课程基本信息表';
 
 CREATE TABLE `course_hours`(

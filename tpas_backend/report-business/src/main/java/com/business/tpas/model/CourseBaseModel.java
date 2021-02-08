@@ -21,6 +21,10 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "id")
     private Long id;
 
+    @ExcelProperty("课程编号")
+    @ApiModelProperty(value = "课程编号")
+    private String courseCode;
+
     @ExcelProperty("课程名称")
     @ApiModelProperty(value = "课程名称")
     private String courseName;
@@ -94,6 +98,14 @@ public class CourseBaseModel {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public Integer getCourseCharacter() {
@@ -192,7 +204,6 @@ public class CourseBaseModel {
         this.createTime = createTime;
     }
 
-
     public Integer getSoftHard() {
         return softHard;
     }
@@ -211,11 +222,11 @@ public class CourseBaseModel {
 
     @Override
     public String toString() {
-        return "CourseBaseModel{" + "courseName='" + courseName + '\'' + ", courseCharacter='" + courseCharacter + '\''
-                + ", courseType='" + courseType + '\'' + ", courseCridet=" + courseCridet + ", totalHours=" + totalHours
-                + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime + ", isBilingual=" + isBilingual
-                + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard + ", studentType=" + studentType
-                + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime="
-                + createTime + '}';
+        return "CourseBaseModel{" + "id=" + id + ", courseCode='" + courseCode + '\'' + ", courseName='" + courseName
+            + '\'' + ", courseCharacter=" + courseCharacter + ", courseType=" + courseType + ", courseCridet="
+            + courseCridet + ", totalHours=" + totalHours + ", institute='" + institute + '\'' + ", firstClassTime="
+            + firstClassTime + ", isBilingual=" + isBilingual + ", newTextbookTime=" + newTextbookTime + ", softHard="
+            + softHard + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\''
+            + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }
 }

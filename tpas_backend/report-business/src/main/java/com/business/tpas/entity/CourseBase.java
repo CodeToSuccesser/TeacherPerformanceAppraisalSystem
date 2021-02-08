@@ -1,9 +1,10 @@
 package com.business.tpas.entity;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -28,6 +29,11 @@ public class CourseBase implements Serializable {
      * 课程名称
      */
     private String courseName;
+
+    /**
+     * 课程编码，唯一，格式 21G39280-2938
+     */
+    private String courseCode;
 
     /**
      * 课程性质, 默认0 必修, 1 选修
@@ -103,6 +109,14 @@ public class CourseBase implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public String getCourseName() {
@@ -227,23 +241,11 @@ public class CourseBase implements Serializable {
 
     @Override
     public String toString() {
-        return "CourseBase{" +
-        "id=" + id +
-        ", courseName=" + courseName +
-        ", courseCharacter=" + courseCharacter +
-        ", courseType=" + courseType +
-        ", courseCridet=" + courseCridet +
-        ", totalHours=" + totalHours +
-        ", institute=" + institute +
-        ", firstClassTime=" + firstClassTime +
-        ", isBilingual=" + isBilingual +
-        ", newTextbookTime=" + newTextbookTime +
-        ", softHard=" + softHard +
-        ", studentType=" + studentType +
-        ", adminId=" + adminId +
-        ", remark=" + remark +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        "}";
+        return "CourseBase{" + "id=" + id + ", courseName='" + courseName + '\'' + ", courseCode='" + courseCode + '\''
+            + ", courseCharacter=" + courseCharacter + ", courseType=" + courseType + ", courseCridet=" + courseCridet
+            + ", totalHours=" + totalHours + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime
+            + ", isBilingual=" + isBilingual + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard
+            + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime="
+            + updateTime + ", createTime=" + createTime + '}';
     }
 }
