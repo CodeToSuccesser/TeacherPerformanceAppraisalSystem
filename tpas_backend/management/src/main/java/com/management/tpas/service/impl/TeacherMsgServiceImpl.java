@@ -1,10 +1,12 @@
 package com.management.tpas.service.impl;
 
 import com.management.common.base.BaseServiceImpl;
+import com.management.common.config.FileConfig;
 import com.management.common.config.GlobalConst;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
+import com.management.common.utils.FileUtil;
 import com.management.common.utils.JacksonUtil;
 import com.management.tpas.config.JwtConfig;
 import com.management.tpas.dao.TeacherMsgMapper;
@@ -16,15 +18,19 @@ import com.management.tpas.model.TeacherMsgModel;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.TeacherMsgService;
 import com.management.tpas.utils.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import static com.management.common.config.GlobalConst.PASSWORD_FORMAT;
 
 /**
  * <p>
@@ -45,6 +51,9 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
 
     @Autowired
     private RedisTemplate<String, UserMsgModel> redisTemplate;
+
+    @Autowired
+    private FileConfig fileConfig;
 
     /**
      * @param loginMsgModel 登录信息
@@ -97,4 +106,21 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
         return BeanMapper.map(teacherMsgMapper.selectById(teacherMsg.getId()), TeacherMsgModel.class);
     }
 
+    @Transactional
+    @Override
+    public TeacherMsgModel updateTeacherMsg(RegisterMsgModel model, MultipartFile file) {
+        // 上传新头像
+        if (file != null) {
+            String newFileName = model.getLogName() + "_" + (new Date().getTime());
+            model.setPortrait(new FileUtil().UploadPortrait(file, fileConfig.baseFilePath, newFileName, fileConfig.imageWeight, fileConfig.imageHeight));
+        }
+        // 校验密码格式
+        if (StringUtils.isNotBlank(model.getPassword())) {
+            if (!PASSWORD_FORMAT.matcher(model.getPassword()).matches()) {
+                throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
+            }
+        }
+        teacherMsgMapper.updateByLogName(model);
+        return BeanMapper.map(teacherMsgMapper.selectByLogName(model.getLogName()), TeacherMsgModel.class);
+    }
 }

@@ -52,3 +52,18 @@ logging:
 
 swagger:
   enable: false
+
+# 上传文件目录
+upload:
+  # 图片尺寸
+  image-size:
+    height: 320
+    width: 320
+  # 头像大小(MB)
+  portrait-max-length: 1
+  file-path: ./file
+  file-menu:
+    # 模板文件
+    sample: ./sample
+    # 图片，如头像
+    image: ./image

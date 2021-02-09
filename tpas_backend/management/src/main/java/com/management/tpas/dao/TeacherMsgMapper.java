@@ -2,6 +2,7 @@ package com.management.tpas.dao;
 
 import com.management.common.base.BaseDao;
 import com.management.tpas.entity.TeacherMsg;
+import com.management.tpas.model.RegisterMsgModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface TeacherMsgMapper extends BaseDao<TeacherMsg> {
 
     TeacherMsg selectByLogName(@Param("logName") String logName);
+
+    void updateByLogName(@Param("data") RegisterMsgModel model);
 
 }

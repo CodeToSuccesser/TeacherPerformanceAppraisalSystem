@@ -7,6 +7,7 @@ import com.management.tpas.model.RegisterMsgModel;
 import com.management.tpas.model.TeacherMsgModel;
 import com.management.tpas.model.UserMsgModel;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -36,5 +37,15 @@ public interface TeacherMsgService extends BaseService<TeacherMsg> {
      * @Date 2020/8/16
      **/
     TeacherMsgModel insertTeacherMsg(RegisterMsgModel registerMsgModel);
+
+    /**
+     * @param model 修改信息
+     * @param file  头像文件 可为空
+     * @return com.management.tpas.model.TeacherMsgModel 修改后信息
+     * @description 修改用户信息
+     * @author dude
+     * @date 2021/2/9
+     **/
+    TeacherMsgModel updateTeacherMsg(RegisterMsgModel model, MultipartFile file);
 
 }

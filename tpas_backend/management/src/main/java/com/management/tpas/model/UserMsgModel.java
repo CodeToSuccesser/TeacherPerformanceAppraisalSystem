@@ -2,6 +2,7 @@ package com.management.tpas.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,35 +24,23 @@ public class UserMsgModel implements Serializable {
     @JsonSerialize(using = com.fasterxml.jackson.databind.ser.std.ToStringSerializer.class)
     private Long id = 0L;
 
-    /**
-     * 管理员姓名
-     */
+    @ApiModelProperty(value = "管理员姓名")
     private String userName = "";
 
-    /**
-     * 唯一登录名, 默认教务员工号
-     */
+    @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
     private String logName = "";
 
-    /**
-     * 联系方式, 手机号/邮箱, 可为空
-     */
+    @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
     private String contact = "";
 
-    /**
-     * 头像图片url, 可为空
-     */
+    @ApiModelProperty(value = "头像图片url, 可为空")
     private String portrait = "";
 
-    /**
-     * 用户类型，0 教师， 1 管理员
-     */
+    @ApiModelProperty(value = "用户类型，0 教师， 1 管理员")
     private Integer userType = -1;
 
-    /**
-     * 数据最新操作时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

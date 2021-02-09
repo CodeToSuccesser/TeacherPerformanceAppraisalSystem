@@ -29,6 +29,12 @@ public class RegisterMsgModel implements Serializable {
     @ApiModelProperty(value = "注册用户类型")
     private Integer type;
 
+    @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
+    private String contact;
+
+    @ApiModelProperty(value = "头像图片url, 可为空")
+    private String portrait;
+
     public String getRegisterName() {
         return registerName;
     }
@@ -59,5 +65,25 @@ public class RegisterMsgModel implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 }

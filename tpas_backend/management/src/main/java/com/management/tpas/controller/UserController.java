@@ -4,12 +4,10 @@ import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
 import com.management.tpas.enums.UserTypeEnum;
-import com.management.tpas.model.AdminMsgModel;
-import com.management.tpas.model.LoginMsgModel;
-import com.management.tpas.model.RegisterMsgModel;
-import com.management.tpas.model.TeacherMsgModel;
+import com.management.tpas.model.*;
 import com.management.tpas.service.TeacherMsgService;
 import com.management.tpas.service.impl.AdminMsgServiceImpl;
+import com.management.tpas.utils.UserUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author dude
@@ -48,7 +47,7 @@ public class UserController {
      **/
     @PostMapping("/login")
     @ApiOperation("登录处理接口")
-    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> login(@RequestBody LoginMsgModel loginMsgModel) {
         if (null == loginMsgModel || StringUtils.isBlank(loginMsgModel.getLogName()) || StringUtils
@@ -84,7 +83,7 @@ public class UserController {
      **/
     @PostMapping("/insertUser")
     @ApiOperation("插入一条用户")
-    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = AdminMsgModel.class),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = AdminMsgModel.class),
             @ApiResponse(code = 0, message = "ok", response = TeacherMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> insertUser(@RequestBody RegisterMsgModel registerMsgModel) {
@@ -112,6 +111,38 @@ public class UserController {
 
     }
 
+    @PostMapping("/modifyUserInfo")
+    @ApiOperation(value = "编辑用户信息", notes = "个人中心信息编辑")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> modifyUserInfo(MultipartFile file, RegisterMsgModel model) {
+        // 无新修改字段
+        if (StringUtils.isBlank(model.getContact()) && StringUtils.isBlank(model.getPassword()) && file == null) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        // 判断注册用户类型
+        UserMsgModel userMsgModel = UserUtil.getUserMsg();
+        if (null == userMsgModel) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+        } else {
+            model.setType(userMsgModel.getUserType());
+            model.setLogName(userMsgModel.getLogName());
+        }
+        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(model.getType());
+        // 用户类型错误
+        if (null == userTypeEnum) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
+        }
+        switch (userTypeEnum) {
+            case USER_TYPE_TEACHER: {
+                return new BaseResponse<>(teacherMsgService.updateTeacherMsg(model, file));
+            }
+            default: {
+                return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
+            }
+        }
+    }
+
     private UserTypeEnum validRegisterMsgModelAndGetType(RegisterMsgModel registerMsgModel) {
         if (registerMsgModel == null || StringUtils.isBlank(registerMsgModel.getLogName()) || StringUtils
                 .isBlank(registerMsgModel.getRegisterName()) || StringUtils.isBlank(registerMsgModel.getPassword())
@@ -123,7 +154,7 @@ public class UserController {
         UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(registerMsgModel.getType());
         // 用户类型错误
         if (null == userTypeEnum) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
         }
 
         return userTypeEnum;

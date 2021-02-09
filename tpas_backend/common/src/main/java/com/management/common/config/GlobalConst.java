@@ -1,5 +1,9 @@
 package com.management.common.config;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
  * @author dude
  * @version 1.0
@@ -37,4 +41,21 @@ public class GlobalConst {
      * @date 2021/1/31
      **/
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
+
+    /**
+     * 上传图片后缀类型
+     *
+     * @author dude
+     * @date 2021/2/8
+     **/
+    public static final List<String> IMAGE_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
+
+    /**
+     * 密码规则：至少6个字符，至少一个数字，至少一个字母
+     *
+     * @author dude
+     * @date 2021/2/9
+     **/
+    public static final Pattern PASSWORD_FORMAT = Pattern.compile("(?=.*([a-zA-Z].*))(?=.*[0-9].*)[a-zA-Z0-9-*/+.~!@#$%^&*()]{6,20}$");
+
 }
