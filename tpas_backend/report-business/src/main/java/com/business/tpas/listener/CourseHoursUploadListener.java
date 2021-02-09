@@ -1,7 +1,6 @@
 package com.business.tpas.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.event.AnalysisEventListener;
 import com.business.tpas.constant.Constant;
 import com.business.tpas.entity.CourseHours;
 import com.business.tpas.model.CourseBaseModel;
@@ -16,13 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @description 导入课时信息文件读取类
  **/
-public class CourseHoursUploadListener extends AnalysisEventListener<CourseHoursModel> {
+public class CourseHoursUploadListener extends EasyExcelUploadListener<CourseHoursModel,CourseHours> {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseHoursUploadListener.class);
 
@@ -32,27 +28,11 @@ public class CourseHoursUploadListener extends AnalysisEventListener<CourseHours
 
     private TeacherMsgService teacherMsgService;
 
-    /**
-     * 每隔一定数目存储数据库，然后清理list，方便内存回收
-     */
-    private List<CourseHours> list = new ArrayList<CourseHours>();
-
-    /**
-     * 数据解析成功记录数
-     */
-    private Integer successCount = 0;
-
-    /**
-     * 数据解析失败或拒绝插入记录信息
-     */
-    private List<CourseHoursModel> rejectInsertList;
-
     public CourseHoursUploadListener(CourseHoursService courseHoursService, CourseBaseService courseBaseService,
         TeacherMsgService teacherMsgService) {
         this.courseHoursService = courseHoursService;
         this.courseBaseService = courseBaseService;
         this.teacherMsgService = teacherMsgService;
-        this.rejectInsertList = new ArrayList<>();
     }
 
     @Override
@@ -146,22 +126,5 @@ public class CourseHoursUploadListener extends AnalysisEventListener<CourseHours
             rejectInsertList.add(data);
         }
     }
-
-    public Integer getSuccessCount() {
-        return successCount;
-    }
-
-    public void setSuccessCount(Integer successCount) {
-        this.successCount = successCount;
-    }
-
-    public List<CourseHoursModel> getRejectInsertList() {
-        return rejectInsertList;
-    }
-
-    public void setRejectInsertList(List<CourseHoursModel> rejectInsertList) {
-        this.rejectInsertList = rejectInsertList;
-    }
-
 
 }

@@ -1,7 +1,13 @@
 package com.business.tpas.utils;
 
+import com.management.common.enums.ErrorCodeEnum;
+import com.management.common.exception.BusinessException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Map;
 
 /**
  * @classname FileUtil
@@ -22,4 +28,24 @@ public class FileUtil {
             os.flush();
         }
     }
+
+    public static void downloadClassPathFile(HttpServletResponse response, String path, String contentType,
+        Map<String, String> headerMap) throws IOException {
+        Resource resource = new ClassPathResource(path);
+        File file = resource.getFile();
+        if (!file.exists()) {
+            throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
+        }
+
+        response.setContentType(contentType);
+
+        if (!headerMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                response.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+
+        downloadFile(response, file);
+    }
+
 }

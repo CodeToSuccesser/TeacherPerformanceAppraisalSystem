@@ -1,6 +1,7 @@
 package com.business.tpas.service;
 
 import com.business.tpas.entity.Major;
+import com.business.tpas.model.MajorModel;
 import com.management.common.base.BaseService;
 
 /**
@@ -12,5 +13,7 @@ import com.management.common.base.BaseService;
  * @since 2020-08-01
  */
 public interface MajorService extends BaseService<Major> {
+
+    MajorModel selectByMajorCode(String majorCode);
 
 }

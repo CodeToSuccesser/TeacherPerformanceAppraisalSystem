@@ -34,4 +34,8 @@ public enum SemesterEnum {
     public static SemesterEnum getEnumByValue(String value) {
         return Arrays.stream(values()).filter(it -> it.value.equals(value)).findFirst().orElse(FIRST);
     }
+
+    public static boolean isExistByCode(Integer code) {
+        return Arrays.stream(SemesterEnum.values()).anyMatch(it -> it.code.equals(code));
+    }
 }

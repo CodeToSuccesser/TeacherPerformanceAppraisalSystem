@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.MajorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.Major">
+        <id column="id" property="id" />
+        <result column="major_code" property="majorCode" />
+        <result column="major_name" property="majorName" />
+        <result column="admin_id" property="adminId" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, major_code, major_name, admin_id, is_deleted,update_time, create_time
+    </sql>
+
+    <select id="selectByMajorCode" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from major
+        where major_code = #{majorCode}
+    </select>
+
+
+</mapper>

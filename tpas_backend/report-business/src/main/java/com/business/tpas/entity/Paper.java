@@ -46,7 +46,7 @@ public class Paper implements Serializable {
     /**
      * 学年
      */
-    private Integer schoolYear;
+    private String schoolYear;
 
     /**
      * 管理员编码
@@ -69,7 +69,6 @@ public class Paper implements Serializable {
     private Date updateTime;
 
     private Date createTime;
-
 
     public Long getId() {
         return id;
@@ -111,11 +110,11 @@ public class Paper implements Serializable {
         this.semester = semester;
     }
 
-    public Integer getSchoolYear() {
+    public String getSchoolYear() {
         return schoolYear;
     }
 
-    public void setSchoolYear(Integer schoolYear) {
+    public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
     }
 

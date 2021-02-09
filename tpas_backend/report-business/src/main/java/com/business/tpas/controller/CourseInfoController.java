@@ -9,8 +9,8 @@ import com.business.tpas.enums.IsBilingualEnum;
 import com.business.tpas.enums.StudentTypeEnum;
 import com.business.tpas.listener.CourseBaseUploadListener;
 import com.business.tpas.model.CourseBaseModel;
-import com.business.tpas.model.UploadResponseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
+import com.business.tpas.model.UploadResponseModel;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
@@ -25,16 +25,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description 管理员课程管理相关API
@@ -49,6 +48,8 @@ public class CourseInfoController {
 
     private static final String filePath = "template/课程信息模板.xls";
 
+    private static final String fileName = "课程信息模板.xls";
+
     @Autowired
     private CourseBaseService courseBaseService;
 
@@ -59,17 +60,10 @@ public class CourseInfoController {
     @GetMapping("/download/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {
-            Resource resource = new ClassPathResource(filePath);
-            File file = resource.getFile();
-            if (!file.exists()) {
-                throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
-            }
-
-            response.setContentType(Constant.EASYEXCEL_CONTENT_TYPE);
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(file.getName(), Constant.EASYEXCEL_ENCODING));
-            FileUtil.downloadFile(response, file);
-
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
+            FileUtil.downloadClassPathFile(response, filePath, Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
         } catch (IOException e) {
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
         }

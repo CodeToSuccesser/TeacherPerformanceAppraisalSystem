@@ -23,19 +23,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @description TODO
+ * @description 课时记录相关接口
  **/
 
 @RestController
@@ -56,6 +55,8 @@ public class CourseHoursController {
 
     private static final String filePath = "template/课时信息模板.xls";
 
+    private static final String fileName = "课时信息模板.xls";
+
     /**
      * 下载课时信息模板
      * @param response
@@ -64,17 +65,10 @@ public class CourseHoursController {
     @GetMapping("/download/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {
-            Resource resource = new ClassPathResource(filePath);
-            File file = resource.getFile();
-            if (!file.exists()) {
-                throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
-            }
-
-            response.setContentType(Constant.EASYEXCEL_CONTENT_TYPE);
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(file.getName(), Constant.EASYEXCEL_ENCODING));
-            FileUtil.downloadFile(response, file);
-
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
+            FileUtil.downloadClassPathFile(response, filePath, Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
         } catch (IOException e) {
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg, e);
         }
@@ -159,20 +153,20 @@ public class CourseHoursController {
         return new BaseResponse<>();
     }
 
-    private void validateModifyInsertCourseHoursParam(CourseHoursModel courseHoursModel){
-        if(StringUtils.isBlank(courseHoursModel.getTeacherCode())){
+    private void validateModifyInsertCourseHoursParam(CourseHoursModel courseHoursModel) {
+        if (StringUtils.isBlank(courseHoursModel.getTeacherCode())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "教师编号为空");
         }
-        if(StringUtils.isBlank(courseHoursModel.getCourseCode())){
+        if (StringUtils.isBlank(courseHoursModel.getCourseCode())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "课程编号为空");
         }
-        if(StringUtils.isBlank(courseHoursModel.getCourseName())){
+        if (StringUtils.isBlank(courseHoursModel.getCourseName())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "选课编号为空");
         }
-        if(courseHoursModel.getSemester() == null){
+        if (courseHoursModel.getSemester() == null) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "学期参数为空");
         }
-        if(courseHoursModel.getSchoolYear() == null){
+        if (StringUtils.isBlank(courseHoursModel.getSchoolYear())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "学年参数为空");
         }
     }

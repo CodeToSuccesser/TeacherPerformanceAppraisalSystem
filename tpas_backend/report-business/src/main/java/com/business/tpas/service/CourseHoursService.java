@@ -18,6 +18,11 @@ import java.util.List;
  */
 public interface CourseHoursService extends BaseService<CourseHours> {
 
+    /**
+     * 根据id查找课时信息
+     * @param id
+     * @return
+     */
     List<CourseHours> selectByCourseId(Long id);
 
     /**
