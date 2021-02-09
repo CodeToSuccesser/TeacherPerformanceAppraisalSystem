@@ -138,6 +138,7 @@ public class CourseHoursUploadListener extends AnalysisEventListener<CourseHours
                 data.setTeacherId(teacherMsgModel.getId());
                 data.setCourseId(courseBaseModel.getId());
                 list.add(BeanMapper.map(data, CourseHours.class));
+                ++successCount;
             } else {
                 rejectInsertList.add(data);
             }
