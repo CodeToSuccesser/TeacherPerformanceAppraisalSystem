@@ -26,10 +26,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
 import static com.management.common.config.GlobalConst.PASSWORD_FORMAT;
 
 /**
@@ -104,6 +102,11 @@ public class TeacherMsgServiceImpl extends BaseServiceImpl<TeacherMsgMapper, Tea
         LOGGER.info("id:" + teacherMsg.getId());
         LOGGER.info("message:" + teacherMsg);
         return BeanMapper.map(teacherMsgMapper.selectById(teacherMsg.getId()), TeacherMsgModel.class);
+    }
+
+    @Override
+    public TeacherMsgModel getByTeacherLogName(String logName) {
+        return BeanMapper.map(teacherMsgMapper.selectByLogName(logName), TeacherMsgModel.class);
     }
 
     @Transactional

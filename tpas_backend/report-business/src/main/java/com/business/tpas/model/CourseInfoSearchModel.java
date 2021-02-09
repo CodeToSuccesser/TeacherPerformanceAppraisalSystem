@@ -26,6 +26,9 @@ public class CourseInfoSearchModel extends PageModel {
     @ApiModelProperty(value = "课程名称")
     private String courseName;
 
+    @ApiModelProperty(value = "课程编号")
+    private String courseCode;
+
     @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
     private Integer softHard;
 
@@ -41,6 +44,14 @@ public class CourseInfoSearchModel extends PageModel {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public Integer getCourseCharacter() {
@@ -89,5 +100,12 @@ public class CourseInfoSearchModel extends PageModel {
 
     public void setIsBilingual(Integer isBilingual) {
         this.isBilingual = isBilingual;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseInfoSearchModel{" + "courseCharacter=" + courseCharacter + ", courseType=" + courseType
+            + ", institute='" + institute + '\'' + ", courseName='" + courseName + '\'' + ", courseCode='" + courseCode
+            + '\'' + ", softHard=" + softHard + ", studentType=" + studentType + ", isBilingual=" + isBilingual + '}';
     }
 }

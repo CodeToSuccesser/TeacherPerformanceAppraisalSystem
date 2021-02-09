@@ -57,4 +57,20 @@ public interface CourseBaseService extends BaseService<CourseBase> {
      */
     void insertCourseBaseInfo(CourseBaseModel courseBaseModel);
 
+    /**
+     * 根据课程名查找同名课程的数量
+     * @param courseName
+     * @return
+     */
+    int countCourseBaseByCourseName(String courseName);
+
+    /**
+     * 根据课程编号查找课程记录数量
+     * @param courseCode
+     * @return
+     */
+    int countCourseBaseByCourseCode(String courseCode);
+
+    CourseBaseModel getByCourseCode(String courseCode);
+
 }

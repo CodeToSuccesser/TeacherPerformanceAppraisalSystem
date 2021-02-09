@@ -39,6 +39,8 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
     @Transactional
     @Override
     public void insertBatchCourseBaseInfo(List<CourseBase> courseBases) {
+        if(CollectionUtils.isEmpty(courseBases))
+            return;
         courseBaseMapper.saveBatch(courseBases);
     }
 
@@ -74,10 +76,25 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
 
     @Override
     public void insertCourseBaseInfo(CourseBaseModel courseBaseModel) {
-        if (courseBaseMapper.countByCourseName(courseBaseModel.getCourseName()) != 0) {
+        if (courseBaseMapper.countByCourseCode(courseBaseModel.getCourseCode()) != 0) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_EXISTED.code, "课程记录已存在");
         }
         courseBaseMapper.insertCourseBase(BeanMapper.map(courseBaseModel, CourseBase.class));
+    }
+
+    @Override
+    public int countCourseBaseByCourseName(String courseName) {
+        return courseBaseMapper.countByCourseName(courseName);
+    }
+
+    @Override
+    public int countCourseBaseByCourseCode(String courseCode) {
+        return courseBaseMapper.countByCourseCode(courseCode);
+    }
+
+    @Override
+    public CourseBaseModel getByCourseCode(String courseCode) {
+        return BeanMapper.map(courseBaseMapper.selectByCourseCode(courseCode), CourseBaseModel.class);
     }
 
     /**

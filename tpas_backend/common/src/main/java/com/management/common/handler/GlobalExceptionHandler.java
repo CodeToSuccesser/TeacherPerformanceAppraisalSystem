@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public BaseResponse<?> defaultExceptionHandler(Exception e) {
-        log.error("Exception ==> {} ", e.getMessage());
+        log.error("Exception ==> ", e);
         return new BaseResponse<>(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
     }
 

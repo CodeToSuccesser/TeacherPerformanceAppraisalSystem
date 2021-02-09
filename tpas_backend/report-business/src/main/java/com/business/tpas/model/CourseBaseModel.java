@@ -2,7 +2,7 @@ package com.business.tpas.model;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.business.tpas.utils.EasyExcelContentCoverUtil;
+import com.business.tpas.utils.CourseBaseContentConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
@@ -21,15 +21,19 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "id")
     private Long id;
 
+    @ExcelProperty("课程编号")
+    @ApiModelProperty(value = "课程编号")
+    private String courseCode;
+
     @ExcelProperty("课程名称")
     @ApiModelProperty(value = "课程名称")
     private String courseName;
 
-    @ExcelProperty(value = "课程性质", converter = EasyExcelContentCoverUtil.class)
+    @ExcelProperty(value = "课程性质", converter = CourseBaseContentConverter.class)
     @ApiModelProperty(value = "课程性质, 0 必修, 1 选修")
     private Integer courseCharacter;
 
-    @ExcelProperty(value = "课程类别", converter = EasyExcelContentCoverUtil.class)
+    @ExcelProperty(value = "课程类别", converter = CourseBaseContentConverter.class)
     @ApiModelProperty(value = "课程类别, 0专业方向, 1 专业核心, 2 教师教育, 3 实践教学, 4 大类教育'")
     private Integer courseType;
 
@@ -49,7 +53,7 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "首次开课时间, 默认为信息录入时间")
     private Date firstClassTime;
 
-    @ExcelProperty(value = "是否双语授课", converter = EasyExcelContentCoverUtil.class)
+    @ExcelProperty(value = "是否双语授课", converter = CourseBaseContentConverter.class)
     @ApiModelProperty(value = "是否双语授课,0 非双语, 1 双语")
     private Integer isBilingual;
 
@@ -57,11 +61,11 @@ public class CourseBaseModel {
     @ApiModelProperty(value = "选用教材时间, 默认为信息录入时间")
     private Date newTextbookTime;
 
-    @ExcelProperty(value = "软硬件课程", converter = EasyExcelContentCoverUtil.class)
+    @ExcelProperty(value = "软硬件课程", converter = CourseBaseContentConverter.class)
     @ApiModelProperty(value = "软硬件课程, 0 软件, 1 硬件")
     private Integer softHard;
 
-    @ExcelProperty(value = "学生类型", converter = EasyExcelContentCoverUtil.class)
+    @ExcelProperty(value = "学生类型", converter = CourseBaseContentConverter.class)
     @ApiModelProperty(value = "学生类型, 0 本科生, 1 专科生, 2 研究生")
     private Integer studentType;
 
@@ -94,6 +98,14 @@ public class CourseBaseModel {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public Integer getCourseCharacter() {
@@ -192,7 +204,6 @@ public class CourseBaseModel {
         this.createTime = createTime;
     }
 
-
     public Integer getSoftHard() {
         return softHard;
     }
@@ -211,11 +222,11 @@ public class CourseBaseModel {
 
     @Override
     public String toString() {
-        return "CourseBaseModel{" + "courseName='" + courseName + '\'' + ", courseCharacter='" + courseCharacter + '\''
-                + ", courseType='" + courseType + '\'' + ", courseCridet=" + courseCridet + ", totalHours=" + totalHours
-                + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime + ", isBilingual=" + isBilingual
-                + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard + ", studentType=" + studentType
-                + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime="
-                + createTime + '}';
+        return "CourseBaseModel{" + "id=" + id + ", courseCode='" + courseCode + '\'' + ", courseName='" + courseName
+            + '\'' + ", courseCharacter=" + courseCharacter + ", courseType=" + courseType + ", courseCridet="
+            + courseCridet + ", totalHours=" + totalHours + ", institute='" + institute + '\'' + ", firstClassTime="
+            + firstClassTime + ", isBilingual=" + isBilingual + ", newTextbookTime=" + newTextbookTime + ", softHard="
+            + softHard + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\''
+            + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }
 }

@@ -48,4 +48,11 @@ public interface TeacherMsgService extends BaseService<TeacherMsg> {
      **/
     TeacherMsgModel updateTeacherMsg(RegisterMsgModel model, MultipartFile file);
 
+    /**
+     * 根据教师登录名获取教师信息
+     * @param logName
+     * @return
+     */
+    TeacherMsgModel getByTeacherLogName(String logName);
+
 }
