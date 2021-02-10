@@ -39,4 +39,10 @@ public interface PaperMapper extends BaseDao<Paper> {
      */
     void insertPaperInfo(@Param("data")Paper paper);
 
+    /**
+     * 逻辑删除论文指导记录
+     * @param ids
+     */
+    void deletePaperInfos(@Param("ids")List<Long> ids);
+
 }

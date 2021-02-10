@@ -37,4 +37,10 @@ public interface CourseHoursMapper extends BaseDao<CourseHours> {
      */
     void insertCourseHours(@Param("data")CourseHoursModel courseHoursModel);
 
+    /**
+     * 根据课时id批量删除课时记录
+     * @param ids
+     */
+    void deleteCourseHoursByIds(@Param("ids")List<Long> ids);
+
 }

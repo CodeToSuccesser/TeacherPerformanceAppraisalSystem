@@ -58,6 +58,7 @@
             <if test="data.schoolYear != null and data.schoolYear != ''">
                 and p.school_year = #{data.schoolYear}
             </if>
+            and p.is_deleted = 0
         </where>
     </select>
 
@@ -73,5 +74,14 @@
         insert into paper(major_id,teacher_id,student_number,semester,school_year,admin_id,remark)
         values(#{data.majorId},#{data.teacherId},#{data.studentNumber},#{data.semester},#{data.schoolYear},#{data.adminId},#{data.remark})
     </insert>
+
+    <update id="deletePaperInfos" parameterType="java.util.List">
+        update paper
+        set is_deleted = 1
+        where id in
+        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>

@@ -94,7 +94,8 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
 
     @Override
     public void deleteCourseHours(List<Long> ids) {
-        courseHoursMapper.deleteBatchIds(ids);
+        // 逻辑删除课时记录
+        courseHoursMapper.deleteCourseHoursByIds(ids);
     }
 
     @Override

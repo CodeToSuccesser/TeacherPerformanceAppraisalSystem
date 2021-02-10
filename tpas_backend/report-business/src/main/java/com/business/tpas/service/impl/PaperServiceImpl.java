@@ -76,7 +76,8 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
 
     @Override
     public void deletePaperInfos(List<Long> ids) {
-        paperMapper.deleteBatchIds(ids);
+        // 逻辑删除论文指导记录
+        paperMapper.deletePaperInfos(ids);
     }
 
     @Override
