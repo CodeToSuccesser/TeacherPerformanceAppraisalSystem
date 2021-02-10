@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.InternMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.Intern">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="normal_practice" property="normalPractice" />
+        <result column="non_normal_practice" property="nonNormalPractice" />
+        <result column="school_practice" property="schoolPractice" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.InternModel">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="teacher_code" property="teacherCode"/>
+        <result column="teacher_name" property="teacherName"/>
+        <result column="normal_practice" property="normalPractice" />
+        <result column="non_normal_practice" property="nonNormalPractice" />
+        <result column="school_practice" property="schoolPractice" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, teacher_id, normal_practice, non_normal_practice, school_practice, semester, school_year, remark, is_deleted,update_time, create_time
+    </sql>
+
+    <select id="selectInternInfo" resultMap="ModelResultMap">
+        select t.id,t.teacher_id,tm.teacher_name,tm.log_name as teacher_code,
+        t.normal_practice,t.non_normal_practice,t.school_practice,t.semester,t.school_year,
+        t.remark,t.update_time,t.create_time,t.is_deleted
+        from intern t inner join teacher_msg tm on t.teacher_id = tm.id
+        <where>
+            <if test="data.teacherCode != null">
+                and tm.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.semester != null ">
+                and t.semester = #{data.semester}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                and t.school_year = #{data.schoolYear}
+            </if>
+            and t.is_deleted = 0
+        </where>
+    </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        <foreach collection="list" item="data" index="index" separator=";">
+            insert into intern
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                teacher_id,semester,school_year,remark
+                <if test="data.normalPractice != null">,normal_practice</if>
+                <if test="data.nonNormalPractice != null">,non_normal_practice</if>
+                <if test="data.schoolPractice != null">,school_practice</if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{data.teacherId}, #{data.semester},#{data.schoolYear},#{data.remark}
+                <if test="data.normalPractice != null">, #{data.normalPractice}</if>
+                <if test="data.nonNormalPractice != null"> ,#{data.nonNormalPractice}</if>
+                <if test="data.schoolPractice != null">, #{data.schoolPractice}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="insertInternInfo" >
+        insert into intern
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            teacher_id,semester,school_year,remark
+            <if test="data.normalPractice != null">,normal_practice</if>
+            <if test="data.nonNormalPractice != null">,non_normal_practice</if>
+            <if test="data.schoolPractice != null">,school_practice</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{data.teacherId}, #{data.semester},#{data.schoolYear},#{data.remark}
+            <if test="data.normalPractice != null">, #{data.normalPractice}</if>
+            <if test="data.nonNormalPractice != null"> ,#{data.nonNormalPractice}</if>
+            <if test="data.schoolPractice != null">, #{data.schoolPractice}</if>
+        </trim>
+    </insert>
+
+    <update id="deleteInternInfos" parameterType="java.util.List">
+        update intern
+        set is_deleted = 1
+        where id in
+        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

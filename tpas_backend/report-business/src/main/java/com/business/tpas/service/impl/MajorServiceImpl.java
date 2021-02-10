@@ -8,6 +8,7 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.utils.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -23,6 +24,7 @@ public class MajorServiceImpl extends BaseServiceImpl<MajorMapper, Major> implem
     @Autowired
     private MajorMapper majorMapper;
 
+    @Transactional(readOnly = true)
     @Override
     public MajorModel selectByMajorCode(String majorCode) {
         return BeanMapper.map(majorMapper.selectByMajorCode(majorCode), MajorModel.class);

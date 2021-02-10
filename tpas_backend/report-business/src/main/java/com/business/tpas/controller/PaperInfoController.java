@@ -77,7 +77,7 @@ public class PaperInfoController {
 
     @ApiOperation(value = "导入论文指导信息文件", notes = "导入论文指导信息文件")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
-    @PostMapping("/import") public BaseResponse<?> uploadCourseInfo(@RequestParam("file") MultipartFile file,
+    @PostMapping("/import") public BaseResponse<?> uploadPaperInfo(@RequestParam("file") MultipartFile file,
         @RequestParam("semester") Integer semester, @RequestParam("schoolYear") String schoolYear) {
         if (file.isEmpty()) {
             logger.error("upload file is empty");
@@ -106,7 +106,7 @@ public class PaperInfoController {
 
     @ApiOperation(value = "导出论文指导信息文件", notes = "导出论文指导信息文件")
     @GetMapping("/export")
-    public void exportCourseInfo(HttpServletResponse response, @RequestBody PaperSearchModel searchModel)
+    public void exportPaperInfo(HttpServletResponse response, @RequestBody PaperSearchModel searchModel)
         throws IOException {
         List<PaperModel> paperModels = paperService.getPaperInfo(searchModel);
 
@@ -131,7 +131,7 @@ public class PaperInfoController {
     @ApiOperation(value = "修改单条论文指导信息", notes = "修改单条论文指导信息")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
     @PostMapping("/{id}/modify")
-    public BaseResponse<?> modifyCourseHours(@PathVariable("id") Long id, @RequestBody PaperModel paperModel) {
+    public BaseResponse<?> modifyPaperInfo(@PathVariable("id") Long id, @RequestBody PaperModel paperModel) {
         validateModifyInsertPaperModelParam(paperModel);
         paperModel.setId(id);
         paperService.modifyPaperInfo(paperModel);

@@ -77,6 +77,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
         return courseHoursMapper.selectCourseHours(searchModel);
     }
 
+    @Transactional
     @Override
     public void modifyCourseHours(CourseHoursModel courseHoursModel) {
         if (courseHoursMapper.selectById(courseHoursModel.getId()) == null) {
@@ -92,12 +93,14 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
         courseHoursMapper.updateById(courseHours);
     }
 
+    @Transactional
     @Override
     public void deleteCourseHours(List<Long> ids) {
         // 逻辑删除课时记录
         courseHoursMapper.deleteCourseHoursByIds(ids);
     }
 
+    @Transactional
     @Override
     public void insertCourseHours(CourseHoursModel courseHoursModel) {
 
