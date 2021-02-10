@@ -5,14 +5,15 @@ import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
 import com.management.tpas.enums.UserTypeEnum;
 import com.management.tpas.model.*;
-import com.management.tpas.service.TeacherMsgService;
-import com.management.tpas.service.impl.AdminMsgServiceImpl;
+import com.management.tpas.service.impl.UserMsgServiceImpl;
 import com.management.tpas.utils.UserUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,11 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private TeacherMsgService teacherMsgService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private AdminMsgServiceImpl adminMsgService;
+    private UserMsgServiceImpl userMsgService;
 
     /**
      * @param loginMsgModel 登录信息
@@ -47,7 +47,7 @@ public class UserController {
      **/
     @PostMapping("/login")
     @ApiOperation("登录处理接口")
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> login(@RequestBody LoginMsgModel loginMsgModel) {
         if (null == loginMsgModel || StringUtils.isBlank(loginMsgModel.getLogName()) || StringUtils
@@ -61,17 +61,7 @@ public class UserController {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
         }
         // 获取账号信息,生成jwt和设置缓存
-        switch (userTypeEnum) {
-            case USER_TYPE_TEACHER: {
-                return new BaseResponse<>(teacherMsgService.getByLoginMsg(loginMsgModel));
-            }
-            case USER_TYPE_ADMIN: {
-                return new BaseResponse<>(adminMsgService.getByLoginMsg(loginMsgModel));
-            }
-            default: {
-                return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-            }
-        }
+        return new BaseResponse<>(userMsgService.getByLoginMsg(loginMsgModel));
     }
 
     /**
@@ -83,37 +73,22 @@ public class UserController {
      **/
     @PostMapping("/insertUser")
     @ApiOperation("插入一条用户")
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = AdminMsgModel.class),
-            @ApiResponse(code = 0, message = "ok", response = TeacherMsgModel.class),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> insertUser(@RequestBody RegisterMsgModel registerMsgModel) {
         UserTypeEnum userTypeEnum = validRegisterMsgModelAndGetType(registerMsgModel);
-
-        switch (userTypeEnum) {
-            case USER_TYPE_TEACHER: {
-                TeacherMsgModel teacherMsgModel = teacherMsgService.insertTeacherMsg(registerMsgModel);
-                if (teacherMsgModel == null) {
-                    throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
-                }
-                return new BaseResponse<>(teacherMsgModel);
-            }
-            case USER_TYPE_ADMIN: {
-                AdminMsgModel adminMsgModel = adminMsgService.insertAdmin(registerMsgModel);
-                if (adminMsgModel == null) {
-                    throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
-                }
-                return new BaseResponse<>(adminMsgModel);
-            }
-            default: {
-                return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-            }
+        // 插入新数据
+        UserMsgModel userMsgModel = userMsgService.insertUserMsg(registerMsgModel);
+        if(userMsgModel == null) {
+            logger.warn("用户登录名未存在，插入后查询失败异常");
+            throw new BusinessException(ErrorCodeEnum.SYSTEM_BUSING);
         }
-
+        return new BaseResponse<>(userMsgModel);
     }
 
     @PostMapping("/modifyUserInfo")
     @ApiOperation(value = "编辑用户信息", notes = "个人中心信息编辑")
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = LoginMsgModel.class),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> modifyUserInfo(MultipartFile file, RegisterMsgModel model) {
         // 无新修改字段
@@ -123,7 +98,7 @@ public class UserController {
         // 判断注册用户类型
         UserMsgModel userMsgModel = UserUtil.getUserMsg();
         if (null == userMsgModel) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+            throw new BusinessException(ErrorCodeEnum.LOGIN_TIME_OUT);
         } else {
             model.setType(userMsgModel.getUserType());
             model.setLogName(userMsgModel.getLogName());
@@ -133,14 +108,7 @@ public class UserController {
         if (null == userTypeEnum) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
         }
-        switch (userTypeEnum) {
-            case USER_TYPE_TEACHER: {
-                return new BaseResponse<>(teacherMsgService.updateTeacherMsg(model, file));
-            }
-            default: {
-                return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-            }
-        }
+        return new BaseResponse<>(userMsgService.updateUserMsg(model, file));
     }
 
     private UserTypeEnum validRegisterMsgModelAndGetType(RegisterMsgModel registerMsgModel) {

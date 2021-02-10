@@ -1,20 +1,21 @@
-package com.management.tpas.model;
+package com.management.tpas.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author dude
  * @version 1.0
- * @classname UserMsgModel
- * @description TODO
- * @date 2020/8/9
+ * @classname UserMsg
+ * @description 用户信息类
+ * @date 2021/2/10
  **/
-public class UserMsgModel implements Serializable {
+@ApiModel(value = "用户信息类", description = "用户信息类")
+public class UserMsg implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,14 +31,14 @@ public class UserMsgModel implements Serializable {
     @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
     private String logName = "";
 
+    @ApiModelProperty(value = "登录密码，默认123456")
+    private String logPassword = "";
+
     @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
     private String contact = "";
 
     @ApiModelProperty(value = "头像图片url, 可为空")
     private String portrait = "";
-
-    @ApiModelProperty(value = "用户类型，0 教师， 1 管理员")
-    private Integer userType = -1;
 
     @ApiModelProperty(value = "用户角色，用逗号拼接，如：role1,role2")
     private String rolesName = "";
@@ -49,7 +50,7 @@ public class UserMsgModel implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    private String token = "";
+    private Integer isDeleted;
 
     public Long getId() {
         return id;
@@ -91,6 +92,14 @@ public class UserMsgModel implements Serializable {
         this.portrait = portrait;
     }
 
+    public String getRolesName() {
+        return rolesName;
+    }
+
+    public void setRolesName(String rolesName) {
+        this.rolesName = rolesName;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -107,43 +116,19 @@ public class UserMsgModel implements Serializable {
         this.createTime = createTime;
     }
 
-    public Integer getUserType() {
-        return userType;
+    public String getLogPassword() {
+        return logPassword;
     }
 
-    public void setUserType(Integer userType) {
-        this.userType = userType;
+    public void setLogPassword(String logPassword) {
+        this.logPassword = logPassword;
     }
 
-    public String getToken() {
-        return token;
+    public Integer getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getRolesName() {
-        return rolesName;
-    }
-
-    public void setRolesName(String rolesName) {
-        this.rolesName = rolesName;
-    }
-
-    @Override
-    public String toString() {
-        return "UserMsgModel{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", logName='" + logName + '\'' +
-                ", contact='" + contact + '\'' +
-                ", portrait='" + portrait + '\'' +
-                ", userType=" + userType +
-                ", rolesValue='" + rolesName + '\'' +
-                ", updateTime=" + updateTime +
-                ", createTime=" + createTime +
-                ", token='" + token + '\'' +
-                '}';
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
