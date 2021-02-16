@@ -42,10 +42,10 @@
         select t.id,t.teacher_id,tm.teacher_name,tm.log_name as teacher_code,
         t.normal_practice,t.non_normal_practice,t.school_practice,t.semester,t.school_year,
         t.remark,t.update_time,t.create_time,t.is_deleted
-        from intern t inner join teacher_msg tm on t.teacher_id = tm.id
+        from intern t inner join user_msg um on t.teacher_id = um.id
         <where>
             <if test="data.teacherCode != null">
-                and tm.log_name = #{data.teacherCode}
+                and um.log_name = #{data.teacherCode}
             </if>
             <if test="data.semester != null ">
                 and t.semester = #{data.semester}

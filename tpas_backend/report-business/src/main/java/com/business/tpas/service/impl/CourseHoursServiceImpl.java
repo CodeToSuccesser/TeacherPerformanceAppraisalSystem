@@ -13,8 +13,8 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.model.UserMsgModel;
+import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.UserUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
     private CourseBaseMapper courseBaseMapper;
 
     @Autowired
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     @Transactional(readOnly = true)
     @Override
@@ -105,18 +105,18 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
     public void insertCourseHours(CourseHoursModel courseHoursModel) {
 
         CourseBase courseBase = courseBaseMapper.selectByCourseCode(courseHoursModel.getCourseCode());
-        TeacherMsgModel teacherMsgModel = teacherMsgService.getByTeacherLogName(courseHoursModel.getTeacherCode());
+        UserMsgModel userMsgModel = userMsgService.getByLoginName(courseHoursModel.getTeacherCode());
 
         if (courseBase == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "根据课程编号查找课程信息为空，插入失败");
         }
 
-        if (teacherMsgModel == null) {
+        if (userMsgModel == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "根据教师编号查找教师信息为空，插入失败");
         }
 
         courseHoursModel.setCourseId(courseBase.getId());
-        courseHoursModel.setTeacherId(teacherMsgModel.getId());
+        courseHoursModel.setTeacherId(userMsgModel.getId());
         courseHoursModel.setAdminId(UserUtil.getUserId());
         courseHoursMapper.insertCourseHours(courseHoursModel);
     }

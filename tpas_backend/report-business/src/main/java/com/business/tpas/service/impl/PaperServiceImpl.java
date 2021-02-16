@@ -13,8 +13,8 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.dao.TeacherMsgMapper;
-import com.management.tpas.entity.TeacherMsg;
+import com.management.tpas.dao.UserMsgMapper;
+import com.management.tpas.entity.UserMsg;
 import com.management.tpas.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     private PaperMapper paperMapper;
 
     @Autowired
-    private TeacherMsgMapper teacherMsgMapper;
+    private UserMsgMapper userMsgMapper;
 
     @Autowired
     private MajorMapper majorMapper;
@@ -66,13 +66,13 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     @Override
     public void modifyPaperInfo(PaperModel paperModel) {
         Paper paper = paperMapper.selectById(paperModel.getId());
-        TeacherMsg teacherMsg = teacherMsgMapper.selectById(paperModel.getTeacherId());
+        UserMsg userMsg= userMsgMapper.selectById(paperModel.getTeacherId());
         Major major = majorMapper.selectById(paperModel.getMajorId());
 
         if(paper == null){
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到论文信息记录，修改失败");
         }
-        if (teacherMsg == null) {
+        if (userMsg == null) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "论文信息所属的教师不存在，修改失败");
         }
         if (major == null) {
@@ -92,10 +92,10 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     @Transactional
     @Override
     public void insertPaperInfo(PaperModel paperModel) {
-        TeacherMsg teacherMsg = teacherMsgMapper.selectByLogName(paperModel.getTeacherCode());
+        UserMsg userMsg = userMsgMapper.selectByLogName(paperModel.getTeacherCode());
         Major major = majorMapper.selectByMajorCode(paperModel.getMajorCode());
 
-        if (teacherMsg == null) {
+        if (userMsg == null) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "论文信息所属的教师不存在，插入失败");
         }
         if (major == null) {
@@ -105,7 +105,7 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
         Paper paper = BeanMapper.map(paperModel, Paper.class);
         paper.setAdminId(UserUtil.getUserId());
         paper.setMajorId(major.getId());
-        paper.setTeacherId(teacherMsg.getId());
+        paper.setTeacherId(userMsg.getId());
         paperMapper.insertPaperInfo(paper);
     }
 }

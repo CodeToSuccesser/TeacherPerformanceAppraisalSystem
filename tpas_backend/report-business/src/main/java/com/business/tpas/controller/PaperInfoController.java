@@ -15,7 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -53,7 +53,7 @@ public class PaperInfoController {
     private MajorService majorService;
 
     @Autowired
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     @Autowired
     private PaperService paperService;
@@ -87,7 +87,7 @@ public class PaperInfoController {
         validateImportParam(schoolYear, semester);
 
         final PaperUploadListener paperUploadListener =
-            new PaperUploadListener(majorService, teacherMsgService, paperService, schoolYear, semester);
+            new PaperUploadListener(majorService, userMsgService, paperService, schoolYear, semester);
 
         try {
             EasyExcel.read(file.getInputStream(), PaperModel.class, paperUploadListener).sheet().doRead();

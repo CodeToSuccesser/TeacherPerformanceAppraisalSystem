@@ -14,7 +14,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -51,7 +51,7 @@ public class CourseHoursController {
     private CourseBaseService courseBaseService;
 
     @Autowired
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     private static final String filePath = "template/课时信息模板.xls";
 
@@ -85,7 +85,7 @@ public class CourseHoursController {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "上传文件为空");
         }
         final CourseHoursUploadListener courseHoursUploadListener =
-            new CourseHoursUploadListener(courseHoursService, courseBaseService, teacherMsgService);
+            new CourseHoursUploadListener(courseHoursService, courseBaseService, userMsgService);
         try {
             EasyExcel.read(file.getInputStream(), CourseHoursModel.class, courseHoursUploadListener).sheet().doRead();
         } catch (IOException e) {

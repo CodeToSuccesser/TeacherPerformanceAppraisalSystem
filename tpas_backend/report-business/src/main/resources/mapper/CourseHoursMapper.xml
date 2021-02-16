@@ -71,7 +71,7 @@
         ch.students_institute,ch.semester,ch.school_year,ch.admin_id,ch.primary_secondary,ch.exp_number,ch.exp_per_number,
         ch.course_time,ch.remark,ch.update_time,ch.create_time
         from course_hours ch inner join course_base cb on ch.course_id = cb.id
-        inner join teacher_msg tm on ch.teacher_id = tm.id
+        inner join user_msg um on ch.teacher_id = um.id
         <where>
             <if test="data.courseName != null and data.courseName != ''">
                 and cb.course_name = #{data.courseName}

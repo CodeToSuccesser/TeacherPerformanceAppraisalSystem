@@ -8,8 +8,8 @@ import com.business.tpas.model.CourseHoursModel;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.service.CourseHoursService;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.model.UserMsgModel;
+import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,13 +26,13 @@ public class CourseHoursUploadListener extends EasyExcelUploadListener<CourseHou
 
     private CourseBaseService courseBaseService;
 
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     public CourseHoursUploadListener(CourseHoursService courseHoursService, CourseBaseService courseBaseService,
-        TeacherMsgService teacherMsgService) {
+        UserMsgService userMsgService) {
         this.courseHoursService = courseHoursService;
         this.courseBaseService = courseBaseService;
-        this.teacherMsgService = teacherMsgService;
+        this.userMsgService = userMsgService;
     }
 
     @Override
@@ -113,9 +113,9 @@ public class CourseHoursUploadListener extends EasyExcelUploadListener<CourseHou
 
             // 判断是否存在课程信息及教师信息
             CourseBaseModel courseBaseModel = courseBaseService.getByCourseCode(courseCode);
-            TeacherMsgModel teacherMsgModel = teacherMsgService.getByTeacherLogName(data.getTeacherCode());
-            if (courseBaseModel != null && teacherMsgModel != null) {
-                data.setTeacherId(teacherMsgModel.getId());
+            UserMsgModel userMsgModel = userMsgService.getByLoginName(data.getTeacherCode());
+            if (courseBaseModel != null && userMsgModel != null) {
+                data.setTeacherId(userMsgModel.getId());
                 data.setCourseId(courseBaseModel.getId());
                 list.add(BeanMapper.map(data, CourseHours.class));
                 ++successCount;

@@ -43,7 +43,7 @@
     <select id="selectPaperInfo" resultMap="ModelResultMap">
         select p.id,p.teacher_id, m.major_name,tm.log_name as teacher_code,m.major_code,tm.teacher_name, p.major_id,
         p.semester,p.school_year, p.admin_id,p.remark, p.student_number, p.update_time, p.create_time
-        from paper p inner join teacher_msg tm on p.teacher_id = tm.id
+        from paper p inner join user_msg um on p.teacher_id = um.id
         inner join major m on m.id = p.major_id
         <where>
             <if test="data.teacherId != null">

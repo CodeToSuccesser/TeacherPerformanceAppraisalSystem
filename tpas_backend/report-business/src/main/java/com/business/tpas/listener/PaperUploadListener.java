@@ -8,8 +8,8 @@ import com.business.tpas.model.PaperModel;
 import com.business.tpas.service.MajorService;
 import com.business.tpas.service.PaperService;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.model.UserMsgModel;
+import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class PaperUploadListener extends EasyExcelUploadListener<PaperModel, Pap
 
     private MajorService majorService;
 
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     private PaperService paperService;
 
@@ -37,10 +37,10 @@ public class PaperUploadListener extends EasyExcelUploadListener<PaperModel, Pap
      */
     private Integer semester;
 
-    public PaperUploadListener(MajorService majorService, TeacherMsgService teacherMsgService,
+    public PaperUploadListener(MajorService majorService, UserMsgService userMsgService,
         PaperService paperService, String schoolYear, Integer semester) {
         this.majorService = majorService;
-        this.teacherMsgService = teacherMsgService;
+        this.userMsgService = userMsgService;
         this.paperService = paperService;
         this.schoolYear = schoolYear;
         this.semester = semester;
@@ -70,11 +70,11 @@ public class PaperUploadListener extends EasyExcelUploadListener<PaperModel, Pap
      * @param paperModel
      */
     private void filterPaperModel(PaperModel paperModel) {
-        TeacherMsgModel teacherMsgModel = teacherMsgService.getByTeacherLogName(paperModel.getTeacherCode());
+        UserMsgModel userMsgModel = userMsgService.getByLoginName(paperModel.getTeacherCode());
         MajorModel majorModel = majorService.selectByMajorCode(paperModel.getMajorCode());
-        if (teacherMsgModel != null && majorModel != null) {
+        if (userMsgModel != null && majorModel != null) {
             paperModel.setMajorId(majorModel.getId());
-            paperModel.setTeacherId(teacherMsgModel.getId());
+            paperModel.setTeacherId(userMsgModel.getId());
             paperModel.setSchoolYear(schoolYear);
             paperModel.setSemester(semester);
             paperModel.setAdminId(UserUtil.getUserId());

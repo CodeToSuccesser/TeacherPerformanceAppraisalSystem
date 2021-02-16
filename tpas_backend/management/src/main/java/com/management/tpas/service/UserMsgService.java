@@ -25,6 +25,13 @@ public interface UserMsgService extends BaseService<UserMsg> {
      **/
     UserMsgModel getByLoginMsg(LoginMsgModel loginMsgModel);
 
+    /**
+     * 根据登录名查找用户信息
+     * @param logName
+     * @return
+     */
+    UserMsgModel getByLoginName(String logName);
+
 
     /**
      * @description 插入一条教师信息

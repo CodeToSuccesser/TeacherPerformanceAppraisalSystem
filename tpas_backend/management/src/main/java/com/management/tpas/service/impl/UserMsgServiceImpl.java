@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -74,6 +75,12 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
         redisTemplate.expire(key, JwtConfig.EXPIRE_TIME, TimeUnit.HOURS);
 
         return userMsgModel;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserMsgModel getByLoginName(String logName) {
+        return BeanMapper.map(userMsgMapper.selectByLogName(logName), UserMsgModel.class);
     }
 
     @Override

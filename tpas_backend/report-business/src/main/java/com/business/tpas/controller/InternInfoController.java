@@ -14,7 +14,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -52,7 +52,7 @@ public class InternInfoController {
     private InternService internService;
 
     @Autowired
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     /**
      * 下载实习带队信息模板文件
@@ -84,7 +84,7 @@ public class InternInfoController {
         validateImportParam(schoolYear, semester);
 
         final InternUploadListener internUploadListener =
-            new InternUploadListener(internService, teacherMsgService, schoolYear, semester);
+            new InternUploadListener(internService, userMsgService, schoolYear, semester);
 
         try {
             EasyExcel.read(file.getInputStream(), InternModel.class, internUploadListener).sheet().doRead();

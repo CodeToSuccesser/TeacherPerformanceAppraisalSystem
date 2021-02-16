@@ -12,8 +12,8 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.dao.TeacherMsgMapper;
-import com.management.tpas.entity.TeacherMsg;
+import com.management.tpas.dao.UserMsgMapper;
+import com.management.tpas.entity.UserMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +35,7 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
     private InternMapper internMapper;
 
     @Autowired
-    private TeacherMsgMapper teacherMsgMapper;
+    private UserMsgMapper userMsgMapper;
 
     @Transactional
     @Override
@@ -61,15 +61,15 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
     @Override
     public void modifyInternInfo(InternModel internModel) {
         Intern intern = internMapper.selectById(internModel.getId());
-        TeacherMsg teacherMsg = teacherMsgMapper.selectById(internModel.getTeacherId());
+        UserMsg userMsg = userMsgMapper.selectById(internModel.getTeacherId());
 
         if (intern == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到实习带队记录，修改失败");
         }
-        if (teacherMsg == null) {
+        if (userMsg == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到实习带队信息所属的教师，修改失败");
         }
-        internModel.setTeacherId(teacherMsg.getId());
+        internModel.setTeacherId(userMsg.getId());
         internMapper.updateById(BeanMapper.map(internModel, Intern.class));
     }
 
@@ -83,14 +83,14 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
     @Transactional
     @Override
     public void insertInternModel(InternModel internModel) {
-        TeacherMsg teacherMsg = teacherMsgMapper.selectByLogName(internModel.getTeacherCode());
-        if (teacherMsg == null) {
+        UserMsg userMsg = userMsgMapper.selectByLogName(internModel.getTeacherCode());
+        if (userMsg == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到实习带队记录所属的教师信息，插入失败");
         }
         if (!SemesterEnum.isExistByCode(internModel.getSemester())) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "实习带队信息的学期信息有误，插入失败");
         }
-        internModel.setTeacherId(teacherMsg.getId());
+        internModel.setTeacherId(userMsg.getId());
         internMapper.insert(BeanMapper.map(internModel, Intern.class));
     }
 }

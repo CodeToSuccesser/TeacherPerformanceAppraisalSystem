@@ -6,8 +6,8 @@ import com.business.tpas.entity.Intern;
 import com.business.tpas.model.InternModel;
 import com.business.tpas.service.InternService;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.model.TeacherMsgModel;
-import com.management.tpas.service.TeacherMsgService;
+import com.management.tpas.model.UserMsgModel;
+import com.management.tpas.service.UserMsgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ public class InternUploadListener extends EasyExcelUploadListener<InternModel, I
 
     private InternService internService;
 
-    private TeacherMsgService teacherMsgService;
+    private UserMsgService userMsgService;
 
     /**
      * 学年，文件上传时插入的数据均为该参数
@@ -32,10 +32,10 @@ public class InternUploadListener extends EasyExcelUploadListener<InternModel, I
      */
     private Integer semester;
 
-    public InternUploadListener(InternService internService, TeacherMsgService teacherMsgService, String schoolYear,
+    public InternUploadListener(InternService internService, UserMsgService userMsgService, String schoolYear,
         Integer semester) {
         this.internService = internService;
-        this.teacherMsgService = teacherMsgService;
+        this.userMsgService = userMsgService;
         this.schoolYear = schoolYear;
         this.semester = semester;
     }
@@ -63,9 +63,9 @@ public class InternUploadListener extends EasyExcelUploadListener<InternModel, I
      * @param internModel
      */
     private void filterInternInfoModel(InternModel internModel) {
-        TeacherMsgModel teacherMsg = teacherMsgService.getByTeacherLogName(internModel.getTeacherCode());
-        if (teacherMsg != null) {
-            internModel.setTeacherId(teacherMsg.getId());
+        UserMsgModel userMsgModel = userMsgService.getByLoginName(internModel.getTeacherCode());
+        if (userMsgModel != null) {
+            internModel.setTeacherId(userMsgModel.getId());
             internModel.setSemester(semester);
             internModel.setSchoolYear(schoolYear);
             list.add(BeanMapper.map(internModel, Intern.class));
