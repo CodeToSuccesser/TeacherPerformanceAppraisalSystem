@@ -4,10 +4,9 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.business.tpas.constant.Constant;
 import com.business.tpas.listener.CourseHoursUploadListener;
-import com.business.tpas.model.CourseHoursModel;
-import com.business.tpas.model.CourseHoursSearchModel;
-import com.business.tpas.model.UploadResponseModel;
+import com.business.tpas.model.*;
 import com.business.tpas.service.CourseBaseService;
+import com.business.tpas.service.CourseHoursModifyRecordService;
 import com.business.tpas.service.CourseHoursService;
 import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
@@ -52,6 +51,9 @@ public class CourseHoursController {
 
     @Autowired
     private UserMsgService userMsgService;
+
+    @Autowired
+    private CourseHoursModifyRecordService courseHoursModifyRecordService;
 
     private static final String filePath = "template/课时信息模板.xls";
 
@@ -152,6 +154,26 @@ public class CourseHoursController {
         courseHoursService.insertCourseHours(courseHoursModel);
         return new BaseResponse<>();
     }
+
+    @ApiOperation(value = "课时修改审批",notes = "课时修改审批")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok")})
+    @PostMapping("/{id}/audit")
+    public BaseResponse<?> auditCourseHoursModify(@PathVariable Long id, @RequestParam("result") Boolean result){
+        if (result == null) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "审批结果参数为空");
+        }
+        courseHoursModifyRecordService.auditCourseHoursModify(id, result);
+        return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "获取修改申请信息记录", notes = "获取修改申请信息记录")
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseHoursModifyRecordModel.class),
+        @ApiResponse(code = 500, message = "系统错误")})
+    @GetMapping("/getModifyRecord")
+    public BaseResponse<?> getModifyRecord(@RequestBody CourseHoursModifyRecordSearchModel searchModel) {
+        return new BaseResponse<>(courseHoursModifyRecordService.getModifyRecord(searchModel));
+    }
+
 
     private void validateModifyInsertCourseHoursParam(CourseHoursModel courseHoursModel) {
         if (StringUtils.isBlank(courseHoursModel.getTeacherCode())) {
