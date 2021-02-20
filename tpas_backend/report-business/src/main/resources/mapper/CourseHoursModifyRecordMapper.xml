@@ -10,6 +10,12 @@
         <result column="apply_id" property="applyId" />
         <result column="selected_student" property="selectedStudent" />
         <result column="course_cridet" property="courseCridet" />
+        <result column="teaching_hours" property="teachingHours" />
+        <result column="computer_hours" property="computerHours" />
+        <result column="experiment_hours" property="experimentHours" />
+        <result column="modify_teaching_hours" property="modifyTeachingHours" />
+        <result column="modify_computer_hours" property="modifyComputerHours" />
+        <result column="modify_experiment_hours" property="modifyExperimentHours" />
         <result column="total_hours" property="totalHours" />
         <result column="peroid" property="peroid" />
         <result column="classed" property="classed" />
@@ -26,9 +32,77 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.CourseHoursModifyRecordModel">
+        <id column="id" property="id" />
+        <result column="hours_id" property="hoursId" />
+        <result column="apply_type" property="applyType" />
+        <result column="apply_id" property="applyId" />
+        <result column="selected_student" property="selectedStudent" />
+        <result column="course_cridet" property="courseCridet" />
+        <result column="teaching_hours" property="teachingHours" />
+        <result column="computer_hours" property="computerHours" />
+        <result column="experiment_hours" property="experimentHours" />
+        <result column="modify_teaching_hours" property="modifyTeachingHours" />
+        <result column="modify_computer_hours" property="modifyComputerHours" />
+        <result column="modify_experiment_hours" property="modifyExperimentHours" />
+        <result column="total_hours" property="totalHours" />
+        <result column="peroid" property="peroid" />
+        <result column="classed" property="classed" />
+        <result column="modify_selected_student" property="modifySelectedStudent" />
+        <result column="modify_course_cridet" property="modifyCourseCridet" />
+        <result column="modify_total_hours" property="modifyTotalHours" />
+        <result column="modify_peroid" property="modifyPeroid" />
+        <result column="modify_classed" property="modifyClassed" />
+        <result column="admin_id" property="adminId" />
+        <result column="check_time" property="checkTime" />
+        <result column="check_result" property="checkResult" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, hours_id, apply_type, apply_id, selected_student, course_cridet, total_hours, peroid, classed, modify_selected_student, modify_course_cridet, modify_total_hours, modify_peroid, modify_classed, admin_id, check_time, check_result, remark, update_time, create_time
+        id, hours_id, apply_type, apply_id, selected_student, course_cridet,teaching_hours, computer_hours,experiment_hours,
+        modify_teaching_hours,modify_computer_hours,modify_experiment_hours,total_hours, peroid, classed, modify_selected_student,
+        modify_course_cridet, modify_total_hours, modify_peroid, modify_classed, admin_id, check_time, check_result, remark,
+        update_time, create_time
     </sql>
+
+    <select id="selectModifyRecords" resultMap="ModelResultMap">
+        select chmr.id, chmr.hours_id, chmr.apply_type, chmr.apply_id, chmr.selected_student, chmr.course_cridet,chmr.teaching_hours,
+        chmr.computer_hours,chmr.experiment_hours, chmr.modify_teaching_hours,chmr.modify_computer_hours,chmr.modify_experiment_hours,
+        chmr.total_hours, chmr.peroid,chmr.classed, chmr.modify_selected_student,chmr.modify_course_cridet, chmr.modify_total_hours,
+        chmr.modify_peroid, chmr.modify_classed, chmr.admin_id, chmr.check_time, chmr.check_result, chmr.remark,
+        chmr.update_time, chmr.create_time
+        from course_hours_modify_record chmr
+        <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
+        <where>
+            <if test="data.applyName != null and data.applyName != ''">
+                and um.log_name = #{data.applyName}
+            </if>
+            <if test="data.beginTime != null">
+                and chmr.create_time <![CDATA[ <= ]]> #{data.beginTime}
+            </if>
+            <if test="data.endTime != null">
+                and chmr.create_time <![CDATA[ <= ]]> #{data.endTime}
+            </if>
+            <if test="data.checkResult != null">
+                and chmr.check_result = #{data.checkResult}
+            </if>
+        </where>
+    </select>
+
+    <select id="countModifyRecordByHoursId">
+        select select count(*) from course_hours_modify_record chmr
+        where chmr.hours_id = #{id}
+    </select>
+
+    <delete id="batchDeleteByHoursIds">
+        delete from course_hours_modify_record chmr
+        where chmr.hours_id in 
+        <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
 
 </mapper>
