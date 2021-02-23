@@ -1,125 +1,138 @@
-package com.business.tpas.entity;
+package com.business.tpas.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
- * <p>
- * 论文指导修改记录表,修改用户:教师/管理员
- * </p>
- *
- * @author peihua.wu
- * @since 2020-08-01
- */
-public class PaperModifyRecord implements Serializable {
-
-    private static final long serialVersionUID=1L;
+ * @description 论文指导信息修改记录模型层
+ **/
+@ApiModel("论文指导信息修改记录模型层")
+public class PaperModifyRecordModel {
 
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "主键")
     private Long id;
 
     /**
      * 论文指导信息编码
      */
+    @ApiModelProperty(value = "论文指导信息编码")
     private Long paperId;
 
     /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
+    @ApiModelProperty(value = "提出修改用户类型, 默认0 教师, 1 管理员")
     private Integer applyType;
 
     /**
      * 提出修改用户编码, teachar_id或者admin_id
      */
+    @ApiModelProperty(value = "提出修改用户编码, teachar_id或者admin_id")
     private Long applyId;
 
     /**
      * 专业信息编码
      */
+    @ApiModelProperty(value = "专业信息编码")
     private Long majorId;
 
     /**
      * 指导学生人数, 默认0
      */
+    @ApiModelProperty(value = "指导学生人数, 默认0")
     private Integer studentNumber;
 
     /**
      * 学期, 默认1 第一学期, 2 第二学期
      */
+    @ApiModelProperty(value = "学期, 默认1 第一学期, 2 第二学期")
     private Integer semester;
 
     /**
      * 学年
      */
+    @ApiModelProperty(value = "学年")
     private String schoolYear;
 
     /**
      * 备注
      */
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     /**
      * 逻辑删除标识, 0 无删除, 1 已删除
      */
+    @ApiModelProperty(value = " 逻辑删除标识, 0 无删除, 1 已删除")
     private Integer isDeleted;
 
     /**
      * 修改专业信息编码
      */
+    @ApiModelProperty(value = "修改专业信息编码")
     private Long modifyMajorId;
 
     /**
      * 修改指导学生人数
      */
+    @ApiModelProperty(value = " 修改指导学生人数")
     private Integer modifyStudentNumber;
 
     /**
      * 修改学期
      */
+    @ApiModelProperty(value = "修改学期")
     private Integer modifySemester;
 
     /**
      * 修改学年
      */
+    @ApiModelProperty(value = "修改学年")
     private String modifySchoolYear;
 
     /**
      * 修改备注
      */
+    @ApiModelProperty(value = "修改备注")
     private String modifyRemark;
 
     /**
      * 修改逻辑删除标识
      */
+    @ApiModelProperty(value = "修改逻辑删除标识")
     private Integer modifyIsDeleted;
 
     /**
      * 处理的管理员编码
      */
+    @ApiModelProperty(value = "处理的管理员编码")
     private Long adminId;
 
     /**
      * 管理员处理时间
      */
+    @ApiModelProperty(value = "管理员处理时间")
     private Date checkTime;
 
     /**
      * 管理员处理结果, 默认0 未处理, 1 通过, 2 驳回
      */
+    @ApiModelProperty(value = "管理员处理结果, 默认0 未处理, 1 通过, 2 驳回")
     private Integer checkResult;
 
     /**
      * 数据最新操作时间
      */
+    @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
 
     public Long getId() {
         return id;
@@ -287,32 +300,5 @@ public class PaperModifyRecord implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "PaperModifyRecord{" +
-        "id=" + id +
-        ", paperId=" + paperId +
-        ", applyType=" + applyType +
-        ", applyId=" + applyId +
-        ", majorId=" + majorId +
-        ", studentNumber=" + studentNumber +
-        ", semester=" + semester +
-        ", schoolYear=" + schoolYear +
-        ", remark=" + remark +
-        ", isDeleted=" + isDeleted +
-        ", modifyMajorId=" + modifyMajorId +
-        ", modifyStudentNumber=" + modifyStudentNumber +
-        ", modifySemester=" + modifySemester +
-        ", modifySchoolYear=" + modifySchoolYear +
-        ", modifyRemark=" + modifyRemark +
-        ", modifyIsDeleted=" + modifyIsDeleted +
-        ", adminId=" + adminId +
-        ", checkTime=" + checkTime +
-        ", checkResult=" + checkResult +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        "}";
     }
 }

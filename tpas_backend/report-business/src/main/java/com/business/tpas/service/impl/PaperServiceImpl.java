@@ -2,8 +2,11 @@ package com.business.tpas.service.impl;
 
 import com.business.tpas.dao.MajorMapper;
 import com.business.tpas.dao.PaperMapper;
+import com.business.tpas.dao.PaperModifyRecordMapper;
 import com.business.tpas.entity.Major;
 import com.business.tpas.entity.Paper;
+import com.business.tpas.entity.PaperModifyRecord;
+import com.business.tpas.enums.PaperModifyCheckResultEnum;
 import com.business.tpas.model.PaperModel;
 import com.business.tpas.model.PaperSearchModel;
 import com.business.tpas.service.PaperService;
@@ -15,11 +18,14 @@ import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.UserMsg;
+import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +47,9 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
 
     @Autowired
     private MajorMapper majorMapper;
+
+    @Autowired
+    private PaperModifyRecordMapper paperModifyRecordMapper;
 
     @Transactional
     @Override
@@ -79,7 +88,30 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, "论文信息所属的专业不存在，修改失败");
         }
 
-        paperMapper.updateById(BeanMapper.map(paperModel, Paper.class));
+        /**
+         * 管理员修改，新增修改记录，直接修改论文信息表
+         * 非管理员修改，新增修改记录
+         */
+        UserMsgModel userMsgModel = UserUtil.getUserMsg();
+        if (userMsgModel == null) {
+            throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，修改论文信息失败");
+        }
+
+        PaperModifyRecord record = buildModifyRecord(BeanMapper.map(paper, PaperModel.class), paperModel);
+        record.setApplyId(userMsgModel.getId());
+        record.setApplyType(userMsgModel.getUserType());
+
+        // 管理员
+        if (userMsgModel.getUserType() == UserTypeEnum.USER_TYPE_ADMIN.flag) {
+            record.setAdminId(userMsgModel.getId());
+            record.setCheckTime(new Date());
+            record.setCheckResult(PaperModifyCheckResultEnum.PASS.getCode());
+
+            // 修改论文信息记录表
+            modifyPaperByRecord(record, paper);
+        }
+        // 新增修改申请记录
+        paperModifyRecordMapper.insert(record);
     }
 
     @Transactional
@@ -107,5 +139,30 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
         paper.setMajorId(major.getId());
         paper.setTeacherId(userMsg.getId());
         paperMapper.insertPaperInfo(paper);
+    }
+
+    private PaperModifyRecord buildModifyRecord(PaperModel oldRecord, PaperModel newRecord) {
+        PaperModifyRecord record = new PaperModifyRecord();
+        record.setPaperId(oldRecord.getId());
+        record.setMajorId(oldRecord.getMajorId());
+        record.setModifyMajorId(newRecord.getMajorId());
+        record.setRemark(oldRecord.getRemark());
+        record.setModifyRemark(newRecord.getRemark());
+        record.setSchoolYear(oldRecord.getSchoolYear());
+        record.setModifySchoolYear(newRecord.getSchoolYear());
+        record.setSemester(oldRecord.getSemester());
+        record.setModifySemester(newRecord.getSemester());
+        record.setStudentNumber(oldRecord.getStudentNumber());
+        record.setModifyStudentNumber(newRecord.getStudentNumber());
+        return record;
+    }
+
+    private void modifyPaperByRecord(PaperModifyRecord record, Paper paper) {
+        paper.setSemester(record.getModifySemester());
+        paper.setSchoolYear(record.getModifySchoolYear());
+        paper.setMajorId(record.getModifyMajorId());
+        paper.setRemark(record.getModifyRemark());
+        paper.setStudentNumber(record.getModifyStudentNumber());
+        paperMapper.updateById(paper);
     }
 }

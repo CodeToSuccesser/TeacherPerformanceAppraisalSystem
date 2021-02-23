@@ -5,10 +5,9 @@ import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy
 import com.business.tpas.constant.Constant;
 import com.business.tpas.enums.SemesterEnum;
 import com.business.tpas.listener.PaperUploadListener;
-import com.business.tpas.model.PaperModel;
-import com.business.tpas.model.PaperSearchModel;
-import com.business.tpas.model.UploadResponseModel;
+import com.business.tpas.model.*;
 import com.business.tpas.service.MajorService;
+import com.business.tpas.service.PaperModifyRecordService;
 import com.business.tpas.service.PaperService;
 import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
@@ -57,6 +56,9 @@ public class PaperInfoController {
 
     @Autowired
     private PaperService paperService;
+
+    @Autowired
+    private PaperModifyRecordService paperModifyRecordService;
 
     /**
      * 下载论文指导信息模板
@@ -152,6 +154,25 @@ public class PaperInfoController {
     public BaseResponse<?> insertPaperInfo(@RequestBody PaperModel paperModel) {
         validateModifyInsertPaperModelParam(paperModel);
         paperService.insertPaperInfo(paperModel);
+        return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "查找论文指导修改信息记录", notes = "查找论文指导修改信息记录")
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = PaperModifyRecordModel.class),
+        @ApiResponse(code = 500, message = "系统错误")})
+    @GetMapping("/getModifyRecord")
+    public BaseResponse<?> getModifyRecord(@RequestBody PaperModifyRecordSearchModel searchModel) {
+        return new BaseResponse<>(paperModifyRecordService.getModifyRecord(searchModel));
+    }
+
+    @ApiOperation(value = "论文指导修改审批",notes = "论文指导修改审批")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok")})
+    @PostMapping("/{id}/audit")
+    public BaseResponse<?> auditPaperModify(@PathVariable Long id, @RequestParam("result") Boolean result) {
+        if (result == null) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "审批结果参数为空");
+        }
+        paperModifyRecordService.auditPaperModify(id, result);
         return new BaseResponse<>();
     }
 
