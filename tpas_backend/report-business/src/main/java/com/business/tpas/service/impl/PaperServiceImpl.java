@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +119,7 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     @Override
     public void deletePaperInfos(List<Long> ids) {
         // 逻辑删除论文指导记录
+        deletePaperModifyRecord(ids);
         paperMapper.deletePaperInfos(ids);
     }
 
@@ -164,5 +166,19 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
         paper.setRemark(record.getModifyRemark());
         paper.setStudentNumber(record.getModifyStudentNumber());
         paperMapper.updateById(paper);
+    }
+
+    /**
+     * 根据paperId删除对应的paperRecord记录
+     * @param ids
+     */
+    private void deletePaperModifyRecord(List<Long> ids) {
+        List<Long> idsToDelete = new ArrayList<>();
+        for (Long id : ids) {
+            if(paperModifyRecordMapper.countModifyRecordByPaperId(id) != 0){
+                idsToDelete.add(id);
+            }
+        }
+        paperModifyRecordMapper.batchDeleteByPaperIds(idsToDelete);
     }
 }

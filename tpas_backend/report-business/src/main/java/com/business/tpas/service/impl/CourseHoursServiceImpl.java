@@ -204,11 +204,11 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
      * 否则不做处理
      * @param ids 课时信息id
      */
-    private void validateCourseHoursCanBeDeleted(List<Long> ids){
+    private void validateCourseHoursCanBeDeleted(List<Long> ids) {
         List<Long> hoursIdsToDelete = new ArrayList<>();
-        for(Long id: ids){
+        for (Long id : ids) {
             int count = courseHoursModifyRecordMapper.countModifyRecordByHoursId(id);
-            if(count != 0){
+            if (count != 0) {
                 hoursIdsToDelete.add(id);
             }
         }

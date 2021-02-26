@@ -5,6 +5,7 @@ import com.business.tpas.model.PaperModifyRecordModel;
 import com.business.tpas.model.PaperModifyRecordSearchModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @author peihua.wu
  * @since 2020-08-01
  */
+@Repository
 public interface PaperModifyRecordMapper extends BaseDao<PaperModifyRecord> {
 
     /**
@@ -24,5 +26,18 @@ public interface PaperModifyRecordMapper extends BaseDao<PaperModifyRecord> {
      * @return
      */
     List<PaperModifyRecordModel> selectModifyRecords(@Param("data")PaperModifyRecordSearchModel searchModel);
+
+    /**
+     * 根据论文指导记录id查找对应的变更记录数目
+     * @param id
+     * @return
+     */
+    int countModifyRecordByPaperId(@Param("id") Long id);
+
+    /**
+     * 根据论文指导记录id批量删除论文指导变更申请记录
+     * @param ids
+     */
+    void batchDeleteByPaperIds(@Param("ids")List<Long> ids);
 
 }

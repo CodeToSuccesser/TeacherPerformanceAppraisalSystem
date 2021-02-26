@@ -92,16 +92,16 @@
         </where>
     </select>
 
-    <select id="countModifyRecordByHoursId">
-        select select count(*) from course_hours_modify_record chmr
+    <select id="countModifyRecordByHoursId" resultType="java.lang.Integer">
+        select count(*) from course_hours_modify_record chmr
         where chmr.hours_id = #{id}
     </select>
 
-    <delete id="batchDeleteByHoursIds">
-        delete from course_hours_modify_record chmr
-        where chmr.hours_id in 
-        <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
-            #{id,jdbcType=BIGINT}
+    <delete id="batchDeleteByHoursIds" parameterType="java.util.List">
+        delete from course_hours_modify_record
+        where 1 = 1
+        <foreach collection="ids" item="id" index="index" open="and hours_id in(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 

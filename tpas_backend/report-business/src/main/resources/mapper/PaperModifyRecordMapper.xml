@@ -80,5 +80,17 @@
         </where>
     </select>
 
+    <select id="countModifyRecordByPaperId" resultType="java.lang.Integer">
+        select count(*) from paper_modify_record
+        where paper_id = #{id}
+    </select>
+
+    <delete id="batchDeleteByPaperIds" parameterType="java.util.List">
+        delete from paper_modify_record
+        where 1 = 1
+        <foreach collection="ids" item="id" index="index" open=" and paper_id in (" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>
