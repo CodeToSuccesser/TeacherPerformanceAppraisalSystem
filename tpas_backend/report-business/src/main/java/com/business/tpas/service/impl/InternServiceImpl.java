@@ -1,7 +1,10 @@
 package com.business.tpas.service.impl;
 
 import com.business.tpas.dao.InternMapper;
+import com.business.tpas.dao.InternModifyRecordMapper;
 import com.business.tpas.entity.Intern;
+import com.business.tpas.entity.InternModifyRecord;
+import com.business.tpas.enums.InternModifyCheckResultEnum;
 import com.business.tpas.enums.SemesterEnum;
 import com.business.tpas.model.InternModel;
 import com.business.tpas.model.InternSearchModel;
@@ -14,10 +17,15 @@ import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.UserMsg;
+import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.model.UserMsgModel;
+import com.management.tpas.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +44,9 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
 
     @Autowired
     private UserMsgMapper userMsgMapper;
+
+    @Autowired
+    private InternModifyRecordMapper internModifyRecordMapper;
 
     @Transactional
     @Override
@@ -61,22 +72,40 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
     @Override
     public void modifyInternInfo(InternModel internModel) {
         Intern intern = internMapper.selectById(internModel.getId());
-        UserMsg userMsg = userMsgMapper.selectById(internModel.getTeacherId());
+        UserMsg teacherMsg = userMsgMapper.selectById(internModel.getTeacherId());
+        UserMsgModel userMsg = UserUtil.getUserMsg();
 
         if (intern == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到实习带队记录，修改失败");
         }
-        if (userMsg == null) {
+        if (teacherMsg == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到实习带队信息所属的教师，修改失败");
         }
-        internModel.setTeacherId(userMsg.getId());
-        internMapper.updateById(BeanMapper.map(internModel, Intern.class));
+        if (userMsg == null) {
+            throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，修改失败");
+        }
+
+        InternModifyRecord record = buildModifyRecord(internModel, BeanMapper.map(intern, InternModel.class));
+        record.setApplyId(userMsg.getId());
+        record.setApplyType(userMsg.getUserType());
+
+        // 管理员
+        if (userMsg.getUserType() == UserTypeEnum.USER_TYPE_ADMIN.flag) {
+            // 设置修改审核记录为通过
+            record.setCheckTime(new Date());
+            record.setCheckResult(InternModifyCheckResultEnum.PASS.getCode());
+            record.setAdminId(userMsg.getId());
+            modifyInternByModifyRecord(intern, record);
+        }
+
+        internModifyRecordMapper.insert(record);
     }
 
     @Transactional
     @Override
     public void deleteInternInfos(List<Long> ids) {
         // 逻辑删除实习带队信息
+        deleteInternModifyRecord(ids);
         internMapper.deleteInternInfos(ids);
     }
 
@@ -92,5 +121,55 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
         }
         internModel.setTeacherId(userMsg.getId());
         internMapper.insert(BeanMapper.map(internModel, Intern.class));
+    }
+
+    /**
+     * 构造实习带队信息修改审核记录
+     * @param newRecord
+     * @param oldRecord
+     * @return
+     */
+    private InternModifyRecord buildModifyRecord(InternModel newRecord, InternModel oldRecord) {
+        InternModifyRecord record = new InternModifyRecord();
+        record.setInternId(oldRecord.getId());
+        record.setNonNormalPractice(oldRecord.getNonNormalPractice());
+        record.setModifyNonNormalPractice(newRecord.getNonNormalPractice());
+        record.setNormalPractice(oldRecord.getNormalPractice());
+        record.setModifyNormalPractice(newRecord.getNormalPractice());
+        record.setSchoolPractice(oldRecord.getSchoolPractice());
+        record.setModifySchoolPractice(newRecord.getSchoolPractice());
+        record.setSchoolYear(oldRecord.getSchoolYear());
+        record.setModifySchoolYear(newRecord.getSchoolYear());
+        record.setSemester(oldRecord.getSemester());
+        record.setModifySemester(newRecord.getSemester());
+        return record;
+    }
+
+    /**
+     * 根据修改申请记录修改实习带队信息
+     * @param intern
+     * @param record
+     */
+    private void modifyInternByModifyRecord(Intern intern, InternModifyRecord record) {
+        intern.setSemester(record.getModifySemester());
+        intern.setSchoolYear(record.getModifySchoolYear());
+        intern.setSchoolPractice(record.getModifySchoolPractice());
+        intern.setNormalPractice(record.getModifyNormalPractice());
+        intern.setNonNormalPractice(record.getModifyNonNormalPractice());
+        internMapper.updateById(intern);
+    }
+
+    /**
+     * 根据internId删除对应的internRecord记录
+     * @param ids
+     */
+    private void deleteInternModifyRecord(List<Long> ids) {
+        List<Long> idsToDelete = new ArrayList<>();
+        for (Long id : ids) {
+            if(internModifyRecordMapper.countModifyRecordByInternId(id) != 0){
+                idsToDelete.add(id);
+            }
+        }
+        internModifyRecordMapper.batchDeleteByInternIds(idsToDelete);
     }
 }

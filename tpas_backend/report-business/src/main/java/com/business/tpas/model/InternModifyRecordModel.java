@@ -1,130 +1,144 @@
-package com.business.tpas.entity;
+package com.business.tpas.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
- * <p>
- * 实习指导修改记录表, 修改用户:教师/管理员
- * </p>
- *
- * @author peihua.wu
- * @since 2020-08-01
- */
-public class InternModifyRecord implements Serializable {
-
-    private static final long serialVersionUID=1L;
+ * @description 实习带队信息修改审批记录
+ **/
+@ApiModel(value = "实习带队信息修改审批记录")
+public class InternModifyRecordModel {
 
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "主键")
     private Long id;
 
     /**
      * 实习指导信息编码
      */
+    @ApiModelProperty(value = "实习指导信息编码")
     private Long internId;
 
     /**
      * 师范实习带队人数
      */
+    @ApiModelProperty(value = "师范实习带队人数")
     private Integer normalPractice;
 
     /**
      * 非师范实习带队人数
      */
+    @ApiModelProperty(value = "非师范实习带队人数")
     private Integer nonNormalPractice;
 
     /**
      * 校内实习带队人数
      */
+    @ApiModelProperty(value = "校内实习带队人数")
     private Integer schoolPractice;
 
     /**
      * 学期
      */
+    @ApiModelProperty(value = "学期")
     private Integer semester;
 
     /**
      * 学年
      */
+    @ApiModelProperty(value = "学年")
     private String schoolYear;
 
     /**
      * 逻辑删除标识
      */
+    @ApiModelProperty(value = "逻辑删除标识")
     private Integer isDeleted;
 
     /**
      * 修改师范实习带队人数
      */
+    @ApiModelProperty(value = "修改师范实习带队人数")
     private Integer modifyNormalPractice;
 
     /**
      * 修改非师范实习带队人数
      */
+    @ApiModelProperty(value = "修改非师范实习带队人数")
     private Integer modifyNonNormalPractice;
 
     /**
      * 修改校内实习带队人数
      */
+    @ApiModelProperty(value = "修改校内实习带队人数")
     private Integer modifySchoolPractice;
 
     /**
      * 修改学期
      */
+    @ApiModelProperty(value = "修改学期")
     private Integer modifySemester;
 
     /**
      * 修改学年
      */
+    @ApiModelProperty(value = "修改学年")
     private String modifySchoolYear;
 
     /**
      * 修改逻辑删除标识
      */
+    @ApiModelProperty(value = "修改逻辑删除标识")
     private Integer modifyIsDeleted;
 
     /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
+    @ApiModelProperty(value = "提出修改用户类型, 默认0 教师, 1 管理员")
     private Integer applyType;
 
     /**
      * 提出修改用户编码, teachar_id或者admin_id
      */
+    @ApiModelProperty(value = "提出修改用户编码, teachar_id或者admin_id")
     private Long applyId;
 
     /**
      * 处理的管理员编码
      */
+    @ApiModelProperty(value = "处理的管理员编码")
     private Long adminId;
 
     /**
      * 管理员处理时间
      */
+    @ApiModelProperty(value = "管理员处理时间")
     private Date checkTime;
 
     /**
      * 管理员处理结果, 默认0 未处理, 1 通过, 2 驳回
      */
+    @ApiModelProperty(value = " 管理员处理结果, 默认0 未处理, 1 通过, 2 驳回")
     private Integer checkResult;
 
     /**
      * 备注
      */
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     /**
      * 数据最新操作时间
      */
+    @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "记录新增时间")
     private Date createTime;
-
 
     public Long getId() {
         return id;
@@ -304,29 +318,13 @@ public class InternModifyRecord implements Serializable {
 
     @Override
     public String toString() {
-        return "InternModifyRecord{" +
-        "id=" + id +
-        ", internId=" + internId +
-        ", normalPractice=" + normalPractice +
-        ", nonNormalPractice=" + nonNormalPractice +
-        ", schoolPractice=" + schoolPractice +
-        ", semester=" + semester +
-        ", schoolYear=" + schoolYear +
-        ", isDeleted=" + isDeleted +
-        ", modifyNormalPractice=" + modifyNormalPractice +
-        ", modifyNonNormalPractice=" + modifyNonNormalPractice +
-        ", modifySchoolPractice=" + modifySchoolPractice +
-        ", modifySemester=" + modifySemester +
-        ", modifySchoolYear=" + modifySchoolYear +
-        ", modifyIsDeleted=" + modifyIsDeleted +
-        ", applyType=" + applyType +
-        ", applyId=" + applyId +
-        ", adminId=" + adminId +
-        ", checkTime=" + checkTime +
-        ", checkResult=" + checkResult +
-        ", remark=" + remark +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        "}";
+        return "InternModifyRecordModel{" + "id=" + id + ", internId=" + internId + ", normalPractice=" + normalPractice
+            + ", nonNormalPractice=" + nonNormalPractice + ", schoolPractice=" + schoolPractice + ", semester="
+            + semester + ", schoolYear=" + schoolYear + ", isDeleted=" + isDeleted + ", modifyNormalPractice="
+            + modifyNormalPractice + ", modifyNonNormalPractice=" + modifyNonNormalPractice + ", modifySchoolPractice="
+            + modifySchoolPractice + ", modifySemester=" + modifySemester + ", modifySchoolYear=" + modifySchoolYear
+            + ", modifyIsDeleted=" + modifyIsDeleted + ", applyType=" + applyType + ", applyId=" + applyId
+            + ", adminId=" + adminId + ", checkTime=" + checkTime + ", checkResult=" + checkResult + ", remark='"
+            + remark + '\'' + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }
 }

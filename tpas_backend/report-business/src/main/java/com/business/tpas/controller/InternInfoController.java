@@ -5,9 +5,8 @@ import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy
 import com.business.tpas.constant.Constant;
 import com.business.tpas.enums.SemesterEnum;
 import com.business.tpas.listener.InternUploadListener;
-import com.business.tpas.model.InternModel;
-import com.business.tpas.model.InternSearchModel;
-import com.business.tpas.model.UploadResponseModel;
+import com.business.tpas.model.*;
+import com.business.tpas.service.InternModifyRecordService;
 import com.business.tpas.service.InternService;
 import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
@@ -53,6 +52,9 @@ public class InternInfoController {
 
     @Autowired
     private UserMsgService userMsgService;
+
+    @Autowired
+    private InternModifyRecordService internModifyRecordService;
 
     /**
      * 下载实习带队信息模板文件
@@ -149,6 +151,25 @@ public class InternInfoController {
     public BaseResponse<?> insertInternInfo(@RequestBody InternModel internModel) {
         validateModifyInsertInternModelParam(internModel);
         internService.insertInternModel(internModel);
+        return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "查找实习带队修改信息记录", notes = "查找实习带队修改信息记录")
+    @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = InternModifyRecordModel.class),
+        @ApiResponse(code = 500, message = "系统错误")})
+    @GetMapping("/getModifyRecord")
+    public BaseResponse<?> getModifyRecord(@RequestBody InternModifyRecordSearchModel searchModel) {
+        return new BaseResponse<>(internModifyRecordService.getModifyRecord(searchModel));
+    }
+
+    @ApiOperation(value = "实习带队修改审批",notes = "实习带队修改审批")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok")})
+    @PostMapping("/{id}/audit")
+    public BaseResponse<?> auditInternModify(@PathVariable Long id, @RequestParam("result") Boolean result) {
+        if (result == null) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "审批结果参数为空");
+        }
+        internModifyRecordService.auditInternModify(id, result);
         return new BaseResponse<>();
     }
 
