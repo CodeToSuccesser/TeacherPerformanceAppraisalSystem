@@ -119,4 +119,10 @@
         WHERE id = #{data.id} and is_deleted = 0
     </update>
 
+    <update id="deleteModelById">
+        UPDATE params_rules_setting
+        SET is_deleted = 1
+        WHERE id = #{id} and is_deleted = 0
+    </update>
+
 </mapper>

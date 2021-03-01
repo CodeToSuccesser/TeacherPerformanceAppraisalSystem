@@ -33,4 +33,12 @@ public interface ParamsRulesSettingService extends BaseService<ParamsRulesSettin
      * @date 2021/2/28
      **/
     void editParamsRulesSetting(ParamsRulesSettingModel model);
+
+    /**
+     * 删除权值信息
+     *
+     * @author dude
+     * @date 2021/3/1
+     **/
+    void deleteModelById(ParamsRulesSettingModel model);
 }

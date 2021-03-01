@@ -18,6 +18,7 @@ import com.management.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,7 @@ public class ParamsRulesSettingImpl extends BaseServiceImpl<ParamsRulesSettingMa
     private RuleSettingMapper ruleSettingMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public PageInfo<ParamsRulesSettingModel> queryParamsRulesSetting(ParamSearchModel searchModel) {
         PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
         List<ParamsRulesSettingModel> modelList = mapper.queryParamsRulesSetting(searchModel);
@@ -47,6 +49,7 @@ public class ParamsRulesSettingImpl extends BaseServiceImpl<ParamsRulesSettingMa
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void editParamsRulesSetting(ParamsRulesSettingModel model) {
         // 查询是否存在旧数据
         ParamSearchModel searchModel = new ParamSearchModel();
@@ -96,5 +99,18 @@ public class ParamsRulesSettingImpl extends BaseServiceImpl<ParamsRulesSettingMa
         } else {
             mapper.insertModel(model);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteModelById(ParamsRulesSettingModel model) {
+        ParamSearchModel searchModel = new ParamSearchModel();
+        searchModel.setId(model.getId());
+        ParamsRulesSetting oldData = mapper.getParamsRulesSetting(searchModel);
+        if (oldData == null) {
+            // 查不到操作数据
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
+        }
+        mapper.deleteModelById(model.getId());
     }
 }

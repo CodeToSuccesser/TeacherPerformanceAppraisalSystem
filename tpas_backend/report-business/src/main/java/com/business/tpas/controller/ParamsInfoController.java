@@ -70,4 +70,16 @@ public class ParamsInfoController {
         return new BaseResponse<>(page);
     }
 
+    @ApiOperation(value = "删除权值", notes = "删除权值")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/deleteParamRules")
+    public BaseResponse<?> deleteParamRules(@RequestBody ParamsRulesSettingModel model) {
+        if (model == null || model.getId() == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        paramsRulesSettingService.deleteModelById(model);
+        return new BaseResponse<>();
+    }
+
 }

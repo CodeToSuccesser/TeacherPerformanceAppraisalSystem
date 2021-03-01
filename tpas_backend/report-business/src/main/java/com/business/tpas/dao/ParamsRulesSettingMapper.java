@@ -51,4 +51,12 @@ public interface ParamsRulesSettingMapper extends BaseDao<ParamsRulesSetting> {
      **/
     void updateModel(@Param("data") ParamsRulesSettingModel date);
 
+    /**
+     * 删除数据
+     *
+     * @author dude
+     * @date 2021/3/1
+     **/
+    void deleteModelById(@Param("id") Long id);
+
 }
