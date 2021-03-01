@@ -23,10 +23,10 @@ public class ParamsRulesSettingModel {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "Cn的n值, 1 表示C1")
+    @ApiModelProperty(value = "Cn的n值, 1 表示C1", required = true)
     private Integer cNum;
 
-    @ApiModelProperty(value = "m表示第m个Cn")
+    @ApiModelProperty(value = "m表示第m个Cn", required = true)
     private Integer cOption;
 
     @ApiModelProperty(value = "权值字段规则, 由逗号拼接, 如: 1,3")
@@ -40,6 +40,9 @@ public class ParamsRulesSettingModel {
 
     @ApiModelProperty(value = "参数权值, 取值类型为2时有效")
     private BigDecimal paramValue;
+
+    @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文")
+    private Integer cType;
 
     @ApiModelProperty(value = "备注")
     private String remark;
@@ -128,16 +131,25 @@ public class ParamsRulesSettingModel {
         this.createTime = createTime;
     }
 
+    public Integer getcType() {
+        return cType;
+    }
+
+    public void setcType(Integer cType) {
+        this.cType = cType;
+    }
+
     @Override
     public String toString() {
         return "ParamsRulesSettingModel{" +
                 "id=" + id +
                 ", cNum=" + cNum +
-                ", cOpction=" + cOption +
+                ", cOption=" + cOption +
                 ", rulesSettingIds='" + rulesSettingIds + '\'' +
                 ", valueType=" + valueType +
                 ", columnName='" + columnName + '\'' +
                 ", paramValue=" + paramValue +
+                ", cType=" + cType +
                 ", remark='" + remark + '\'' +
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +

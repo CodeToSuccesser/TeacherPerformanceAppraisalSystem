@@ -1,5 +1,7 @@
 package com.business.tpas.controller;
 
+import com.business.tpas.enums.ParamsRulesValueTypeEnum;
+import com.business.tpas.enums.RuleSettingCTypeEnum;
 import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.model.ParamsRulesSettingModel;
 import com.business.tpas.service.ParamsRulesSettingService;
@@ -10,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,17 +37,24 @@ public class ParamsInfoController {
     @Autowired
     private ParamsRulesSettingService paramsRulesSettingService;
 
-    @ApiOperation(value = "新增权值", notes = "新增权值")
+    @ApiOperation(value = "新增/修改权值", notes = "新增/修改权值, cNum、cOption必传，不存在时为新增")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
-    @PostMapping("/addParamRules")
-    public BaseResponse<?> addParamRules(@RequestBody List<Long> ids) {
-        return new BaseResponse<>();
-    }
-
-    @ApiOperation(value = "修改权值", notes = "修改权值")
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
-    @PostMapping("/modifyParamRules")
-    public BaseResponse<?> modifyParamRules(@RequestBody List<Long> ids) {
+    @PostMapping("/editParamRules")
+    public BaseResponse<?> addParamRules(@RequestBody ParamsRulesSettingModel model) {
+        if (model == null || model.getcNum() == null || model.getcOption() == null
+                || model.getValueType() == null || model.getcType() == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        Integer valueType = model.getValueType();
+        if(!ParamsRulesValueTypeEnum.isExistByCode(valueType)) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG);
+        } else {
+            if ((valueType.equals(ParamsRulesValueTypeEnum.COLUMN.getCode()) && StringUtils.isBlank(model.getColumnName()))
+                    || (valueType.equals(ParamsRulesValueTypeEnum.CONST.getCode()) && model.getParamValue() == null)) {
+                return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+            }
+        }
+        paramsRulesSettingService.editParamsRulesSetting(model);
         return new BaseResponse<>();
     }
 

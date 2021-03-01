@@ -19,5 +19,36 @@ import java.util.List;
 @Repository
 public interface ParamsRulesSettingMapper extends BaseDao<ParamsRulesSetting> {
 
+    /**
+     * 批量查询权值信息
+     *
+     * @author dude
+     * @date 2021/2/28
+     **/
     List<ParamsRulesSettingModel> queryParamsRulesSetting(@Param("data") ParamSearchModel searchModel);
+
+    /**
+     * 由id查询权值
+     *
+     * @author dude
+     * @date 2021/2/28
+     **/
+    ParamsRulesSetting getParamsRulesSetting(@Param("data") ParamSearchModel searchModel);
+
+    /**
+     * 新增
+     *
+     * @author dude
+     * @date 2021/3/1
+     **/
+    void insertModel(@Param("data") ParamsRulesSettingModel data);
+
+    /**
+     * 修改数据
+     *
+     * @author dude
+     * @date 2021/3/1
+     **/
+    void updateModel(@Param("data") ParamsRulesSettingModel date);
+
 }

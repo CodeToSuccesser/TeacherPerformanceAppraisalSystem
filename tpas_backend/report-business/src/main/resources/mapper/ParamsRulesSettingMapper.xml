@@ -49,4 +49,74 @@
         </where>
     </select>
 
+    <select id="getParamsRulesSetting" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM params_rules_setting
+        <where>
+            is_deleted = 0
+            <if test="data.id != null">
+                AND id = #{data.id}
+            </if>
+            <if test="data.cNum != null">
+                AND c_num = #{data.cNum}
+            </if>
+            <if test="data.cOption != null">
+                AND c_option = #{data.cOption}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertModel" parameterType="com.business.tpas.model.ParamsRulesSettingModel">
+        INSERT INTO params_rules_setting(c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
+        , remark) VALUE
+        (#{data.cNum}, #{data.cOption}
+        <choose>
+            <when test="data.rulesSettingIds == null"> , ''</when>
+            <otherwise>, #{data.rulesSettingIds}</otherwise>
+        </choose>
+        , #{data.valueType}
+        <choose>
+            <when test="data.valueType = 1">
+                , #{data.columnName}, 0
+            </when>
+            <otherwise>
+                , '', #{data.paramValue}
+            </otherwise>
+        </choose>
+        , #{data.remark})
+    </insert>
+
+    <update id="updateModel">
+        UPDATE params_rules_setting
+        <set>
+            <if test="data.cNum != null">
+                , c_num = #{data.cNum}
+            </if>
+            <if test="data.cOption != null">
+                , c_option = #{data.cOption}
+            </if>
+            <if test="data.rulesSettingIds != null and data.rulesSettingIds != ''">
+                , rules_setting_ids = #{data.rulesSettingIds}
+            </if>
+            <if test="data.valueType != null">
+                , value_type = #{data.valueType}
+                <choose>
+                    <when test="data.valueType == 1">
+                        , `column_name` = #{data.columnName}
+                        , param_value = 0
+                    </when>
+                    <when test="data.valueType == 2">
+                        , `column_name` = ''
+                        , param_value = #{data.paramValue}
+                    </when>
+                    <otherwise>
+                        , `column_name` = ''
+                        , param_value = 0
+                    </otherwise>
+                </choose>
+            </if>
+        </set>
+        WHERE id = #{data.id} and is_deleted = 0
+    </update>
+
 </mapper>

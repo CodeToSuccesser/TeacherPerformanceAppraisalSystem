@@ -28,7 +28,7 @@ public class ParamsRulesSetting implements Serializable {
     private Integer cNum;
 
     @ApiModelProperty(value = "m表示第m个Cn")
-    private Integer cOpction;
+    private Integer cOption;
 
     @ApiModelProperty(value = "权值字段规则, 由逗号拼接, 如: 1,3")
     private String rulesSettingIds;
@@ -44,6 +44,9 @@ public class ParamsRulesSetting implements Serializable {
 
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文")
+    private Integer cType;
 
     private Integer isDeleted;
 
@@ -67,12 +70,12 @@ public class ParamsRulesSetting implements Serializable {
         this.cNum = cNum;
     }
 
-    public Integer getcOpction() {
-        return cOpction;
+    public Integer getcOption() {
+        return cOption;
     }
 
-    public void setcOpction(Integer cOpction) {
-        this.cOpction = cOpction;
+    public void setcOption(Integer cOption) {
+        this.cOption = cOption;
     }
 
     public String getRulesSettingIds() {
@@ -115,6 +118,14 @@ public class ParamsRulesSetting implements Serializable {
         this.remark = remark;
     }
 
+    public Integer getcType() {
+        return cType;
+    }
+
+    public void setcType(Integer cType) {
+        this.cType = cType;
+    }
+
     public Integer getIsDeleted() {
         return isDeleted;
     }
@@ -144,12 +155,13 @@ public class ParamsRulesSetting implements Serializable {
         return "ParamsRulesSetting{" +
                 "id=" + id +
                 ", cNum=" + cNum +
-                ", cOpction=" + cOpction +
+                ", cOpction=" + cOption +
                 ", rulesSettingIds='" + rulesSettingIds + '\'' +
                 ", valueType=" + valueType +
                 ", columnName='" + columnName + '\'' +
                 ", paramValue=" + paramValue +
                 ", remark='" + remark + '\'' +
+                ", cType=" + cType +
                 ", isDeleted=" + isDeleted +
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +

@@ -23,4 +23,14 @@ public interface ParamsRulesSettingService extends BaseService<ParamsRulesSettin
      * @date 2021/2/27
      **/
     PageInfo<ParamsRulesSettingModel> queryParamsRulesSetting(ParamSearchModel searchModel);
+
+    /**
+     * @description 新增编辑权值信息
+     * @param model 数据
+     * @return void
+     *
+     * @author dude
+     * @date 2021/2/28
+     **/
+    void editParamsRulesSetting(ParamsRulesSettingModel model);
 }

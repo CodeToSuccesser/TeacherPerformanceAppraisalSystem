@@ -99,6 +99,9 @@ INSERT INTO `params_rules_setting`(`id`, `c_num`, `c_option`, `rules_setting_ids
 (32, 11, 1, '', 1, 'student_number', 0, '学生人数'),
 (33, 12, 1, '', 2, '', 5, '指导全日制本科生论文倍数');
 
+ALTER TABLE `params_rules_setting` ADD COLUMN `c_type` TINYINT(4) NOT NULL DEFAULT 1 COMMENT '权值类型, 1 授课, 2 指导论文, 3指导实习';
+INSERT INTO `params_rules_setting`(`id`, `c_num`, `c_option`, `rules_setting_ids`, `value_type`, `column_name`, `param_value`, `remark`, `c_type`)VALUES
+(34, 13, 1, '', 1, 'student_number', 0, '学生人数', 2);
 
 CREATE TABLE `assess_rule`(
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -118,4 +121,6 @@ INSERT INTO `assess_rule` (`c_type`, `assess_detail`, `remark`) VALUES
 (1, 'C1*C5*C6*(1+C4+C7)', '课程实验'),
 (1, 'C9+C10*C11', '期末复习绩效'),
 (2, 'C11*C12', '指导全日制本科生论文');
+
+UPDATE `assess_rule` SET `assess_detail` = 'C13*C12' WHERE `c_type` = 2;
 -- ----------------------系统管理重构--------------------------
