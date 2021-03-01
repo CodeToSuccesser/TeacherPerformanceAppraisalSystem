@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.business.tpas.entity.RuleSetting">
         <id column="id" property="id" />
-        <result column="c_type" property="Type" />
+        <result column="c_type" property="cType" />
         <result column="value_name" property="valueName" />
         <result column="rule_type" property="ruleType" />
         <result column="left_value" property="leftValue" />
@@ -17,7 +17,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, c_type, value_name, rue_type, left_value, right_value, remark, is_deleted, update_time, create_time
+        id, c_type, value_name, rule_type, left_value, right_value, remark, is_deleted, update_time, create_time
     </sql>
 
     <select id="queryByIdList" resultMap="BaseResultMap">
