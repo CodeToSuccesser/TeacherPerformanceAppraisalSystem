@@ -84,11 +84,6 @@ public class InternModifyRecord implements Serializable {
     private String modifySchoolYear;
 
     /**
-     * 修改逻辑删除标识
-     */
-    private Integer modifyIsDeleted;
-
-    /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
     private Integer applyType;
@@ -222,22 +217,6 @@ public class InternModifyRecord implements Serializable {
         this.modifySemester = modifySemester;
     }
 
-    public String getModifySchoolYear() {
-        return modifySchoolYear;
-    }
-
-    public void setModifySchoolYear(String modifySchoolYear) {
-        this.modifySchoolYear = modifySchoolYear;
-    }
-
-    public Integer getModifyIsDeleted() {
-        return modifyIsDeleted;
-    }
-
-    public void setModifyIsDeleted(Integer modifyIsDeleted) {
-        this.modifyIsDeleted = modifyIsDeleted;
-    }
-
     public Integer getApplyType() {
         return applyType;
     }
@@ -302,6 +281,14 @@ public class InternModifyRecord implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getModifySchoolYear() {
+        return modifySchoolYear;
+    }
+
+    public void setModifySchoolYear(String modifySchoolYear) {
+        this.modifySchoolYear = modifySchoolYear;
+    }
+
     @Override
     public String toString() {
         return "InternModifyRecord{" +
@@ -318,7 +305,6 @@ public class InternModifyRecord implements Serializable {
         ", modifySchoolPractice=" + modifySchoolPractice +
         ", modifySemester=" + modifySemester +
         ", modifySchoolYear=" + modifySchoolYear +
-        ", modifyIsDeleted=" + modifyIsDeleted +
         ", applyType=" + applyType +
         ", applyId=" + applyId +
         ", adminId=" + adminId +

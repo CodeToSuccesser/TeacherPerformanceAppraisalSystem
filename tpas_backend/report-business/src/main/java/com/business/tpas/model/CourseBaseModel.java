@@ -78,6 +78,10 @@ public class CourseBaseModel {
     private String remark;
 
     @ExcelIgnore
+    @ApiModelProperty(value = "逻辑删除标志")
+    private Integer isDeleted;
+
+    @ExcelIgnore
     @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
@@ -220,6 +224,14 @@ public class CourseBaseModel {
         this.studentType = studentType;
     }
 
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public String toString() {
         return "CourseBaseModel{" + "id=" + id + ", courseCode='" + courseCode + '\'' + ", courseName='" + courseName
@@ -227,6 +239,6 @@ public class CourseBaseModel {
             + courseCridet + ", totalHours=" + totalHours + ", institute='" + institute + '\'' + ", firstClassTime="
             + firstClassTime + ", isBilingual=" + isBilingual + ", newTextbookTime=" + newTextbookTime + ", softHard="
             + softHard + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\''
-            + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
+            + ", isDeleted=" + isDeleted + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }
 }

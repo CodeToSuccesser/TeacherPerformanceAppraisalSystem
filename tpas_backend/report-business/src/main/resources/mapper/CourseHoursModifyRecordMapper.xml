@@ -28,6 +28,7 @@
         <result column="check_time" property="checkTime" />
         <result column="check_result" property="checkResult" />
         <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
@@ -57,6 +58,7 @@
         <result column="check_time" property="checkTime" />
         <result column="check_result" property="checkResult" />
         <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
@@ -65,7 +67,7 @@
         id, hours_id, apply_type, apply_id, selected_student, course_cridet,teaching_hours, computer_hours,experiment_hours,
         modify_teaching_hours,modify_computer_hours,modify_experiment_hours,total_hours, peroid, classed, modify_selected_student,
         modify_course_cridet, modify_total_hours, modify_peroid, modify_classed, admin_id, check_time, check_result, remark,
-        update_time, create_time
+        update_time, create_time,is_deleted
     </sql>
 
     <select id="selectModifyRecords" resultMap="ModelResultMap">
@@ -73,7 +75,7 @@
         chmr.computer_hours,chmr.experiment_hours, chmr.modify_teaching_hours,chmr.modify_computer_hours,chmr.modify_experiment_hours,
         chmr.total_hours, chmr.peroid,chmr.classed, chmr.modify_selected_student,chmr.modify_course_cridet, chmr.modify_total_hours,
         chmr.modify_peroid, chmr.modify_classed, chmr.admin_id, chmr.check_time, chmr.check_result, chmr.remark,
-        chmr.update_time, chmr.create_time
+        chmr.update_time, chmr.create_time,chmr.is_deleted
         from course_hours_modify_record chmr
         <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
         <where>
@@ -89,20 +91,23 @@
             <if test="data.checkResult != null">
                 and chmr.check_result = #{data.checkResult}
             </if>
+            and chmr.is_deleted = 0
         </where>
     </select>
 
     <select id="countModifyRecordByHoursId" resultType="java.lang.Integer">
         select count(*) from course_hours_modify_record chmr
         where chmr.hours_id = #{id}
+        and chmr.is_deleted = 0
     </select>
 
-    <delete id="batchDeleteByHoursIds" parameterType="java.util.List">
-        delete from course_hours_modify_record
+    <update id="batchDeleteByHoursIds" parameterType="java.util.List">
+        update course_hours_modify_record
+        set is_deleted = 1
         where 1 = 1
         <foreach collection="ids" item="id" index="index" open="and hours_id in(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
 </mapper>

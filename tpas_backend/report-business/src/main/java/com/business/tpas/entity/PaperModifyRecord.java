@@ -94,11 +94,6 @@ public class PaperModifyRecord implements Serializable {
     private String modifyRemark;
 
     /**
-     * 修改逻辑删除标识
-     */
-    private Integer modifyIsDeleted;
-
-    /**
      * 处理的管理员编码
      */
     private Long adminId;
@@ -241,14 +236,6 @@ public class PaperModifyRecord implements Serializable {
         this.modifyRemark = modifyRemark;
     }
 
-    public Integer getModifyIsDeleted() {
-        return modifyIsDeleted;
-    }
-
-    public void setModifyIsDeleted(Integer modifyIsDeleted) {
-        this.modifyIsDeleted = modifyIsDeleted;
-    }
-
     public Long getAdminId() {
         return adminId;
     }
@@ -307,7 +294,6 @@ public class PaperModifyRecord implements Serializable {
         ", modifySemester=" + modifySemester +
         ", modifySchoolYear=" + modifySchoolYear +
         ", modifyRemark=" + modifyRemark +
-        ", modifyIsDeleted=" + modifyIsDeleted +
         ", adminId=" + adminId +
         ", checkTime=" + checkTime +
         ", checkResult=" + checkResult +

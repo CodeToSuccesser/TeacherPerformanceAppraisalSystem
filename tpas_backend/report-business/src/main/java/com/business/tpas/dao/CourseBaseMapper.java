@@ -66,4 +66,10 @@ public interface CourseBaseMapper extends BaseDao<CourseBase> {
      * @return
      */
     CourseBase selectByCourseCode(@Param("courseCode")String courseCode);
+
+    /**
+     * 逻辑删除课程基本信息
+     * @param ids
+     */
+    void deleteCourseInfo(@Param("ids")List<Long> ids);
 }

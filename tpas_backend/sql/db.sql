@@ -71,6 +71,7 @@ CREATE TABLE `course_base`(
 	`student_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '学生类型, 默认0 本科生, 1 专科生, 2 研究生',
 	`admin_id` BIGINT(20) NOT NULL COMMENT '管理员编号',
 	`remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+	`is_deleted` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '逻辑删除标识, 0 无删除, 1 已删除',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据最新操作时间',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(`id`),
@@ -127,6 +128,7 @@ CREATE TABLE `course_hours_modify_record`(
 	`remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据最新操作时间',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`is_deleted` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '逻辑删除标识, 0 无删除, 1 已删除',
 	PRIMARY KEY(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='课程课时修改记录表, 修改用户:教师/管理员';
 
@@ -161,7 +163,6 @@ CREATE TABLE `paper_modify_record`(
 	`modify_semester` TINYINT(4) DEFAULT NULL COMMENT '修改学期',
 	`modify_school_year` VARCHAR(32) NOT NULL COMMENT '学年',
 	`modify_remark` VARCHAR(255) DEFAULT NULL COMMENT '修改备注',
-	`modify_is_deleted` TINYINT(4) DEFAULT NULL COMMENT '修改逻辑删除标识',
 	`admin_id` BIGINT(20) DEFAULT NULL COMMENT '处理的管理员编码',
 	`check_time` TIMESTAMP NULL COMMENT '管理员处理时间',
 	`check_result` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '管理员处理结果, 默认0 未处理, 1 通过, 2 驳回',
@@ -199,7 +200,6 @@ CREATE TABLE `intern_modify_record`(
 	`modify_school_practice` INT(11) DEFAULT NULL COMMENT '修改校内实习带队人数',
 	`modify_semester` TINYINT(4) DEFAULT NULL COMMENT '修改学期',
 	`modify_school_year` VARCHAR(32) NOT NULL COMMENT '学年',
-	`modify_is_deleted` TINYINT(4) DEFAULT NULL COMMENT '修改逻辑删除标识',
 	`apply_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '提出修改用户类型, 默认0 教师, 1 管理员',
 	`apply_id` BIGINT(20) NOT NULL COMMENT '提出修改用户编码, teachar_id或者admin_id',
 	`admin_id` BIGINT(20) DEFAULT NULL COMMENT '处理的管理员编码',

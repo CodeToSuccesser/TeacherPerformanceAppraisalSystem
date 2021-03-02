@@ -19,6 +19,7 @@
         <result column="student_type" property="studentType" />
         <result column="admin_id" property="adminId" />
         <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
@@ -39,13 +40,15 @@
         <result column="student_type" property="studentType" />
         <result column="admin_id" property="adminId" />
         <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, course_name, course_code, course_character, course_type, course_cridet, total_hours, institute, first_class_time, is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark, update_time, create_time
+        id, course_name, course_code, course_character, course_type, course_cridet, total_hours, institute, first_class_time,
+        is_bilingual, new_textbook_time, soft_hard, student_type, admin_id, remark,is_deleted, update_time, create_time
     </sql>
 
     <insert id="saveBatch" parameterType="java.util.List">
@@ -100,6 +103,7 @@
          <if test="data.institute != null and data.institute != ''">
              and cb.institute = #{data.institute}
          </if>
+            and cb.is_deleted = 0
         </where>
     </select>
 
@@ -107,11 +111,13 @@
     <select id="countByCourseName" resultType="java.lang.Integer">
         select count(*) from course_base cb
         where cb.course_name = #{courseName}
+        and cb.is_deleted = 0
     </select>
 
     <select id="countByCourseCode" resultType="java.lang.Integer">
         select count(*) from course_base cb
         where cb.course_code = #{courseCode}
+        and cb.is_deleted = 0
     </select>
     
     <insert id="insertCourseBase">
@@ -140,6 +146,7 @@
         select <include refid="Base_Column_List"/>
         from course_base cb
         where cb.course_name = #{courseName}
+        and cb.is_deleted = 0
         order by cb.id desc
         limit 1
     </select>
@@ -148,7 +155,17 @@
         select <include refid="Base_Column_List"/>
         from course_base cb
         where cb.course_code = #{courseCode}
+        and cb.is_deleted = 0
         limit 1
     </select>
+
+    <update id="deleteCourseInfo" parameterType="java.util.List">
+        update course_base
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>
