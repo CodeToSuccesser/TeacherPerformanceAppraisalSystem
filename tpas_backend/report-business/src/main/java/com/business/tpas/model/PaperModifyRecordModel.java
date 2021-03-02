@@ -102,12 +102,6 @@ public class PaperModifyRecordModel {
     private String modifyRemark;
 
     /**
-     * 修改逻辑删除标识
-     */
-    @ApiModelProperty(value = "修改逻辑删除标识")
-    private Integer modifyIsDeleted;
-
-    /**
      * 处理的管理员编码
      */
     @ApiModelProperty(value = "处理的管理员编码")
@@ -252,14 +246,6 @@ public class PaperModifyRecordModel {
 
     public void setModifyRemark(String modifyRemark) {
         this.modifyRemark = modifyRemark;
-    }
-
-    public Integer getModifyIsDeleted() {
-        return modifyIsDeleted;
-    }
-
-    public void setModifyIsDeleted(Integer modifyIsDeleted) {
-        this.modifyIsDeleted = modifyIsDeleted;
     }
 
     public Long getAdminId() {

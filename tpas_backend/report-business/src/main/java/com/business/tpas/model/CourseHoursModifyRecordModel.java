@@ -165,6 +165,9 @@ public class CourseHoursModifyRecordModel {
     @ApiModelProperty(value = "修改后的实验学时")
     private Integer modifyExperimentHours;
 
+    @ApiModelProperty(value = "逻辑删除标志")
+    private Integer isDeleted;
+
     public Long getId() {
         return id;
     }
@@ -371,5 +374,13 @@ public class CourseHoursModifyRecordModel {
 
     public void setModifyExperimentHours(Integer modifyExperimentHours) {
         this.modifyExperimentHours = modifyExperimentHours;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

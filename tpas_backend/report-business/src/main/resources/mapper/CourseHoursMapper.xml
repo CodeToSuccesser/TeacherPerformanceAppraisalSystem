@@ -66,7 +66,7 @@
     </sql>
 
     <select id="selectCourseHours" resultMap="ModelResultMap">
-        select ch.id,ch.teacher_id,tm.log_name as teacher_code, tm.teacher_name,cb.course_code,ch.course_id,cb.course_name,ch.student_number,ch.total_capacity,ch.selected_student,ch.week_hours,
+        select ch.id,ch.teacher_id,um.log_name as teacher_code, um.user_name as teacher_name,cb.course_code,ch.course_id,cb.course_name,ch.student_number,ch.total_capacity,ch.selected_student,ch.week_hours,
         ch.peroid,ch.classed,ch.teaching_hours,ch.computer_hours,ch.experiment_hours,ch.experiment_hours,ch.selection_number,
         ch.students_institute,ch.semester,ch.school_year,ch.admin_id,ch.primary_secondary,ch.exp_number,ch.exp_per_number,
         ch.course_time,ch.remark,ch.update_time,ch.create_time
@@ -169,8 +169,8 @@
     <update id="deleteCourseHoursByIds" parameterType="java.util.List">
         update course_hours
         set is_deleted = 1
-        where id in
-        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
             #{item}
         </foreach>
     </update>

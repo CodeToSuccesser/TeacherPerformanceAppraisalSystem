@@ -41,7 +41,7 @@
     </sql>
 
     <select id="selectPaperInfo" resultMap="ModelResultMap">
-        select p.id,p.teacher_id, m.major_name,tm.log_name as teacher_code,m.major_code,tm.teacher_name, p.major_id,
+        select p.id,p.teacher_id, m.major_name,um.log_name as teacher_code,m.major_code,um.user_name as teacher_name, p.major_id,
         p.semester,p.school_year, p.admin_id,p.remark, p.student_number, p.update_time, p.create_time
         from paper p inner join user_msg um on p.teacher_id = um.id
         inner join major m on m.id = p.major_id
@@ -78,8 +78,8 @@
     <update id="deletePaperInfos" parameterType="java.util.List">
         update paper
         set is_deleted = 1
-        where id in
-        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
             #{item}
         </foreach>
     </update>

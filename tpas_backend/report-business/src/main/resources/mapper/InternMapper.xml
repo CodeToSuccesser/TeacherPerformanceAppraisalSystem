@@ -39,7 +39,7 @@
     </sql>
 
     <select id="selectInternInfo" resultMap="ModelResultMap">
-        select t.id,t.teacher_id,tm.teacher_name,tm.log_name as teacher_code,
+        select t.id,t.teacher_id,um.user_name as teacher_name,um.log_name as teacher_code,
         t.normal_practice,t.non_normal_practice,t.school_practice,t.semester,t.school_year,
         t.remark,t.update_time,t.create_time,t.is_deleted
         from intern t inner join user_msg um on t.teacher_id = um.id
@@ -96,8 +96,8 @@
     <update id="deleteInternInfos" parameterType="java.util.List">
         update intern
         set is_deleted = 1
-        where id in
-        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
             #{item}
         </foreach>
     </update>

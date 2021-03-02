@@ -90,12 +90,6 @@ public class InternModifyRecordModel {
     private String modifySchoolYear;
 
     /**
-     * 修改逻辑删除标识
-     */
-    @ApiModelProperty(value = "修改逻辑删除标识")
-    private Integer modifyIsDeleted;
-
-    /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
     @ApiModelProperty(value = "提出修改用户类型, 默认0 教师, 1 管理员")
@@ -244,14 +238,6 @@ public class InternModifyRecordModel {
         this.modifySchoolYear = modifySchoolYear;
     }
 
-    public Integer getModifyIsDeleted() {
-        return modifyIsDeleted;
-    }
-
-    public void setModifyIsDeleted(Integer modifyIsDeleted) {
-        this.modifyIsDeleted = modifyIsDeleted;
-    }
-
     public Integer getApplyType() {
         return applyType;
     }
@@ -323,7 +309,7 @@ public class InternModifyRecordModel {
             + semester + ", schoolYear=" + schoolYear + ", isDeleted=" + isDeleted + ", modifyNormalPractice="
             + modifyNormalPractice + ", modifyNonNormalPractice=" + modifyNonNormalPractice + ", modifySchoolPractice="
             + modifySchoolPractice + ", modifySemester=" + modifySemester + ", modifySchoolYear=" + modifySchoolYear
-            + ", modifyIsDeleted=" + modifyIsDeleted + ", applyType=" + applyType + ", applyId=" + applyId
+            + ", applyType=" + applyType + ", applyId=" + applyId
             + ", adminId=" + adminId + ", checkTime=" + checkTime + ", checkResult=" + checkResult + ", remark='"
             + remark + '\'' + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }

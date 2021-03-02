@@ -111,6 +111,11 @@ public class CourseHoursModifyRecord implements Serializable {
     private String remark;
 
     /**
+     * 逻辑删除标志
+     */
+    private Integer isDeleted;
+
+    /**
      * 数据最新操作时间
      */
     private Date updateTime;
@@ -355,6 +360,14 @@ public class CourseHoursModifyRecord implements Serializable {
         this.createTime = createTime;
     }
 
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public String toString() {
         return "CourseHoursModifyRecord{" + "id=" + id + ", hoursId=" + hoursId + ", applyType=" + applyType
@@ -363,9 +376,9 @@ public class CourseHoursModifyRecord implements Serializable {
             + ", modifySelectedStudent=" + modifySelectedStudent + ", modifyCourseCridet=" + modifyCourseCridet
             + ", modifyTotalHours=" + modifyTotalHours + ", modifyPeroid='" + modifyPeroid + '\'' + ", modifyClassed='"
             + modifyClassed + '\'' + ", adminId=" + adminId + ", checkTime=" + checkTime + ", checkResult="
-            + checkResult + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime=" + createTime
-            + ", teachingHours=" + teachingHours + ", modifyTeachingHours=" + modifyTeachingHours + ", computerHours="
-            + computerHours + ", modifyComputerHours=" + modifyComputerHours + ", experimentHours=" + experimentHours
-            + ", modifyExperimentHours=" + modifyExperimentHours + '}';
+            + checkResult + ", remark='" + remark + '\'' + ", isDeleted=" + isDeleted + ", updateTime=" + updateTime
+            + ", createTime=" + createTime + ", teachingHours=" + teachingHours + ", modifyTeachingHours="
+            + modifyTeachingHours + ", computerHours=" + computerHours + ", modifyComputerHours=" + modifyComputerHours
+            + ", experimentHours=" + experimentHours + ", modifyExperimentHours=" + modifyExperimentHours + '}';
     }
 }

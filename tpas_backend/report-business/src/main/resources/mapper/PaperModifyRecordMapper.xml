@@ -19,7 +19,6 @@
         <result column="modify_semester" property="modifySemester" />
         <result column="modify_school_year" property="modifySchoolYear" />
         <result column="modify_remark" property="modifyRemark" />
-        <result column="modify_is_deleted" property="modifyIsDeleted" />
         <result column="admin_id" property="adminId" />
         <result column="check_time" property="checkTime" />
         <result column="check_result" property="checkResult" />
@@ -43,7 +42,6 @@
         <result column="modify_semester" property="modifySemester" />
         <result column="modify_school_year" property="modifySchoolYear" />
         <result column="modify_remark" property="modifyRemark" />
-        <result column="modify_is_deleted" property="modifyIsDeleted" />
         <result column="admin_id" property="adminId" />
         <result column="check_time" property="checkTime" />
         <result column="check_result" property="checkResult" />
@@ -55,13 +53,13 @@
     <sql id="Base_Column_List">
         id, paper_id, apply_type, apply_id, major_id, student_number, semester,school_year,remark, is_deleted,
         modify_major_id,modify_student_number,modify_semester,modify_school_year,check_time,modify_remark, check_result,
-        modify_is_deleted,admin_id, update_time, create_time
+        admin_id, update_time, create_time
     </sql>
 
     <select id="selectModifyRecords" resultMap="ModelResultMap">
         select pmr.id, pmr.paper_id, pmr.apply_type, pmr.apply_id, pmr.major_id, pmr.student_number, pmr.semester,pmr.school_year,
         pmr.remark, pmr.is_deleted,pmr.modify_major_id,pmr.modify_student_number,pmr.modify_semester,pmr.modify_school_year,
-        pmr.check_time,pmr.modify_remark, pmr.check_result,pmr.modify_is_deleted,pmr.admin_id, pmr.update_time, pmr. create_time
+        pmr.check_time,pmr.modify_remark, pmr.check_result,pmr.admin_id, pmr.update_time, pmr.create_time
         from paper_modify_record pmr
         <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
         <where>
@@ -77,6 +75,7 @@
             <if test="data.checkResult != null">
                 and pmr.check_result = #{data.checkResult}
             </if>
+            and pmr.is_deleted = 0
         </where>
     </select>
 
@@ -85,12 +84,13 @@
         where paper_id = #{id}
     </select>
 
-    <delete id="batchDeleteByPaperIds" parameterType="java.util.List">
-        delete from paper_modify_record
+    <update id="batchDeleteByPaperIds" parameterType="java.util.List">
+        update paper_modify_record
+        set is_deleted = 1
         where 1 = 1
         <foreach collection="ids" item="id" index="index" open=" and paper_id in (" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
 </mapper>

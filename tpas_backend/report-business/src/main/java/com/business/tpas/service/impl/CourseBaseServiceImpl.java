@@ -71,7 +71,8 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
     @Override
     public void deleteCourseBaseInfos(List<Long> ids) {
         filterIdsCanBeDeleted(ids);
-        courseBaseMapper.deleteBatchIds(ids);
+        // 逻辑删除课程基本信息
+        courseBaseMapper.deleteCourseInfo(ids);
     }
 
     @Override

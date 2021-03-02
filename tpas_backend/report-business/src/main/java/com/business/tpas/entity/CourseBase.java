@@ -96,12 +96,16 @@ public class CourseBase implements Serializable {
     private String remark;
 
     /**
+     * 逻辑删除标志
+     */
+    private Integer isDeleted;
+
+    /**
      * 数据最新操作时间
      */
     private Date updateTime;
 
     private Date createTime;
-
 
     public Long getId() {
         return id;
@@ -239,13 +243,21 @@ public class CourseBase implements Serializable {
         this.createTime = createTime;
     }
 
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public String toString() {
         return "CourseBase{" + "id=" + id + ", courseName='" + courseName + '\'' + ", courseCode='" + courseCode + '\''
             + ", courseCharacter=" + courseCharacter + ", courseType=" + courseType + ", courseCridet=" + courseCridet
             + ", totalHours=" + totalHours + ", institute='" + institute + '\'' + ", firstClassTime=" + firstClassTime
             + ", isBilingual=" + isBilingual + ", newTextbookTime=" + newTextbookTime + ", softHard=" + softHard
-            + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", updateTime="
-            + updateTime + ", createTime=" + createTime + '}';
+            + ", studentType=" + studentType + ", adminId=" + adminId + ", remark='" + remark + '\'' + ", isDeleted="
+            + isDeleted + ", updateTime=" + updateTime + ", createTime=" + createTime + '}';
     }
 }
