@@ -18,6 +18,7 @@ public enum ErrorCodeEnum {
     DUPLICATE_OBJECT_EXIST(409, "logName已存在"),
     PARAM_IS_EMPTY(411, "请求参数为空"),
     PARAM_IS_WRONG(416, "请求参数有误"),
+    DATA_IS_USING(417, "数据被使用，无法操作"),
     UPLOAD_FILE_WRONG(418, "上传文件格式错误"),
     FILE_OPERATION_ERROR(419, "文件处理发生异常"),
     LOGIN_TIME_OUT(401, "身份验证已过期"),

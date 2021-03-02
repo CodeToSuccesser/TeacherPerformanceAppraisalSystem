@@ -34,4 +34,32 @@
         </where>
     </select>
 
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM rule_setting
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <insert id="insertModel" parameterType="com.business.tpas.model.RuleSettingModel">
+        INSERT INTO rule_setting(c_type, value_name, rule_type, left_value, right_value, remark)VALUE
+        (#{data.cType}, #{data.valueName}, #{data.ruleType}, #{data.leftValue}, #{data.rightValue}, #{data.remark})
+    </insert>
+
+    <update id="updateModel" parameterType="com.business.tpas.model.RuleSettingModel">
+        UPDATE rule_setting
+        SET c_type = #{data.cType}
+        , value_name = #{data.valueName}
+        , rule_type = #{data.ruleType}
+        , left_value = #{data.leftValue}
+        , right_value = #{data.rightValue}
+        , remark = #{data.remark}
+        WHERE id = #{data.id} AND is_deleted = 0
+    </update>
+
+    <update id="deleteModelById" parameterType="com.business.tpas.model.RuleSettingModel">
+        UPDATE rule_setting
+        SET is_deleted = 1
+        WHERE id = #{data.id} AND is_deleted = 0
+    </update>
+
 </mapper>

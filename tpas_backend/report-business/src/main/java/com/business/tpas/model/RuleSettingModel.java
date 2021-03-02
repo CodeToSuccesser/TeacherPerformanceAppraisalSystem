@@ -1,27 +1,21 @@
-package com.business.tpas.entity;
+package com.business.tpas.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @author dude
  * @version 1.0
- * @classname ruleSetting
- * @description 权值字段规则表
- * @date 2021/2/28
+ * @classname RuleSettingModel
+ * @description 权值字段规则
+ * @date 2021/3/2
  **/
-@ApiModel(value = "权值字段规则表", description = "权值字段规则表")
-public class RuleSetting implements Serializable {
+@ApiModel(value = "权值字段规则", description = "权值字段规则")
+public class RuleSettingModel {
 
-    private static final long serialVersionUID=1L;
-
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文")
@@ -42,11 +36,24 @@ public class RuleSetting implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    private Integer isDeleted;
-
     private Date updateTime;
 
     private Date createTime;
+
+    @Override
+    public String toString() {
+        return "RuleSettingModel{" +
+                "id=" + id +
+                ", cType=" + cType +
+                ", valueName='" + valueName + '\'' +
+                ", ruleType=" + ruleType +
+                ", leftValue=" + leftValue +
+                ", rightValue=" + rightValue +
+                ", remark='" + remark + '\'' +
+                ", updateTime=" + updateTime +
+                ", createTime=" + createTime +
+                '}';
+    }
 
     public Long getId() {
         return id;
@@ -104,14 +111,6 @@ public class RuleSetting implements Serializable {
         this.remark = remark;
     }
 
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -126,20 +125,5 @@ public class RuleSetting implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ruleSetting{" +
-                "id=" + id +
-                ", cType=" + cType +
-                ", valueName='" + valueName + '\'' +
-                ", ruleType=" + ruleType +
-                ", leftValue=" + leftValue +
-                ", rightValue=" + rightValue +
-                ", isDeleted=" + isDeleted +
-                ", updateTime=" + updateTime +
-                ", createTime=" + createTime +
-                '}';
     }
 }

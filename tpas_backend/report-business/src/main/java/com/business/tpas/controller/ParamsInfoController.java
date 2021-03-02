@@ -1,10 +1,13 @@
 package com.business.tpas.controller;
 
 import com.business.tpas.enums.ParamsRulesValueTypeEnum;
-import com.business.tpas.enums.RuleSettingCTypeEnum;
+import com.business.tpas.enums.RuleSettingColumnNameEnum;
+import com.business.tpas.enums.RuleSettingRuleTypeEnum;
 import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.model.ParamsRulesSettingModel;
+import com.business.tpas.model.RuleSettingModel;
 import com.business.tpas.service.ParamsRulesSettingService;
+import com.business.tpas.service.RuleSettingService;
 import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * @author dude
@@ -36,6 +39,9 @@ public class ParamsInfoController {
 
     @Autowired
     private ParamsRulesSettingService paramsRulesSettingService;
+
+    @Autowired
+    private RuleSettingService ruleSettingService;
 
     @ApiOperation(value = "新增/修改权值", notes = "新增/修改权值, cNum、cOption必传，不存在时为新增")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"), @ApiResponse(code = 500, message = "系统错误")})
@@ -82,4 +88,41 @@ public class ParamsInfoController {
         return new BaseResponse<>();
     }
 
+    @ApiOperation(value = "编辑权值规则", notes = "编辑权值规则")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/editRuleSetting")
+    public BaseResponse<?> editRuleSetting(@RequestBody RuleSettingModel model) {
+        if (model == null || model.getcType() == null || model.getValueName() == null || model.getRuleType() == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        // 判断规则字段是否有效
+        if (Arrays.stream(RuleSettingColumnNameEnum.values())
+                .noneMatch(it -> it.getcType().equals(model.getcType())
+                        && it.getColumnName().equals(model.getValueName().toLowerCase()))) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG);
+        }
+        // 判断规则参数取值类型
+        if (!RuleSettingRuleTypeEnum.isExistByCode(model.getRuleType())) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG);
+        }
+        // 判断区间左值是否非空，右值为空表示不限制右区间
+        if (model.getLeftValue() == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        ruleSettingService.editRuleSettingModel(model);
+        return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "删除权值规则", notes = "编辑权值规则")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/deleteRuleSetting")
+    public BaseResponse<?> deleteRuleSetting(@RequestBody RuleSettingModel model) {
+        if (model == null || model.getId() == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        ruleSettingService.deleteModelById(model);
+        return new BaseResponse<>();
+    }
 }
