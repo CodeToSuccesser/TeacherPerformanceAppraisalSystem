@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.CourseHoursMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.CourseHours">
+        <id column="id" property="id" />
+        <result column="course_id" property="courseId" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="student_number" property="studentNumber" />
+        <result column="total_capacity" property="totalCapacity" />
+        <result column="selected_student" property="selectedStudent" />
+        <result column="week_hours" property="weekHours" />
+        <result column="peroid" property="peroid" />
+        <result column="classed" property="classed" />
+        <result column="teaching_hours" property="teachingHours" />
+        <result column="computer_hours" property="computerHours" />
+        <result column="experiment_hours" property="experimentHours" />
+        <result column="selection_number" property="selectionNumber" />
+        <result column="students_institute" property="studentsInstitute" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="primary_secondary" property="primarySecondary" />
+        <result column="exp_number" property="expNumber" />
+        <result column="exp_per_number" property="expPerNumber" />
+        <result column="course_time" property="courseTime" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.CourseHoursModel">
+        <id column="id" property="id" />
+        <result column="course_name" property="courseName" />
+        <result column="teacher_code" property="teacherCode"/>
+        <result column="student_number" property="studentNumber" />
+        <result column="total_capacity" property="totalCapacity" />
+        <result column="selected_student" property="selectedStudent" />
+        <result column="week_hours" property="weekHours" />
+        <result column="peroid" property="peroid" />
+        <result column="classed" property="classed" />
+        <result column="teaching_hours" property="teachingHours" />
+        <result column="computer_hours" property="computerHours" />
+        <result column="experiment_hours" property="experimentHours" />
+        <result column="selection_number" property="selectionNumber" />
+        <result column="students_institute" property="studentsInstitute" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="primary_secondary" property="primarySecondary" />
+        <result column="exp_number" property="expNumber" />
+        <result column="exp_per_number" property="expPerNumber" />
+        <result column="course_time" property="courseTime" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, course_id, teacher_id, student_number, total_capacity, selected_student, week_hours, peroid, classed, teaching_hours,
+        computer_hours, experiment_hours, selection_number, students_institute, semester, school_year, admin_id, primary_secondary,
+        exp_number, exp_per_number, course_time, remark, is_deleted,update_time, create_time
+    </sql>
+
+    <select id="selectCourseHours" resultMap="ModelResultMap">
+        select ch.id,ch.teacher_id,um.log_name as teacher_code, um.user_name as teacher_name,cb.course_code,ch.course_id,cb.course_name,ch.student_number,ch.total_capacity,ch.selected_student,ch.week_hours,
+        ch.peroid,ch.classed,ch.teaching_hours,ch.computer_hours,ch.experiment_hours,ch.experiment_hours,ch.selection_number,
+        ch.students_institute,ch.semester,ch.school_year,ch.admin_id,ch.primary_secondary,ch.exp_number,ch.exp_per_number,
+        ch.course_time,ch.remark,ch.update_time,ch.create_time
+        from course_hours ch inner join course_base cb on ch.course_id = cb.id
+        inner join user_msg um on ch.teacher_id = um.id
+        <where>
+            <if test="data.courseName != null and data.courseName != ''">
+                and cb.course_name = #{data.courseName}
+            </if>
+            <if test="data.semester != null">
+                and ch.semester = #{data.semester}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                and ch.school_year = #{data.schoolYear}
+            </if>
+            and ch.is_deleted = 0
+        </where>
+    </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="data" separator=";">
+            insert into course_hours
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                course_id,teacher_id,selection_number,semester,school_year,admin_id,remark
+                <if test="data.studentNumber != null">,student_number</if>
+                <if test="data.totalCapacity != null">,total_capacity</if>
+                <if test="data.selectedStudent != null">,selected_student</if>
+                <if test="data.weekHours != null and data.weekHours != ''">,week_hours</if>
+                <if test="data.peroid != null and data.peroid != ''">,peroid</if>
+                <if test="data.classed != null and data.classed != ''">,classed</if>
+                <if test="data.teachingHours != null">,teaching_hours</if>
+                <if test="data.computerHours != null">,computer_hours</if>
+                <if test="data.experimentHours != null">,experiment_hours</if>
+                <if test="data.studentsInstitute != null and data.studentsInstitute != ''">,students_institute</if>
+                <if test="data.primarySecondary != null">,primary_secondary</if>
+                <if test="data.expNumber != null">,exp_number</if>
+                <if test="data.expPerNumber != null">,exp_per_number</if>
+                <if test="data.courseTime != null and data.courseTime != ''">,course_time</if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{data.courseId},#{data.teacherId},#{data.selectionNumber},#{data.semester},#{data.schoolYear},#{data.adminId},#{data.remark}
+                <if test="data.studentNumber != null">,#{data.studentNumber}</if>
+                <if test="data.totalCapacity != null">,#{data.totalCapacity}</if>
+                <if test="data.selectedStudent != null">,#{data.selectedStudent}</if>
+                <if test="data.weekHours != null and data.weekHours != ''">,#{data.weekHours}</if>
+                <if test="data.peroid != null and data.peroid != ''">,#{data.peroid}</if>
+                <if test="data.classed != null and data.classed != ''">,#{data.classed}</if>
+                <if test="data.teachingHours != null">,#{data.teachingHours}</if>
+                <if test="data.computerHours != null">,#{data.computerHours}</if>
+                <if test="data.experimentHours != null">,#{data.experimentHours}</if>
+                <if test="data.studentsInstitute != null and data.studentsInstitute != ''">,#{data.studentsInstitute}</if>
+                <if test="data.primarySecondary != null">,#{data.primarySecondary}</if>
+                <if test="data.expNumber != null">,#{data.expNumber}</if>
+                <if test="data.expPerNumber != null">,#{data.expPerNumber}</if>
+                <if test="data.courseTime != null and data.courseTime != ''">,#{data.courseTime}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="insertCourseHours" >
+        insert into course_hours
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            course_id,teacher_id,selection_number,semester,school_year,admin_id,remark
+            <if test="data.studentNumber != null">,student_number</if>
+            <if test="data.totalCapacity != null">,total_capacity</if>
+            <if test="data.selectedStudent != null">,selected_student</if>
+            <if test="data.weekHours != null and data.weekHours != ''">,week_hours</if>
+            <if test="data.peroid != null and data.peroid != ''">,peroid</if>
+            <if test="data.classed != null and data.classed != ''">,classed</if>
+            <if test="data.teachingHours != null">,teaching_hours</if>
+            <if test="data.computerHours != null">,computer_hours</if>
+            <if test="data.experimentHours != null">,experiment_hours</if>
+            <if test="data.studentsInstitute != null and data.studentsInstitute != ''">,students_institute</if>
+            <if test="data.primarySecondary != null">,primary_secondary</if>
+            <if test="data.expNumber != null">,exp_number</if>
+            <if test="data.expPerNumber != null">,exp_per_number</if>
+            <if test="data.courseTime != null and data.courseTime != ''">,course_time</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{data.courseId},#{data.teacherId},#{data.selectionNumber},#{data.semester},#{data.schoolYear},#{data.adminId},#{data.remark}
+            <if test="data.studentNumber != null">,#{data.studentNumber}</if>
+            <if test="data.totalCapacity != null">,#{data.totalCapacity}</if>
+            <if test="data.selectedStudent != null">,#{data.selectedStudent}</if>
+            <if test="data.weekHours != null and data.weekHours != ''">,#{data.weekHours}</if>
+            <if test="data.peroid != null and data.peroid != null">,#{data.peroid}</if>
+            <if test="data.classed != null and data.classed != ''">,#{data.classed}</if>
+            <if test="data.teachingHours != null">,#{data.teachingHours}</if>
+            <if test="data.computerHours != null">,#{data.computerHours}</if>
+            <if test="data.experimentHours != null">,#{data.experimentHours}</if>
+            <if test="data.studentsInstitute != null and data.studentsInstitute != ''">,#{data.studentsInstitute}</if>
+            <if test="data.primarySecondary != null">,#{data.primarySecondary}</if>
+            <if test="data.expNumber != null">,#{data.expNumber}</if>
+            <if test="data.expPerNumber != null">,#{data.expPerNumber}</if>
+            <if test="data.courseTime != null and data.courseTime != ''">,#{data.courseTime}</if>
+        </trim>
+    </insert>
+
+    <update id="deleteCourseHoursByIds" parameterType="java.util.List">
+        update course_hours
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+</mapper>

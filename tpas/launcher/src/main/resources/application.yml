@@ -1,0 +1,13 @@
+#spring:
+#  profiles:
+#    active: local
+spring:
+  # templates 模板引擎配置
+  thymeleaf:
+    mode: LEGACYHTML5  # 不进未关闭标签检查，需配合nekohtml使用
+    encoding: UTF-8
+    cache: false     # 关闭缓存
+    prefix: classpath:/template/
+    suffix: .html
+  mvc:
+    static-path-pattern: /static/**

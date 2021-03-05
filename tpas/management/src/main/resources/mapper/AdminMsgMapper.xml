@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.tpas.dao.AdminMsgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.management.tpas.entity.AdminMsg">
+        <id column="id" property="id" />
+        <result column="admin_name" property="adminName" />
+        <result column="log_name" property="logName" />
+        <result column="log_password" property="logPassword" />
+        <result column="contact" property="contact" />
+        <result column="portrait" property="portrait" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, admin_name, log_name, log_password, contact, portrait, is_deleted, update_time, create_time
+    </sql>
+
+    <select id="selectByLogName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from admin_msg
+        where log_name = #{logName,jdbcType=VARCHAR} AND is_deleted = 0
+    </select>
+
+</mapper>

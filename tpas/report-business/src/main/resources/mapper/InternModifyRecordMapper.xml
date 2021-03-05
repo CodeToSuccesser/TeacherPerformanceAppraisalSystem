@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.InternModifyRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.InternModifyRecord">
+        <id column="id" property="id" />
+        <result column="intern_id" property="internId" />
+        <result column="normal_practice" property="normalPractice" />
+        <result column="non_normal_practice" property="nonNormalPractice" />
+        <result column="school_practice" property="schoolPractice" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="modify_normal_practice" property="modifyNormalPractice" />
+        <result column="modify_non_normal_practice" property="modifyNonNormalPractice" />
+        <result column="modify_school_practice" property="modifySchoolPractice" />
+        <result column="modify_semester" property="modifySemester" />
+        <result column="modify_school_year" property="modifySchoolYear" />
+        <result column="apply_type" property="applyType" />
+        <result column="apply_id" property="applyId" />
+        <result column="admin_id" property="adminId" />
+        <result column="check_time" property="checkTime" />
+        <result column="check_result" property="checkResult" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.InternModifyRecordModel">
+        <id column="id" property="id" />
+        <result column="intern_id" property="internId" />
+        <result column="normal_practice" property="normalPractice" />
+        <result column="non_normal_practice" property="nonNormalPractice" />
+        <result column="school_practice" property="schoolPractice" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="modify_normal_practice" property="modifyNormalPractice" />
+        <result column="modify_non_normal_practice" property="modifyNonNormalPractice" />
+        <result column="modify_school_practice" property="modifySchoolPractice" />
+        <result column="modify_semester" property="modifySemester" />
+        <result column="modify_school_year" property="modifySchoolYear" />
+        <result column="apply_type" property="applyType" />
+        <result column="apply_id" property="applyId" />
+        <result column="admin_id" property="adminId" />
+        <result column="check_time" property="checkTime" />
+        <result column="check_result" property="checkResult" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, intern_id, normal_practice, non_normal_practice, school_practice, semester, school_year, is_deleted, modify_normal_practice,
+        modify_non_normal_practice, modify_school_practice, modify_semester, modify_school_year, apply_type, apply_id, admin_id,
+        check_time, check_result, remark, update_time, create_time
+    </sql>
+
+    <select id="selectModifyRecords" resultMap="ModelResultMap">
+        select imr.id, imr.intern_id, imr.normal_practice, imr.non_normal_practice, imr.school_practice, imr.semester,
+        imr.school_year,imr.is_deleted,imr.modify_normal_practice, imr.modify_non_normal_practice,imr.modify_school_practice,
+        imr.modify_semester,imr.modify_school_year,imr.apply_type,imr.apply_id, imr.admin_id,imr.check_time,
+        imr.check_result, imr.remark,imr.update_time,imr.create_time
+        from intern_modify_record imr
+        <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
+        <where>
+            <if test="data.applyName != null and data.applyName != ''">
+                and um.log_name = #{data.applyName}
+            </if>
+            <if test="data.beginTime != null">
+                and imr.create_time <![CDATA[ <= ]]> #{data.beginTime}
+            </if>
+            <if test="data.endTime != null">
+                and imr.create_time <![CDATA[ <= ]]> #{data.endTime}
+            </if>
+            <if test="data.checkResult != null">
+                and imr.check_result = #{data.checkResult}
+            </if>
+            and imr.is_deleted = 0
+        </where>
+    </select>
+
+    <select id="countModifyRecordByInternId" resultType="java.lang.Integer">
+        select count(*) from intern_modify_record
+        where intern_id = #{id}
+    </select>
+
+    <update id="batchDeleteByInternIds" parameterType="java.util.List">
+        update intern_modify_record
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" item="id" index="index" open=" and intern_id in (" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>
