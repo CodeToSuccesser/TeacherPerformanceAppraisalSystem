@@ -1,6 +1,7 @@
 package com.business.tpas.service;
 
 import com.business.tpas.entity.Assessment;
+import com.business.tpas.model.AssessCalculateSearchModel;
 import com.management.common.base.BaseService;
 
 /**
@@ -12,5 +13,7 @@ import com.management.common.base.BaseService;
  * @since 2020-08-01
  */
 public interface AssessmentService extends BaseService<Assessment> {
+
+    void calculateAssessment(AssessCalculateSearchModel model);
 
 }

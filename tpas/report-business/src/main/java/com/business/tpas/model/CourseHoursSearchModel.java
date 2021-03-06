@@ -17,7 +17,7 @@ public class CourseHoursSearchModel extends PageModel {
     private Integer semester;
 
     @ApiModelProperty(value = "学年")
-    private Integer schoolYear;
+    private String schoolYear;
 
     public String getCourseName() {
         return courseName;
@@ -35,17 +35,17 @@ public class CourseHoursSearchModel extends PageModel {
         this.semester = semester;
     }
 
-    public Integer getSchoolYear() {
+    public String getSchoolYear() {
         return schoolYear;
     }
 
-    public void setSchoolYear(Integer schoolYear) {
+    public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
     }
 
     @Override
     public String toString() {
         return "CourseHoursSearchModel{" + "courseName='" + courseName + '\'' + ", semester=" + semester
-            + ", schoolYear=" + schoolYear + '}';
+                + ", schoolYear=" + schoolYear + '}';
     }
 }

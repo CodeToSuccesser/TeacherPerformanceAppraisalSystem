@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.AssessmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.Assessment">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="course_quality" property="courseQuality" />
+        <result column="paper_quality" property="paperQuality" />
+        <result column="intern_quality" property="internQuality" />
+        <result column="other_quality" property="otherQuality" />
+        <result column="total_quality" property="totalQuality" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, teacher_id, semester, school_year, course_quality, paper_quality, intern_quality, other_quality,
+        total_quality, update_time, create_time
+    </sql>
+
+    <insert id="updateOrInsert">
+        INSERT INTO assessment(teacher_id, semester, school_year
+        , course_quality, paper_quality, intern_quality, other_quality, total_quality)
+        VALUE
+        (#{data.teacherId}, #{data.semester}, #{data.schoolYear}
+        , #{data.courseQuality}, #{data.paperQuality}, #{data.internQuality}, #{data.otherQuality}
+        , #{data.totalQuality})
+        ON DUPLICATE KEY UPDATE
+        <choose>
+            <when test="cType == 1">
+                course_quality = VALUES(course_quality)
+                , total_quality = VALUES(course_quality) + paper_quality + intern_quality + other_quality
+            </when>
+            <when test="cType == 2">
+                paper_quality = VALUES(paper_quality)
+                , total_quality = VALUES(paper_quality) + course_quality + intern_quality + other_quality
+            </when>
+            <when test="cType == 3">
+                intern_quality = VALUES(intern_quality)
+                , total_quality = VALUES(intern_quality) + course_quality + paper_quality + other_quality            </when>
+            <when test="cType == 4">
+                other_quality = VALUES(other_quality)
+                , total_quality = VALUES(other_quality) + course_quality + intern_quality + paper_quality            </when>
+            <otherwise>
+                course_quality = VALUES(course_quality)
+                , paper_quality = VALUES(paper_quality)
+                , intern_quality = VALUES(intern_quality)
+                , other_quality = VALUES(other_quality)
+                , total_quality = VALUES(total_quality)
+            </otherwise>
+        </choose>
+    </insert>
+
+</mapper>

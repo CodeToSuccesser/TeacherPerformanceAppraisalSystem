@@ -3,6 +3,8 @@ package com.business.tpas.entity;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,59 +26,31 @@ public class PaperScore implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 教师编码
-     */
+    @ApiModelProperty(value = "教师编码")
     private Long teacherId;
 
-    /**
-     * 论文指导信息编码
-     */
+    @ApiModelProperty(value = "论文指导信息编码")
     private Long paperId;
 
-    /**
-     * c9权值
-     */
-    private BigDecimal c9Value;
+    @ApiModelProperty(value = "选用的绩效规则id")
+    private Long assessRuleId;
 
-    /**
-     * c10权值
-     */
-    private BigDecimal c10Value;
+    @ApiModelProperty(value = "选用的绩效规则")
+    private String assessDetail;
 
-    /**
-     * c11权值
-     */
-    private BigDecimal c11Value;
+    @ApiModelProperty(value = "统计得出绩效规则")
+    private String assessFormat;
 
-    /**
-     * c12权值
-     */
-    private BigDecimal c12Value;
-
-    /**
-     * c13权值
-     */
-    private BigDecimal c13Value;
-
-    /**
-     * 论文指导总分
-     */
+    @ApiModelProperty(value = "论文总分")
     private BigDecimal total;
 
-    /**
-     * 学期, 默认1 第一学期, 2 第二学期
-     */
+    @ApiModelProperty(value = "学期, 默认1 第一学期, 2 第二学期")
     private Integer semester;
 
-    /**
-     * 学年
-     */
-    private Integer schoolYear;
+    @ApiModelProperty(value = "学年")
+    private String schoolYear;
 
-    /**
-     * 处理的管理员编码
-     */
+    @ApiModelProperty(value = "处理的管理员编码")
     private Long adminId;
 
     /**
@@ -116,44 +90,28 @@ public class PaperScore implements Serializable {
         this.paperId = paperId;
     }
 
-    public BigDecimal getC9Value() {
-        return c9Value;
+    public Long getAssessRuleId() {
+        return assessRuleId;
     }
 
-    public void setC9Value(BigDecimal c9Value) {
-        this.c9Value = c9Value;
+    public void setAssessRuleId(Long assessRuleId) {
+        this.assessRuleId = assessRuleId;
     }
 
-    public BigDecimal getC10Value() {
-        return c10Value;
+    public String getAssessDetail() {
+        return assessDetail;
     }
 
-    public void setC10Value(BigDecimal c10Value) {
-        this.c10Value = c10Value;
+    public void setAssessDetail(String assessDetail) {
+        this.assessDetail = assessDetail;
     }
 
-    public BigDecimal getC11Value() {
-        return c11Value;
+    public String getAssessFormat() {
+        return assessFormat;
     }
 
-    public void setC11Value(BigDecimal c11Value) {
-        this.c11Value = c11Value;
-    }
-
-    public BigDecimal getC12Value() {
-        return c12Value;
-    }
-
-    public void setC12Value(BigDecimal c12Value) {
-        this.c12Value = c12Value;
-    }
-
-    public BigDecimal getC13Value() {
-        return c13Value;
-    }
-
-    public void setC13Value(BigDecimal c13Value) {
-        this.c13Value = c13Value;
+    public void setAssessFormat(String assessFormat) {
+        this.assessFormat = assessFormat;
     }
 
     public BigDecimal getTotal() {
@@ -172,11 +130,11 @@ public class PaperScore implements Serializable {
         this.semester = semester;
     }
 
-    public Integer getSchoolYear() {
+    public String getSchoolYear() {
         return schoolYear;
     }
 
-    public void setSchoolYear(Integer schoolYear) {
+    public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
     }
 
@@ -215,21 +173,19 @@ public class PaperScore implements Serializable {
     @Override
     public String toString() {
         return "PaperScore{" +
-        "id=" + id +
-        ", teacherId=" + teacherId +
-        ", paperId=" + paperId +
-        ", c9Value=" + c9Value +
-        ", c10Value=" + c10Value +
-        ", c11Value=" + c11Value +
-        ", c12Value=" + c12Value +
-        ", c13Value=" + c13Value +
-        ", total=" + total +
-        ", semester=" + semester +
-        ", schoolYear=" + schoolYear +
-        ", adminId=" + adminId +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        ", isDeleted=" + isDeleted +
-        "}";
+                "id=" + id +
+                ", teacherId=" + teacherId +
+                ", paperId=" + paperId +
+                ", assessRuleId=" + assessRuleId +
+                ", assessDetail='" + assessDetail + '\'' +
+                ", assessFormat='" + assessFormat + '\'' +
+                ", total=" + total +
+                ", semester=" + semester +
+                ", schoolYear='" + schoolYear + '\'' +
+                ", adminId=" + adminId +
+                ", updateTime=" + updateTime +
+                ", createTime=" + createTime +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

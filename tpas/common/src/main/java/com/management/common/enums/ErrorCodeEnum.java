@@ -16,6 +16,7 @@ public enum ErrorCodeEnum {
     JSON_CONVERT_ERROR(555, "JSON转换异常"),
     SYSTEM_BUSING(501, "系统繁忙"),
     DUPLICATE_OBJECT_EXIST(409, "logName已存在"),
+    CALCULATE_ERROR(410, "计算绩效错误"),
     PARAM_IS_EMPTY(411, "请求参数为空"),
     PARAM_IS_WRONG(416, "请求参数有误"),
     DATA_IS_USING(417, "数据被使用，无法操作"),

@@ -2,6 +2,8 @@ package com.business.tpas.dao;
 
 import com.business.tpas.entity.InternScore;
 import com.management.common.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +13,8 @@ import com.management.common.base.BaseDao;
  * @author peihua.wu
  * @since 2020-08-01
  */
+@Repository
 public interface InternScoreMapper extends BaseDao<InternScore> {
 
+    void updateOrInsert(@Param("data") InternScore internScore);
 }

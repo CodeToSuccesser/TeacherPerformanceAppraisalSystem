@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.AssessRuleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.AssessRule">
+        <id column="id" property="id" />
+        <result column="c_type" property="cType" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="rule_setting_ids" property="ruleSettingIds" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, c_type, assess_detail, rule_setting_ids, remark, is_deleted, update_time, create_time
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM assess_rule
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <update id="deletedModelById" parameterType="com.business.tpas.model.AssessRuleModel">
+        UPDATE assess_rule
+        SET is_deleted = 1
+        WHERE id = #{data.id} AND is_deleted = 0
+    </update>
+
+    <select id="selectByCType" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM assess_rule
+        WHERE c_type = #{cType} AND is_deleted = 0
+    </select>
+
+</mapper>

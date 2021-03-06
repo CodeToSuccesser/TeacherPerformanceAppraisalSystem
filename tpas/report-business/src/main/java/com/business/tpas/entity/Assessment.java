@@ -37,7 +37,7 @@ public class Assessment implements Serializable {
     /**
      * 学年
      */
-    private Integer schoolYear;
+    private String schoolYear;
 
     /**
      * 授课总分
@@ -96,11 +96,11 @@ public class Assessment implements Serializable {
         this.semester = semester;
     }
 
-    public Integer getSchoolYear() {
+    public String getSchoolYear() {
         return schoolYear;
     }
 
-    public void setSchoolYear(Integer schoolYear) {
+    public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
     }
 
@@ -163,17 +163,32 @@ public class Assessment implements Serializable {
     @Override
     public String toString() {
         return "Assessment{" +
-        "id=" + id +
-        ", teacherId=" + teacherId +
-        ", semester=" + semester +
-        ", schoolYear=" + schoolYear +
-        ", courseQuality=" + courseQuality +
-        ", paperQuality=" + paperQuality +
-        ", internQuality=" + internQuality +
-        ", otherQuality=" + otherQuality +
-        ", totalQuality=" + totalQuality +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        "}";
+                "id=" + id +
+                ", teacherId=" + teacherId +
+                ", semester=" + semester +
+                ", schoolYear=" + schoolYear +
+                ", courseQuality=" + courseQuality +
+                ", paperQuality=" + paperQuality +
+                ", internQuality=" + internQuality +
+                ", otherQuality=" + otherQuality +
+                ", totalQuality=" + totalQuality +
+                ", updateTime=" + updateTime +
+                ", createTime=" + createTime +
+                "}";
+    }
+
+    public Assessment() {
+
+    }
+
+    public Assessment(Long teacherId, Integer semester, String schoolYear) {
+        this.teacherId = teacherId;
+        this.semester = semester;
+        this.schoolYear = schoolYear;
+        this.courseQuality = BigDecimal.ZERO;
+        this.internQuality = BigDecimal.ZERO;
+        this.paperQuality = BigDecimal.ZERO;
+        this.otherQuality = BigDecimal.ZERO;
+        this.totalQuality = BigDecimal.ZERO;
     }
 }

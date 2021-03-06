@@ -5,6 +5,7 @@ import com.business.tpas.model.CourseHoursModel;
 import com.business.tpas.model.CourseHoursSearchModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @author peihua.wu
  * @since 2020-08-01
  */
+@Repository
 public interface CourseHoursMapper extends BaseDao<CourseHours> {
 
     /**

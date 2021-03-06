@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.PaperScoreMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.PaperScore">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="paper_id" property="paperId" />
+        <result column="total" property="total" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="assess_rule_id" property="assessRuleId" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="assess_format" property="assessFormat" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, teacher_id, paper_id, total, semester, school_year, admin_id, update_time, create_time, is_deleted
+        , assess_rule_id, assess_detail, assess_format
+    </sql>
+
+    <insert id="updateOrInsert">
+        INSERT INTO paper_score(teacher_id, paper_id, total, semester
+        , school_year, admin_id, assess_rule_id, assess_detail, assess_format)
+        VALUE
+        (#{data.teacherId}, #{data.paperId}, #{data.total}, #{data.semester}
+        , #{data.schoolYear}, #{data.adminId}, #{data.assessRuleId}, #{data.assessDetail}
+        , #{data.assessFormat})
+        ON DUPLICATE KEY UPDATE assess_detail = VALUES(assess_detail)
+        , assess_format = VALUES(assess_format)
+        , is_deleted = 0
+    </insert>
+
+</mapper>

@@ -59,4 +59,20 @@ public interface ParamsRulesSettingMapper extends BaseDao<ParamsRulesSetting> {
      **/
     void deleteModelById(@Param("id") Long id);
 
+    /**
+     * 由id批量查询参数
+     *
+     * @author dude
+     * @date 2021/3/5
+     **/
+    List<ParamsRulesSetting> queryByIdList(@Param("idList") List<Long> idList);
+
+    /**
+     * 由cNum批量查询参数
+     *
+     * @author dude
+     * @date 2021/3/5
+     **/
+    List<ParamsRulesSetting> queryByCNumList(@Param("data") List<Integer> list);
+
 }

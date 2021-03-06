@@ -125,4 +125,28 @@
         WHERE id = #{id} and is_deleted = 0
     </update>
 
+    <select id="queryByIdList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM params_rules_setting
+        WHERE is_deleted = 0
+        <if test="idList != null and idList.size > 0">
+            AND id IN
+            <foreach collection="idList" separator="," open="(" close=")" index="index" item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryByCNumList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM params_rules_setting
+        WHERE is_deleted = 0
+        <if test="data != null and data.size > 0">
+            AND c_num IN
+            <foreach collection="data" separator="," open="(" close=")" index="index" item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>
