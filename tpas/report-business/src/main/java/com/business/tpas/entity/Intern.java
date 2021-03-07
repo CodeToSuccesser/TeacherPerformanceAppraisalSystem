@@ -59,6 +59,11 @@ public class Intern implements Serializable {
     private Integer isDeleted;
 
     /**
+     * 对于师范实习记录，标注为校内或校外实习，校外-0，校内-1
+     */
+    private Integer isInSchool;
+
+    /**
      * 备注
      */
     private String remark;
@@ -135,6 +140,14 @@ public class Intern implements Serializable {
         this.isDeleted = isDeleted;
     }
 
+    public Integer getIsInSchool() {
+        return isInSchool;
+    }
+
+    public void setIsInSchool(Integer isInSchool) {
+        this.isInSchool = isInSchool;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -161,18 +174,10 @@ public class Intern implements Serializable {
 
     @Override
     public String toString() {
-        return "Intern{" +
-        "id=" + id +
-        ", teacherId=" + teacherId +
-        ", normalPractice=" + normalPractice +
-        ", nonNormalPractice=" + nonNormalPractice +
-        ", schoolPractice=" + schoolPractice +
-        ", semester=" + semester +
-        ", schoolYear=" + schoolYear +
-        ", isDeleted=" + isDeleted +
-        ", remark=" + remark +
-        ", updateTime=" + updateTime +
-        ", createTime=" + createTime +
-        "}";
+        return "Intern{" + "id=" + id + ", teacherId=" + teacherId + ", normalPractice=" + normalPractice
+            + ", nonNormalPractice=" + nonNormalPractice + ", schoolPractice=" + schoolPractice + ", semester="
+            + semester + ", schoolYear='" + schoolYear + '\'' + ", isDeleted=" + isDeleted + ", isInSchool="
+            + isInSchool + ", remark='" + remark + '\'' + ", updateTime=" + updateTime + ", createTime=" + createTime
+            + '}';
     }
 }

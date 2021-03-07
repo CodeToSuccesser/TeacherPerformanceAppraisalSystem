@@ -81,6 +81,10 @@ public class InternModel {
     @ApiModelProperty(value = "逻辑删除标志")
     private Integer isDeleted;
 
+    @ExcelProperty("师范生校内外实习")
+    @ApiModelProperty(value = "师范生校内外实习")
+    private Integer isInSchool;
+
     /**
      * 备注
      */
@@ -185,6 +189,14 @@ public class InternModel {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getIsInSchool() {
+        return isInSchool;
+    }
+
+    public void setIsInSchool(Integer isInSchool) {
+        this.isInSchool = isInSchool;
     }
 
     public Date getUpdateTime() {

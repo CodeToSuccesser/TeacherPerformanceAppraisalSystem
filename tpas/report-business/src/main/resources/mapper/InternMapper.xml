@@ -12,6 +12,7 @@
         <result column="semester" property="semester" />
         <result column="school_year" property="schoolYear" />
         <result column="remark" property="remark" />
+        <result column="is_in_school" property="isInSchool"/>
         <result column="is_deleted" property="isDeleted"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
@@ -29,19 +30,21 @@
         <result column="school_year" property="schoolYear" />
         <result column="remark" property="remark" />
         <result column="is_deleted" property="isDeleted"/>
+        <result column="is_in_school" property="isInSchool"/>
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, teacher_id, normal_practice, non_normal_practice, school_practice, semester, school_year, remark, is_deleted,update_time, create_time
+        id, teacher_id, normal_practice, non_normal_practice, school_practice, semester, school_year, remark, is_deleted,
+        is_in_school,update_time, create_time
     </sql>
 
     <select id="selectInternInfo" resultMap="ModelResultMap">
         select t.id,t.teacher_id,um.user_name as teacher_name,um.log_name as teacher_code,
         t.normal_practice,t.non_normal_practice,t.school_practice,t.semester,t.school_year,
-        t.remark,t.update_time,t.create_time,t.is_deleted
+        t.remark,t.update_time,t.create_time,t.is_deleted,t.is_in_school
         from intern t inner join user_msg um on t.teacher_id = um.id
         <where>
             <if test="data.teacherCode != null">
@@ -65,6 +68,7 @@
                 <if test="data.normalPractice != null">,normal_practice</if>
                 <if test="data.nonNormalPractice != null">,non_normal_practice</if>
                 <if test="data.schoolPractice != null">,school_practice</if>
+                <if test="data.isInSchool != null">,is_in_school</if>
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -72,6 +76,7 @@
                 <if test="data.normalPractice != null">, #{data.normalPractice}</if>
                 <if test="data.nonNormalPractice != null"> ,#{data.nonNormalPractice}</if>
                 <if test="data.schoolPractice != null">, #{data.schoolPractice}</if>
+                <if test="data.isInSchool != null">,#{data.isInSchool}</if>
             </trim>
         </foreach>
     </insert>
@@ -83,6 +88,7 @@
             <if test="data.normalPractice != null">,normal_practice</if>
             <if test="data.nonNormalPractice != null">,non_normal_practice</if>
             <if test="data.schoolPractice != null">,school_practice</if>
+            <if test="data.isInSchool != null">,is_in_school</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -90,6 +96,7 @@
             <if test="data.normalPractice != null">, #{data.normalPractice}</if>
             <if test="data.nonNormalPractice != null"> ,#{data.nonNormalPractice}</if>
             <if test="data.schoolPractice != null">, #{data.schoolPractice}</if>
+            <if test="data.isInSchool != null">,#{data.isInSchool}</if>
         </trim>
     </insert>
 
