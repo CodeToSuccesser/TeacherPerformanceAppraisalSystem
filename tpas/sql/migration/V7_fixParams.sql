@@ -111,16 +111,56 @@ CREATE TABLE `assess_rule`(
 	`is_deleted` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '逻辑删除标识, 0 无删除, 1 已删除',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据最新操作时间',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`rule_setting_ids` varchar(100) DEFAULT NULL COMMENT '进行绩效核算前提规则id',
 	INDEX `C_TYPE_INDEX`(`c_type`) USING BTREE,
 	PRIMARY KEY(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='绩效核算规则表';
 
-INSERT INTO `assess_rule` (`c_type`, `assess_detail`, `remark`) VALUES
-(1, 'C1*C8*(1+C2+C3+C4)', '研究生、本、专科理论课'),
-(1, 'C1*C5*C6*(1+C4+C7)', '实验课程'),
-(1, 'C1*C5*C6*(1+C4+C7)', '课程实验'),
-(1, 'C9+C10*C11', '期末复习绩效'),
-(2, 'C11*C12', '指导全日制本科生论文');
+INSERT INTO `assess_rule` (`c_type`, `assess_detail`, `remark`, `rule_setting_ids`) VALUES
+(1, '{1}*{8}*(1+{2}+{3}+{4})', '研究生、本、专科理论课', '1,2'),
+(1, '{1}*{5}*{6}*(1+{4}+{7})', '实验课程', '3'),
+(1, '{1}*{5}*{6}*(1+{4}+{7})', '课程实验', '4'),
+(1, '{9}+{10}*{11}', '期末复习绩效'),
+(2, '{13}*{12}', '指导全日制本科生论文');
 
-UPDATE `assess_rule` SET `assess_detail` = 'C13*C12' WHERE `c_type` = 2;
+
+ALTER TABLE teacher_performance.course_score DROP COLUMN c1_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c2_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c3_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c4_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c5_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c6_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c7_value;
+ALTER TABLE teacher_performance.course_score DROP COLUMN c8_value;
+
+ALTER TABLE teacher_performance.course_score ADD COLUMN `assess_rule_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '选用绩效规则id';
+ALTER TABLE teacher_performance.course_score ADD COLUMN `assess_detail` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: {1}*{8}*(1+{2}+{3}+{4})';
+ALTER TABLE teacher_performance.course_score ADD COLUMN `assess_format` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: 1*0.1*(1+0+0+0)';
+ALTER TABLE teacher_performance.course_score modify column school_year VARCHAR(32) NOT NULL COMMENT '学年';
+ALTER TABLE teacher_performance.course_score ADD UNIQUE TEACHER_COURSE_TIME(`teacher_id`, `course_hours_id`, `semester`, `school_year`, `assess_rule_id`);
+
+ALTER TABLE teacher_performance.paper_score DROP COLUMN c9_value;
+ALTER TABLE teacher_performance.paper_score DROP COLUMN c10_value;
+ALTER TABLE teacher_performance.paper_score DROP COLUMN c11_value;
+ALTER TABLE teacher_performance.paper_score DROP COLUMN c12_value;
+ALTER TABLE teacher_performance.paper_score DROP COLUMN c13_value;
+
+ALTER TABLE teacher_performance.paper_score ADD COLUMN `assess_rule_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '选用绩效规则id';
+ALTER TABLE teacher_performance.paper_score ADD COLUMN `assess_detail` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: {1}*{8}*(1+{2}+{3}+{4})';
+ALTER TABLE teacher_performance.paper_score ADD COLUMN `assess_format` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: 1*0.1*(1+0+0+0)';
+ALTER TABLE teacher_performance.paper_score modify column school_year VARCHAR(32) NOT NULL COMMENT '学年';
+ALTER TABLE teacher_performance.paper_score ADD UNIQUE TEACHER_COURSE_TIME(`teacher_id`, `paper_id`, `semester`, `school_year`, `assess_rule_id`);
+
+ALTER TABLE teacher_performance.intern_score DROP COLUMN c14_value;
+ALTER TABLE teacher_performance.intern_score DROP COLUMN c15_value;
+
+ALTER TABLE teacher_performance.intern_score ADD COLUMN `assess_rule_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '选用绩效规则id';
+ALTER TABLE teacher_performance.intern_score ADD COLUMN `assess_detail` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: {1}*{8}*(1+{2}+{3}+{4})';
+ALTER TABLE teacher_performance.intern_score ADD COLUMN `assess_format` varchar(60) NOT NULL DEFAULT '0' COMMENT '绩效计算公式, 如研究生、本、专科理论课: 1*0.1*(1+0+0+0)';
+ALTER TABLE teacher_performance.intern_score modify column school_year VARCHAR(32) NOT NULL COMMENT '学年';
+ALTER TABLE teacher_performance.intern_score ADD UNIQUE TEACHER_COURSE_TIME(`teacher_id`, `intern_id`, `semester`, `school_year`, `assess_rule_id`);
+
+ALTER TABLE teacher_performance.assessment modify column school_year VARCHAR(32) NOT NULL COMMENT '学年';
+ALTER TABLE teacher_performance.assessment ADD UNIQUE TEACHER_TIME(`teacher_id`, `semester`, `school_year`);
+
 -- ----------------------系统管理重构--------------------------
