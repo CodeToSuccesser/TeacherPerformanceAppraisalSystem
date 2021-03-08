@@ -23,4 +23,17 @@
         id, teacher_id, intern_id, c14_value, c15_value, total, semester, school_year, admin_id, update_time, create_time, is_deleted
     </sql>
 
+    <insert id="updateOrInsert">
+        INSERT INTO intern_score(teacher_id, intern_id, total, semester
+        , school_year, admin_id, assess_rule_id, assess_detail, assess_format)
+        VALUE
+        (#{data.teacherId}, #{data.internId}, #{data.total}, #{data.semester}
+        , #{data.schoolYear}, #{data.adminId}, #{data.assessRuleId}, #{data.assessDetail}
+        , #{data.assessFormat})
+        ON DUPLICATE KEY UPDATE assess_detail = VALUES(assess_detail)
+        , assess_format = VALUES(assess_format)
+        , total = VALUES(total)
+        , is_deleted = 0
+    </insert>
+
 </mapper>

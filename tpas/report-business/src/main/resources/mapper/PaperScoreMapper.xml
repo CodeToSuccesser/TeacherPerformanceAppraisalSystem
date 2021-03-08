@@ -34,6 +34,7 @@
         , #{data.assessFormat})
         ON DUPLICATE KEY UPDATE assess_detail = VALUES(assess_detail)
         , assess_format = VALUES(assess_format)
+        , total = VALUES(total)
         , is_deleted = 0
     </insert>
 

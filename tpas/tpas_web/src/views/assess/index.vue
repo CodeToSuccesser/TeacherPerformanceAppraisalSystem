@@ -13,7 +13,7 @@
 
         <el-button type="primary" size="small" class="button-find">查找</el-button>
 
-        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+<!--        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>-->
         <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
 
         <el-table :data="courseScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
@@ -22,6 +22,7 @@
           <el-table-column :resizable="false" prop="total" sortable label="授课总分" />
           <el-table-column :resizable="false" prop="semester" sortable label="学期" />
           <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" />
+          <el-table-column :resizable="false" prop="assessDetail" sortable label="权值规则" />
           <el-table-column :resizable="false" prop="valueDetail" sortable label="权值信息" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
         </el-table>
@@ -37,7 +38,7 @@
 
         <el-button type="primary" size="small" class="button-find">查找</el-button>
 
-        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+<!--        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>-->
         <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
 
         <el-table :data="paperScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
@@ -46,6 +47,7 @@
           <el-table-column :resizable="false" prop="total" sortable label="论文指导总分" />
           <el-table-column :resizable="false" prop="semester" sortable label="学期" />
           <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" />
+          <el-table-column :resizable="false" prop="assessDetail" sortable label="权值规则" />
           <el-table-column :resizable="false" prop="valueDetail" sortable label="权值信息" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
         </el-table>
@@ -61,7 +63,7 @@
 
         <el-button type="primary" size="small" class="button-find">查找</el-button>
 
-        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>
+<!--        <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="calculationResults">计算结果</el-button>-->
         <el-button type="primary" size="small" class="button-add" @click="exportAssessResult">导出结果</el-button>
 
         <el-table :data="internScoreInfo" stripe style="width: 100% " :border="true" fit class="score-table">
@@ -70,6 +72,7 @@
           <el-table-column :resizable="false" prop="total" sortable label="实习指导总分" />
           <el-table-column :resizable="false" prop="semester" sortable label="学期" />
           <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" />
+          <el-table-column :resizable="false" prop="assessDetail" sortable label="权值规则" />
           <el-table-column :resizable="false" prop="valueDetail" sortable label="权值信息" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
         </el-table>
@@ -85,16 +88,61 @@ export default {
   data() {
     return {
       courseScoreInfo: [{
-        id: ''
-      },
-      {
-        id: ''
+        id: '1',
+        courseHourId: '21H33751-1269',
+        total: '14.400',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{1}*{5}*{6}*(1+{4}+{7})',
+        valueDetail: '18*0.800*1.000*(1+0.000+0)',
+        createTime: '2021-03-07 02:24:12.0'
+      }, {
+        id: '2',
+        courseHourId: '21H33751-1204',
+        total: '15.100',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{9}+{10}*{11}',
+        valueDetail: '2.000+0.050*262',
+        createTime: '2021-03-07 02:24:12.0'
       }],
       paperScoreInfo: [{
-        id: ''
+        id: '1',
+        paperId: '8',
+        total: '5.000',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{13}*{12}',
+        valueDetail: '1*5.000',
+        createTime: '2021-03-07 02:24:12.0'
+      }, {
+        id: '2',
+        paperId: '8',
+        total: '0.500',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{10}*10',
+        valueDetail: '0.050*10',
+        createTime: '2021-03-07 02:24:12.0'
       }],
       internScoreInfo: [{
-        id: ''
+        id: '1',
+        internId: '5',
+        total: '96',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{14}*24',
+        valueDetail: '4*24',
+        createTime: '2021-03-07 02:24:12.0'
+      }, {
+        id: '2',
+        internId: '5',
+        total: '100',
+        semester: '1',
+        schoolYear: '2017-2018',
+        assessDetail: '{15}*20',
+        valueDetail: '2*20',
+        createTime: '2021-03-07 02:24:12.0'
       }],
       activeName: 'courseHour',
       isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType

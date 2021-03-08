@@ -20,7 +20,6 @@
       <el-table-column :resizable="false" prop="userType" sortable label="用户类型" />
       <el-table-column :resizable="false" prop="teacherName" sortable label="用户姓名" />
       <el-table-column :resizable="false" prop="logName" sortable label="登陆名" />
-      <el-table-column :resizable="false" prop="logPassword" sortable label="登陆密码" />
       <el-table-column :resizable="false" prop="contact" sortable label="联系方式" />
       <el-table-column :resizable="false" prop="portrait" sortable label="头像" />
       <el-table-column :resizable="false" prop="adminName" sortable label="创建账号的管理员" />
@@ -43,9 +42,6 @@
         </el-form-item>
         <el-form-item label="唯一登录名" :label-width="formLabelWidth">
           <el-input v-model="userForm.logName" autocomplete="off" :disabled="userEditDisable" />
-        </el-form-item>
-        <el-form-item label="登录密码" :label-width="formLabelWidth">
-          <el-input v-model="userForm.logPassword" autocomplete="off" :disabled="userEditDisable" />
         </el-form-item>
         <el-form-item label="联系方式" :label-width="formLabelWidth">
           <el-input v-model="userForm.contact" autocomplete="off" :disabled="userEditDisable" />
@@ -104,7 +100,23 @@ export default {
   data() {
     return {
       inputUserName: '',
-      userInfo: [{}],
+      userInfo: [{
+        id: '1',
+        userType: '教师',
+        teacherName: '小明',
+        logName: '2020080201',
+        contact: '2020080201@m.scnu.edu.cn',
+        portrait: '',
+        adminName: 'admin'
+      }, {
+        id: '2',
+        userType: '教师,管理员',
+        teacherName: 'admin',
+        logName: 'admin',
+        contact: 'admin_tpas@m.scnu.edu.cn',
+        portrait: '',
+        adminName: '教务员'
+      }],
       userForm: {
         userType: '',
         teacherName: '',
