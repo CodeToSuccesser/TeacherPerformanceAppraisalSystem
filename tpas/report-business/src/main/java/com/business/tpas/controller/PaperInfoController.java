@@ -107,7 +107,7 @@ public class PaperInfoController {
     }
 
     @ApiOperation(value = "导出论文指导信息文件", notes = "导出论文指导信息文件")
-    @GetMapping("/export")
+    @PostMapping("/export")
     public void exportPaperInfo(HttpServletResponse response, @RequestBody PaperSearchModel searchModel)
         throws IOException {
         List<PaperModel> paperModels = paperService.getPaperInfo(searchModel);
@@ -124,7 +124,7 @@ public class PaperInfoController {
     @ApiOperation(value = "根据条件查询论文指导信息", notes = "根据条件查询论文指导信息")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = PaperModel .class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getPaperInfo")
+    @PostMapping("/getPaperInfo")
     public BaseResponse<?> getPaperInfo(@RequestBody PaperSearchModel searchModel) {
         PageInfo<PaperModel> paperModelPageInfo = paperService.getPaperInfoByPage(searchModel);
         return new BaseResponse<>(paperModelPageInfo);
@@ -160,7 +160,7 @@ public class PaperInfoController {
     @ApiOperation(value = "查找论文指导修改信息记录", notes = "查找论文指导修改信息记录")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = PaperModifyRecordModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getModifyRecord")
+    @PostMapping("/getModifyRecord")
     public BaseResponse<?> getModifyRecord(@RequestBody PaperModifyRecordSearchModel searchModel) {
         return new BaseResponse<>(paperModifyRecordService.getModifyRecord(searchModel));
     }

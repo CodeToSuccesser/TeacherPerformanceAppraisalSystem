@@ -100,7 +100,7 @@ public class CourseInfoController {
     }
 
     @ApiOperation(value = "导出课程信息文件", notes = "导出课程信息文件")
-    @GetMapping("/export")
+    @PostMapping("/export")
     public void exportCourseInfo(HttpServletResponse response, @RequestBody CourseInfoSearchModel searchModel)
         throws IOException {
         List<CourseBaseModel> courseBaseModels = courseBaseService.getCourseBaseInfo(searchModel);
@@ -118,7 +118,7 @@ public class CourseInfoController {
     @ApiOperation(value = "根据条件查询课程信息", notes = "根据条件查询课程信息")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseBaseModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getCourseInfo")
+    @PostMapping("/getCourseInfo")
     public BaseResponse<?> getCourseInfo(@RequestBody CourseInfoSearchModel searchModel) {
         PageInfo<CourseBaseModel> courseBaseModelPage = courseBaseService.getCourseBaseInfoByPage(searchModel);
         return new BaseResponse<>(courseBaseModelPage);

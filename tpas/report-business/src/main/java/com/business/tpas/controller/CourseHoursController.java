@@ -104,7 +104,7 @@ public class CourseHoursController {
     }
 
     @ApiOperation(value = "导出课程信息文件", notes = "导出课程信息文件")
-    @GetMapping("/export")
+    @PostMapping("/export")
     public void exportCourseInfo(HttpServletResponse response, @RequestBody CourseHoursSearchModel searchModel)
         throws IOException {
         List<CourseHoursModel> courseHoursModelList = courseHoursService.getCourseHours(searchModel);
@@ -121,7 +121,7 @@ public class CourseHoursController {
     @ApiOperation(value = "根据条件查询课时信息", notes = "根据条件查询课时信息")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseHoursModel .class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getCourseHours")
+    @PostMapping("/getCourseHours")
     public BaseResponse<?> getCourseHours(@RequestBody CourseHoursSearchModel searchModel) {
         PageInfo<CourseHoursModel> courseHoursByPage = courseHoursService.getCourseHoursByPage(searchModel);
         return new BaseResponse<>(courseHoursByPage);
@@ -169,7 +169,7 @@ public class CourseHoursController {
     @ApiOperation(value = "获取修改申请信息记录", notes = "获取修改申请信息记录")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = CourseHoursModifyRecordModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getModifyRecord")
+    @PostMapping("/getModifyRecord")
     public BaseResponse<?> getModifyRecord(@RequestBody CourseHoursModifyRecordSearchModel searchModel) {
         return new BaseResponse<>(courseHoursModifyRecordService.getModifyRecord(searchModel));
     }

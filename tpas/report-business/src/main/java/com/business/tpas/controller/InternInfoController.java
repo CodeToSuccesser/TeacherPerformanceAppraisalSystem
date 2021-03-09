@@ -104,7 +104,7 @@ public class InternInfoController {
     }
 
     @ApiOperation(value = "导出实习带队信息文件", notes = "导出实习带队信息文件")
-    @GetMapping("/export")
+    @PostMapping("/export")
     public void exportInternInfo(HttpServletResponse response, @RequestBody InternSearchModel searchModel)
         throws IOException {
         List<InternModel> internModels = internService.getInternInfo(searchModel);
@@ -121,7 +121,7 @@ public class InternInfoController {
     @ApiOperation(value = "根据条件查询实习带队信息", notes = "根据条件查询实习带队信息")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = InternModel .class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getInternInfo")
+    @PostMapping("/getInternInfo")
     public BaseResponse<?> getInternInfo(@RequestBody InternSearchModel searchModel) {
         PageInfo<InternModel> internModelPageInfo = internService.getInternInfoByPage(searchModel);
         return new BaseResponse<>(internModelPageInfo);
@@ -157,7 +157,7 @@ public class InternInfoController {
     @ApiOperation(value = "查找实习带队修改信息记录", notes = "查找实习带队修改信息记录")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = InternModifyRecordModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getModifyRecord")
+    @PostMapping("/getModifyRecord")
     public BaseResponse<?> getModifyRecord(@RequestBody InternModifyRecordSearchModel searchModel) {
         return new BaseResponse<>(internModifyRecordService.getModifyRecord(searchModel));
     }
