@@ -73,6 +73,9 @@
         from course_hours ch inner join course_base cb on ch.course_id = cb.id
         inner join user_msg um on ch.teacher_id = um.id
         <where>
+            <if test="data.teacherId != null and data.teacherId != ''">
+                and ch.teacher_id = #{data.taecherId}
+            </if>
             <if test="data.courseName != null and data.courseName != ''">
                 and cb.course_name = #{data.courseName}
             </if>

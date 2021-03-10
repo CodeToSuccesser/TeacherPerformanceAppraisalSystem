@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "课时记录条件查询模型层", description = "课时记录条件查询模型层")
 public class CourseHoursSearchModel extends PageModel {
 
+    @ApiModelProperty(value = "教师id")
+    private Long teacherId;
+
     @ApiModelProperty(value = "课程名称")
     private String courseName;
 
@@ -43,9 +46,17 @@ public class CourseHoursSearchModel extends PageModel {
         this.schoolYear = schoolYear;
     }
 
+    public Long getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
+    }
+
     @Override
     public String toString() {
-        return "CourseHoursSearchModel{" + "courseName='" + courseName + '\'' + ", semester=" + semester
-                + ", schoolYear=" + schoolYear + '}';
+        return "CourseHoursSearchModel{" + "teacherId=" + teacherId + ", courseName='" + courseName + '\''
+            + ", semester=" + semester + ", schoolYear='" + schoolYear + '\'' + '}';
     }
 }

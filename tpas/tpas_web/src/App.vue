@@ -15,6 +15,7 @@ export default {
       sessionStorage.setItem('account', this.$store.getters.name)
       sessionStorage.setItem('contact', this.$store.getters.contact)
       sessionStorage.setItem('avatar', this.$store.getters.avatar)
+      sessionStorage.setItem('id', this.$store.getters.id)
     })
   }
 }

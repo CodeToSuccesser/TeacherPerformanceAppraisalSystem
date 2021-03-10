@@ -1,35 +1,61 @@
 <template>
   <div class="app-container">
-    <el-select v-model="value" placeholder="年度" class="selector-year">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+    <el-form ref="form" :model="searchForm">
+      <el-select v-model="searchForm.selectedSchoolYear" placeholder="年度" clearable class="selector-first">
+        <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.key" :value="item.value" />
+      </el-select>
 
-    <el-select v-model="value" placeholder="学期" class="selector-term">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+      <el-select v-model="searchForm.selectedSemester" placeholder="学期" clearable class="selector">
+        <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+      </el-select>
 
-    <el-button type="primary" size="small" class="button-find">查找</el-button>
+      <el-input v-model="searchForm.selectedCourseName" placeholder="课程名称" clearable class="selector" style="width: 120px" />
 
-    <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
+      <el-input v-model="searchForm.selectedStudentInstitute" placeholder="学生学院" clearable class="selector" style="width: 120px" />
 
-    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
-    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+      <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
+
+      <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
+
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+    </el-form>
 
     <el-table :data="courseHourInfo" stripe style="width: 100% " :border="true" fit>
-      <el-table-column :resizable="false" prop="id" sortable label="序号" />
-      <el-table-column :resizable="false" prop="courseName" sortable label="课程名称" />
-      <el-table-column :resizable="false" prop="selectedStudent" sortable label="已选学生人数" />
-      <el-table-column :resizable="false" prop="studentInstitute" sortable label="学生学院" />
-      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" />
-      <el-table-column :resizable="false" prop="semester" sortable label="学期" />
-      <el-table-column :resizable="false" prop="primarySecondary" sortable label="是否主讲" />
-      <el-table-column :resizable="false" label="操作">
-        <template>
-          <el-button type="text" size="small" @click="courseDetailVisible = true">查看详情</el-button>
+      <el-table-column :resizable="false" prop="id" sortable label="序号" align="center" width="60px">
+        <template slot-scope="scope">
+          <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :resizable="false" prop="courseName" sortable label="课程名称" align="center" />
+      <el-table-column :resizable="false" prop="selectedStudent" sortable label="已选学生人数" align="center" />
+      <el-table-column :resizable="false" prop="studentsInstitute" sortable label="学生学院" align="center" />
+      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
+      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center">
+        {{ courseHourInfo.semester === 0 ? 1 : 2 }}
+      </el-table-column>
+      <el-table-column :resizable="false" prop="primarySecondary" sortable label="是否主讲" align="center">
+        {{ courseHourInfo.primarySecondary === 0 ? '主讲' : '辅讲' }}
+      </el-table-column>
+      <el-table-column :resizable="false" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="showDetail(scope)">查看详情</el-button>
           <el-button type="text" size="small" @click="courseDetailEdit">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="curPageNum"
+      class="pagination"
+      @prev-click="prePage"
+      @next-click="nextPage"
+      @current-change="handleCurrentChange"
+    />
 
     <el-dialog title="课时详情" :visible.sync="courseDetailVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="courseDetailForm">
@@ -43,16 +69,10 @@
           <el-input v-model="courseDetailForm.selectedStudent" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="学生学院" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.studentInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
-        </el-form-item>
-        <el-form-item label="学年" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.studentInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
-        </el-form-item>
-        <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.studentInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.studentsInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.studentInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.primarySecondary" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="周学时" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.weekHours" autocomplete="off" :disabled="courseDetailEditDisable" />
@@ -100,12 +120,6 @@
         <el-form-item label="学生学院" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="学年" :label-width="formLabelWidth">
-          <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
-        </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
         </el-form-item>
@@ -144,44 +158,37 @@
 </template>
 
 <script>
+import { getCourseHours } from '@/api/course'
+
 export default {
   data() {
     return {
-      courseHourInfo: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      total: 0,
+      pageSize: 25,
+      curPageNum: 1,
+      searchForm: {
+        selectedSchoolYear: '',
+        selectedSemester: '',
+        selectedCourseName: '',
+        selectedStudentInstitute: ''
+      },
+      courseHourInfo: [],
+      schoolYearOptions: {},
+      semesterOptions: [
+        {
+          key: '第一学期',
+          value: 0
+        },
+        {
+          key: '第二学期',
+          value: 1
+        }
+      ],
       dialogTableVisible: false,
       courseDetailVisible: false,
       courseDetailEditDisable: true,
       applyCourseHoursVisible: false,
-      courseDetailForm: {
-        courseName: '',
-        selectedStudent: '',
-        studentInstitute: '',
-        totalCapacity: '',
-        weekHours: '',
-        semester: '',
-        teachingHours: '',
-        computerHours: '',
-        experimentHours: '',
-        schoolYear: '',
-        expNumber: '',
-        expPerNumber: ''
-      },
+      courseDetailForm: {},
       applyCourseHourForm: {
         courseName: '',
         selectedStudent: '',
@@ -200,6 +207,17 @@ export default {
       isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
     }
   },
+  created() {
+    const param = {
+      pageSize: this.pageSize,
+      pageNum: this.curPageNum
+    }
+    if (this.$store.getters.userType !== 0) {
+      param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+    }
+
+    this.getCourseHours(param)
+  },
   methods: {
     courseDetailEditEnsureOrCancel: function() {
       this.courseDetailEditDisable = true
@@ -208,38 +226,121 @@ export default {
     courseDetailEdit: function() {
       this.courseDetailEditDisable = false
       this.courseDetailVisible = true
+    },
+    getCourseHours: function(body) {
+      getCourseHours(body)
+        .then(response => {
+          const { data } = response
+          this.courseHourInfo = data.list
+          this.total = data.total
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+    },
+    importCourseHour: function() {
+
+    },
+    exportCourseHour: function() {
+
+    },
+    showDetail: function(scope) {
+      this.courseDetailForm = this.courseHourInfo[scope.$index]
+      // 转换显示
+      this.courseDetailForm.semester = this.courseDetailForm.semester === 0 ? 1 : 2
+      this.courseDetailForm.primarySecondary = this.courseDetailForm.primarySecondary === 0 ? '主讲' : '辅讲'
+      this.courseDetailVisible = true
+    },
+    nextPage: function() {
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getCourseHours(param)
+      this.curPageNum = this.curPageNum + 1
+    },
+    prePage: function() {
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getCourseHours(param)
+      this.curPageNum = this.curPageNum - 1
+    },
+    handleCurrentChange: function(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+
+      this.getCourseHours(param)
+      this.curPageNum = val
+    },
+    searchCourseHours: function() {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
+      if (this.searchForm.selectedCourseName && this.searchForm.selectedCourseName !== '') {
+        param.courseName = this.searchForm.selectedCourseName
+      }
+      if (this.searchForm.selectedStudentInstitute && this.searchForm.selectedStudentInstitute !== '') {
+        param.studentInstitute = this.searchForm.selectedStudentInstitute
+      }
+      if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getCourseHours(param)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
+  .dashboard {
+    &-container {
+      margin: 30px;
+    }
+
+    &-text {
+      font-size: 30px;
+      line-height: 46px;
+    }
   }
 
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
+  .selector-first {
+    margin-bottom: 20px;
   }
-}
 
-.selector-year {
-  margin-bottom: 20px;
-}
+  .selector {
+    margin-left: 10px;
+    margin-bottom: 20px;
+  }
 
-.selector-term {
-  margin-left: 10px;
-  margin-bottom: 20px;
-}
+  .button-find {
+    margin-left: 30px;
+  }
 
-.button-find {
-  margin-left: 30px;
-}
+  .button-add {
+    float: right;
+  }
 
-.button-add {
-  float: right;
-}
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
+  }
 
 </style>

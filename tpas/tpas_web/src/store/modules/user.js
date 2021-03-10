@@ -9,7 +9,8 @@ const getDefaultState = () => {
     account: '',
     avatar: '',
     contact: '',
-    userType: ''
+    userType: '',
+    id: ''
   }
 }
 
@@ -36,6 +37,9 @@ const mutations = {
   },
   SET_USER_TYPE: (state, userType) => {
     state.userType = userType
+  },
+  SET_USER_ID: (state, id) => {
+    state.id = id
   }
 }
 
@@ -52,6 +56,7 @@ const actions = {
         commit('SET_ACCOUNT', data.logName)
         commit('SET_CONTACT', data.contact)
         commit('SET_USER_TYPE', data.userType)
+        commit('SET_USER_ID', data.id)
         setToken(data.token)
         resolve()
       }).catch(error => {
