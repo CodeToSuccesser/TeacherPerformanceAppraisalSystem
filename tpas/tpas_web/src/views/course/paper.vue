@@ -1,38 +1,58 @@
 <template>
   <div class="app-container">
-    <el-select v-model="value" placeholder="年度" class="selector-year">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+    <el-form ref="form" :model="searchForm">
+      <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" class="selector-first">
+        <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
 
-    <el-select v-model="value" placeholder="学期" class="selector-term">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+      <el-select v-model="searchForm.selectedSemester" placeholder="学期" class="selector">
+        <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+      </el-select>
 
-    <el-button type="primary" size="small" class="button-find">查找</el-button>
+      <el-input v-model="searchForm.selectedStudentInstitute" placeholder="学生学院" clearable class="selector" style="width: 120px" />
 
-    <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">申请新增</el-button>
-    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
-    <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
+      <el-button type="primary" size="small" class="button-find">查找</el-button>
+
+      <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">申请新增</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
+    </el-form>
 
     <el-table :data="paperInfo" stripe style="width: 100% " :border="true" fit>
-      <el-table-column :resizable="false" prop="id" sortable label="序号" />
-      <el-table-column :resizable="false" prop="major" sortable label="专业名称" />
-      <el-table-column :resizable="false" prop="studentNumber" sortable label="学生人数" />
-      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" />
-      <el-table-column :resizable="false" prop="semester" sortable label="学期" />
-      <el-table-column :resizable="false" prop="remark" sortable label="备注" />
-      <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
-      <el-table-column :resizable="false" label="操作">
-        <template>
-          <el-button type="text" size="small" @click="paperEdit">修改</el-button>
+      <el-table-column :resizable="false" prop="id" sortable label="序号" align="center" width="60px">
+        <template slot-scope="scope">
+          <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :resizable="false" prop="majorName" sortable label="专业名称" align="center"/>
+      <el-table-column :resizable="false" prop="studentNumber" sortable label="学生人数" align="center"/>
+      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center"/>
+      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center"/>
+      <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center"/>
+      <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center"/>
+      <el-table-column :resizable="false" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="paperEdit(scope)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
 
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="curPageNum"
+      class="pagination"
+      @prev-click="prePage"
+      @next-click="nextPage"
+      @current-change="handleCurrentChange"
+    />
+
     <el-dialog title="论文指导信息修改" :visible.sync="paperDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="paperForm">
         <el-form-item label="专业名称" :label-width="formLabelWidth">
-          <el-input v-model="paperForm.major" autocomplete="off" :disabled="paperEditDisable" />
+          <el-input v-model="paperForm.majorName" autocomplete="off" :disabled="paperEditDisable" />
         </el-form-item>
         <el-form-item label="学生人数" :label-width="formLabelWidth">
           <el-input v-model="paperForm.studentNumber" autocomplete="off" :disabled="paperEditDisable" />
@@ -56,7 +76,7 @@
     <el-dialog title="论文指导信息申请" :visible.sync="applyPaperDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="applyPaperForm">
         <el-form-item label="专业名称" :label-width="formLabelWidth">
-          <el-input v-model="applyPaperForm.major" autocomplete="off" />
+          <el-input v-model="applyPaperForm.majorName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="学生人数" :label-width="formLabelWidth">
           <el-input v-model="applyPaperForm.studentNumber" autocomplete="off" />
@@ -82,13 +102,34 @@
 
 <script>
 
+import { getPaperInfo } from '@/api/paper'
+
 export default {
   name: 'Paper',
   data() {
     return {
+      pageSize: 25,
+      curPageNum: 1,
+      total: 0,
       paperInfo: [{
         date: ''
       }],
+      searchForm: {
+        selectedSemester: '',
+        selectedSchoolYear: '',
+        selectedStudentInstitute: ''
+      },
+      schoolYearOptions: {},
+      semesterOptions: [
+        {
+          key: '第一学期',
+          value: 0
+        },
+        {
+          key: '第二学期',
+          value: 1
+        }
+      ],
       paperDialogVisible: false,
       paperEditDisable: true,
       applyPaperDialogVisible: false,
@@ -100,7 +141,7 @@ export default {
         remark: ''
       },
       applyPaperForm: {
-        major: '',
+        majorName: '',
         studentNumber: '',
         semester: '',
         schoolYear: '',
@@ -110,14 +151,73 @@ export default {
       isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
     }
   },
+  created() {
+    const param = {
+      pageSize: this.pageSize,
+      pageNum: this.curPageNum
+    }
+    if (this.$store.getters.userType !== 0) {
+      param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+    }
+    this.getPaperInfo(param)
+  },
   methods: {
-    paperEdit: function() {
+    paperEdit: function(scope) {
       this.paperEditDisable = false
       this.paperDialogVisible = true
+      this.paperForm = this.paperInfo[scope.$index]
     },
     paperEditEnsureOrCancel: function() {
       this.paperDialogVisible = false
       this.paperEditDisable = true
+    },
+    getPaperInfo: function(body) {
+      getPaperInfo(body).then(response => {
+        const { data } = response
+        this.paperInfo = data.list
+        this.total = data.total
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    prePage: function() {
+      const param = {
+        pageSize: this.pageSize,
+        pageNum: this.curPageNum - 1
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getPaperInfo(param)
+      this.curPageNum = this.curPageNum - 1
+    },
+    nextPage: function() {
+      const param = {
+        pageSize: this.pageSize,
+        pageNum: this.curPageNum + 1
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getPaperInfo(param)
+      this.curPageNum = this.curPageNum + 1
+    },
+    handleCurrentChange: function(val) {
+      const param = {
+        pageSize: this.pageSize,
+        pageNum: val
+      }
+      if (this.$store.getters.userType !== 0) {
+        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
+      this.getPaperInfo(param)
+      this.curPageNum = val
+    },
+    importPaper: function() {
+
+    },
+    exportPaper: function() {
+
     }
   }
 }
@@ -135,11 +235,11 @@ export default {
     }
   }
 
-  .selector-year {
+  .selector-first {
     margin-bottom: 20px;
   }
 
-  .selector-term {
+  .selector {
     margin-left: 10px;
     margin-bottom: 20px;
   }
@@ -150,6 +250,12 @@ export default {
 
   .button-add {
     float: right;
+  }
+
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
   }
 
 </style>

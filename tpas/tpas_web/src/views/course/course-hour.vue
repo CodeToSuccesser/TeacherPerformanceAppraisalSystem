@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="searchForm">
-      <el-select v-model="searchForm.selectedSchoolYear" placeholder="年度" clearable class="selector-first">
+      <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" clearable class="selector-first">
         <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.key" :value="item.value" />
       </el-select>
 
@@ -234,7 +234,7 @@ export default {
           this.courseHourInfo = data.list
           this.total = data.total
         })
-        .catch(function(error) {
+        .catch(error => {
           console.log(error)
         })
     },
