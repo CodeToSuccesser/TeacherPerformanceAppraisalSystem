@@ -84,9 +84,9 @@ export const asyncRoutes = [
         meta: { title: '论文指导信息', icon: 'education', roles: [0, 1] }
       },
       {
-        path: 'job',
+        path: 'intern',
         name: '实习带队信息',
-        component: () => import('@/views/course/job'),
+        component: () => import('@/views/course/intern'),
         meta: { title: '实习带队信息', icon: 'tree', roles: [0, 1] }
       }
     ]
