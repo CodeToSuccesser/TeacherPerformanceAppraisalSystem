@@ -16,7 +16,7 @@
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
-
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
     </el-form>
@@ -158,7 +158,13 @@
 </template>
 
 <script>
-import { getCourseHours } from '@/api/course'
+import {
+  getCourseHours,
+  downCourseHoursTemplate,
+  exportCourseFile
+} from '@/api/course'
+
+import { downloadExcel } from '@/utils/file'
 
 export default {
   data() {
@@ -192,7 +198,7 @@ export default {
       applyCourseHourForm: {
         courseName: '',
         selectedStudent: '',
-        studentInstitute: '',
+        studentsInstitute: '',
         totalCapacity: '',
         weekHours: '',
         semester: '',
@@ -212,10 +218,6 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    if (this.$store.getters.userType !== 0) {
-      param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-    }
-
     this.getCourseHours(param)
   },
   methods: {
@@ -228,6 +230,10 @@ export default {
       this.courseDetailVisible = true
     },
     getCourseHours: function(body) {
+      const userType = this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
+      if (Number(userType) !== 1) {
+        body.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
       getCourseHours(body)
         .then(response => {
           const { data } = response
@@ -242,7 +248,22 @@ export default {
 
     },
     exportCourseHour: function() {
-
+      const param = {}
+      if (this.searchForm.selectedCourseName && this.searchForm.selectedCourseName !== '') {
+        param.courseName = this.searchForm.selectedCourseName
+      }
+      if (this.searchForm.selectedStudentInstitute && this.searchForm.selectedStudentInstitute !== '') {
+        param.studentInstitute = this.searchForm.selectedStudentInstitute
+      }
+      if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      exportCourseFile(param)
+        .then(response => {
+          downloadExcel(response, '课时信息导出文件.xlsx')
+        }).catch(error => {
+          console.log(error)
+        })
     },
     showDetail: function(scope) {
       this.courseDetailForm = this.courseHourInfo[scope.$index]
@@ -256,9 +277,6 @@ export default {
         pageNum: this.curPageNum + 1,
         pageSize: this.pageSize
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getCourseHours(param)
       this.curPageNum = this.curPageNum + 1
     },
@@ -267,9 +285,6 @@ export default {
         pageNum: this.curPageNum - 1,
         pageSize: this.pageSize
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getCourseHours(param)
       this.curPageNum = this.curPageNum - 1
     },
@@ -277,9 +292,6 @@ export default {
       const param = {
         pageNum: this.curPageNum,
         pageSize: this.pageSize
-      }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
       }
 
       this.getCourseHours(param)
@@ -299,10 +311,16 @@ export default {
       if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
         param.semester = this.searchForm.selectedSemester
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getCourseHours(param)
+    },
+    downloadTemplate: function() {
+      downCourseHoursTemplate()
+        .then(response => {
+          downloadExcel(response, '课时信息导入模板文件.xls')
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }

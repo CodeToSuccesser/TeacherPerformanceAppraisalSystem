@@ -14,7 +14,6 @@ import com.management.tpas.dao.SystemMenuMapper;
 import com.management.tpas.dao.SystemRoleMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.SystemMenu;
-import com.management.tpas.entity.SystemRole;
 import com.management.tpas.entity.UserMsg;
 import com.management.tpas.model.*;
 import com.management.tpas.service.UserMsgService;
@@ -28,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.management.common.config.GlobalConst.PASSWORD_FORMAT;
@@ -75,9 +73,8 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
         }
         // 获取账号信息
         UserMsgModel userMsgModel = BeanMapper.map(userMsg, UserMsgModel.class);
-        // 查找角色、设置菜单
-        List<String> roleNames = CommonUtil.parseStringList(userMsgModel.getRolesName(), ",");
-        userMsgModel.setRouterMenus(getRouterMenu(roleNames));
+        // TODO：设置用户类型
+        userMsgModel.setUserType(Integer.parseInt(userMsg.getRolesName().split(",")[0]));
         // 生成jwt和设置缓存
         String key = GlobalConst.REDIS_KEY_PREFIX + userMsgModel.getUserType().toString() + userMsgModel.getId().toString();
         String token = JwtUtil.createJWT(JacksonUtil.object2Json(userMsgModel), JwtConfig.JWT_SECRET);

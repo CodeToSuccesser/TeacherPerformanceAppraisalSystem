@@ -74,7 +74,7 @@
         inner join user_msg um on ch.teacher_id = um.id
         <where>
             <if test="data.teacherId != null and data.teacherId != ''">
-                and ch.teacher_id = #{data.taecherId}
+                and ch.teacher_id = #{data.teacherId}
             </if>
             <if test="data.courseName != null and data.courseName != ''">
                 and cb.course_name = #{data.courseName}
