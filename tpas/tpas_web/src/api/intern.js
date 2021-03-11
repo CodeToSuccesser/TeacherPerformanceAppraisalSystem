@@ -24,7 +24,8 @@ export function getInternInfo(data) {
 export function downInternInfoTemplate() {
   return request({
     url: '/intern/info/download/template',
-    method: 'get'
+    method: 'get',
+    responseType: 'blob'
   })
 }
 
@@ -37,6 +38,7 @@ export function exportInternFile(data) {
   return request({
     url: '/intern/info/export',
     method: 'post',
+    responseType: 'blob',
     data
   })
 }

@@ -12,6 +12,7 @@
       <el-button type="primary" size="small" class="button-find">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">申请新增</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importIntern">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportIntern">导出</el-button>
     </el-form>
@@ -108,10 +109,11 @@
 
 <script>
 
-import { getInternInfo } from '@/api/intern'
+import { downInternInfoTemplate, getInternInfo, exportInternFile } from '@/api/intern'
+import { downloadExcel } from '@/utils/file'
 
 export default {
-  name: 'intern',
+  name: 'Intern',
   data() {
     return {
       pageSize: 25,
@@ -163,9 +165,6 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    if (this.$store.getters.userType !== 0) {
-      param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-    }
     this.getInternInfo(param)
   },
   methods: {
@@ -182,9 +181,26 @@ export default {
 
     },
     exportIntern: function() {
-
+      const param = {}
+      if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      if (this.searchForm.selectedSchoolYear && this.searchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.searchForm.selectedSchoolYear
+      }
+      exportInternFile(param)
+        .then(response => {
+          downloadExcel(response, '实习带队信息导出文件.xlsx')
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     getInternInfo: function(body) {
+      const userType = this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
+      if (Number(userType) !== 1) {
+        body.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
       getInternInfo(body).then(response => {
         const { data } = response
         this.internInfo = data.list
@@ -198,9 +214,6 @@ export default {
         pageSize: this.pageSize,
         pageNum: this.curPageNum - 1
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getInternInfo(param)
       this.curPageNum = this.curPageNum - 1
     },
@@ -208,9 +221,6 @@ export default {
       const param = {
         pageSize: this.pageSize,
         pageNum: this.curPageNum + 1
-      }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
       }
       this.getInternInfo(param)
       this.curPageNum = this.curPageNum + 1
@@ -220,11 +230,17 @@ export default {
         pageSize: this.pageSize,
         pageNum: val
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getInternInfo(param)
       this.curPageNum = val
+    },
+    downloadTemplate: function() {
+      downInternInfoTemplate()
+        .then(response => {
+          downloadExcel(response, '实习带队信息模板.xls')
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
