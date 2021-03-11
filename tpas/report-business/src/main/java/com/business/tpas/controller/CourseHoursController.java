@@ -8,11 +8,12 @@ import com.business.tpas.model.*;
 import com.business.tpas.service.CourseBaseService;
 import com.business.tpas.service.CourseHoursModifyRecordService;
 import com.business.tpas.service.CourseHoursService;
-import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
+import com.management.common.config.FileConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
+import com.management.common.utils.FileUtil;
 import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,7 +56,8 @@ public class CourseHoursController {
     @Autowired
     private CourseHoursModifyRecordService courseHoursModifyRecordService;
 
-    private static final String filePath = "template/课时信息模板.xls";
+    @Autowired
+    private FileConfig fileConfig;
 
     private static final String fileName = "课时信息模板.xls";
 
@@ -70,7 +72,8 @@ public class CourseHoursController {
             Map<String, String> headerMap = new HashMap<>();
             headerMap.put("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
-            FileUtil.downloadClassPathFile(response, filePath, Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
+            FileUtil.downloadFileByPath(response, fileConfig.SampleFileMenu + "/" + fileName,
+                Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
         } catch (IOException e) {
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg, e);
         }

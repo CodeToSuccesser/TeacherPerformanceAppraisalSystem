@@ -8,11 +8,12 @@ import com.business.tpas.listener.InternUploadListener;
 import com.business.tpas.model.*;
 import com.business.tpas.service.InternModifyRecordService;
 import com.business.tpas.service.InternService;
-import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
+import com.management.common.config.FileConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
+import com.management.common.utils.FileUtil;
 import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,8 +44,6 @@ public class InternInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(InternInfoController.class);
 
-    private static final String filePath = "template/实习带队信息模板.xls";
-
     private static final String fileName = "实习带队信息模板.xls";
 
     @Autowired
@@ -55,6 +54,9 @@ public class InternInfoController {
 
     @Autowired
     private InternModifyRecordService internModifyRecordService;
+
+    @Autowired
+    private FileConfig fileConfig;
 
     /**
      * 下载实习带队信息模板文件
@@ -67,7 +69,8 @@ public class InternInfoController {
             Map<String, String> headerMap = new HashMap<>();
             headerMap.put("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
-            FileUtil.downloadClassPathFile(response, filePath, Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
+            FileUtil.downloadFileByPath(response, fileConfig.SampleFileMenu + "/" + fileName,
+                Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
         } catch (IOException e) {
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg, e);
         }
