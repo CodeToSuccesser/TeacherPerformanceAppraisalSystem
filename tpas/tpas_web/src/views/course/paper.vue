@@ -9,11 +9,12 @@
         <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
       </el-select>
 
-      <el-input v-model="searchForm.selectedStudentInstitute" placeholder="学生学院" clearable class="selector" style="width: 120px" />
+      <el-input v-model="searchForm.selectedMajorName" placeholder="专业名称" clearable class="selector" style="width: 120px" />
 
       <el-button type="primary" size="small" class="button-find">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">申请新增</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
     </el-form>
@@ -24,12 +25,12 @@
           <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column :resizable="false" prop="majorName" sortable label="专业名称" align="center"/>
-      <el-table-column :resizable="false" prop="studentNumber" sortable label="学生人数" align="center"/>
-      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center"/>
-      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center"/>
-      <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center"/>
-      <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center"/>
+      <el-table-column :resizable="false" prop="majorName" sortable label="专业名称" align="center" />
+      <el-table-column :resizable="false" prop="studentNumber" sortable label="学生人数" align="center" />
+      <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
+      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center" />
+      <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center" />
+      <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center" />
       <el-table-column :resizable="false" label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="paperEdit(scope)">修改</el-button>
@@ -102,7 +103,8 @@
 
 <script>
 
-import { getPaperInfo } from '@/api/paper'
+import { downloadPaperTemplate, getPaperInfo, exportPaperInfo } from '@/api/paper'
+import { downloadExcel } from '@/utils/file'
 
 export default {
   name: 'Paper',
@@ -117,7 +119,7 @@ export default {
       searchForm: {
         selectedSemester: '',
         selectedSchoolYear: '',
-        selectedStudentInstitute: ''
+        selectedMajorName: ''
       },
       schoolYearOptions: {},
       semesterOptions: [
@@ -156,9 +158,6 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    if (this.$store.getters.userType !== 0) {
-      param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-    }
     this.getPaperInfo(param)
   },
   methods: {
@@ -172,6 +171,10 @@ export default {
       this.paperEditDisable = true
     },
     getPaperInfo: function(body) {
+      const userType = this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
+      if (Number(userType) !== 1) {
+        body.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+      }
       getPaperInfo(body).then(response => {
         const { data } = response
         this.paperInfo = data.list
@@ -185,9 +188,6 @@ export default {
         pageSize: this.pageSize,
         pageNum: this.curPageNum - 1
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getPaperInfo(param)
       this.curPageNum = this.curPageNum - 1
     },
@@ -195,9 +195,6 @@ export default {
       const param = {
         pageSize: this.pageSize,
         pageNum: this.curPageNum + 1
-      }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
       }
       this.getPaperInfo(param)
       this.curPageNum = this.curPageNum + 1
@@ -207,9 +204,6 @@ export default {
         pageSize: this.pageSize,
         pageNum: val
       }
-      if (this.$store.getters.userType !== 0) {
-        param.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
-      }
       this.getPaperInfo(param)
       this.curPageNum = val
     },
@@ -217,7 +211,32 @@ export default {
 
     },
     exportPaper: function() {
-
+      const param = {}
+      if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      if (this.searchForm.selectedSchoolYear && this.searchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.searchForm.selectedSchoolYear
+      }
+      if (this.searchForm.selectedMajorName && this.searchForm.selectedMajorName !== '') {
+        param.majorName = this.searchForm.selectedMajorName
+      }
+      exportPaperInfo(param)
+        .then(response => {
+          downloadExcel(response, '论文指导信息导出文件.xlsx')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    downloadTemplate: function() {
+      downloadPaperTemplate()
+        .then(response => {
+          downloadExcel(response, '论文指导信息模板.xls')
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
