@@ -12,11 +12,12 @@ import com.business.tpas.model.CourseBaseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
 import com.business.tpas.model.UploadResponseModel;
 import com.business.tpas.service.CourseBaseService;
-import com.business.tpas.utils.FileUtil;
 import com.github.pagehelper.PageInfo;
+import com.management.common.config.FileConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
+import com.management.common.utils.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -46,12 +47,13 @@ public class CourseInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseInfoController.class);
 
-    private static final String filePath = "template/课程信息模板.xls";
-
     private static final String fileName = "课程信息模板.xls";
 
     @Autowired
     private CourseBaseService courseBaseService;
+
+    @Autowired
+    private FileConfig fileConfig;
 
     /**
      * @description 导入课程管理文件模板
@@ -63,7 +65,8 @@ public class CourseInfoController {
             Map<String, String> headerMap = new HashMap<>();
             headerMap.put("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
-            FileUtil.downloadClassPathFile(response, filePath, Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
+            FileUtil.downloadFileByPath(response, fileConfig.SampleFileMenu + "/" + fileName,
+                Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
         } catch (IOException e) {
             throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg);
         }
