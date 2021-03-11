@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.tpas.dao.SystemRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.management.tpas.entity.SystemRole">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="menus_value" property="menusValue" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.management.tpas.model.SystemRoleModel">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="menus_value" property="menusValue" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `name`, menus_value, remark, create_time, is_deleted
+    </sql>
+
+    <select id="getRoles" resultMap="ModelResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM system_role
+        WHERE is_deleted = 0
+    </select>
+
+    <select id="getRoleByName" resultMap="ModelResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM system_role
+        WHERE `name` = #{name} AND is_deleted = 0
+    </select>
+
+    <insert id="insertModel">
+        INSERT INTO system_role(`name`, menus_value, remark)VALUE
+        (#{data.name}
+        <choose>
+            <when test="data.menusValue == null or data.menusValue == ''">
+                , ''
+            </when>
+            <otherwise>
+                , #{data.menusValue}
+            </otherwise>
+        </choose>
+        , remark)
+        ON DUPLICATE KEY UPDATE is_deleted = 0
+        , menus_value = VALUES(menus_value)
+        , remark = VALUES(remark)
+    </insert>
+
+    <update id="updateModel">
+        UPDATE system_role
+        SET `name` = #{data.name}
+        <choose>
+            <when test="data.menusValue == null or data.menusValue == ''">
+                , menus_value = ''
+            </when>
+            <otherwise>
+                , menus_value = #{data.menusValue}
+            </otherwise>
+        </choose>
+        , remark = #{data.remark}
+        , is_deleted = 0
+        WHERE id = #{data.id}
+    </update>
+
+    <select id="countMenusByName" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM system_role
+        WHERE `name` IN
+        <foreach collection="data" item="item" index="index" open="(" close=")" separator="," >
+            #{item}
+        </foreach>
+        AND is_deleted = 0
+    </select>
+
+    <select id="getRoleByNameList" resultMap="ModelResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM system_role
+        WHERE `name` IN
+        <foreach collection="data" item="item" index="index" open="(" close=")" separator="," >
+            #{item}
+        </foreach>
+        AND is_deleted = 0
+    </select>
+
+    <update id="deletedModel">
+        UPDATE system_role
+        SET is_deleted = 1
+        WHERE `name` = #{data.name}
+    </update>
+
+</mapper>

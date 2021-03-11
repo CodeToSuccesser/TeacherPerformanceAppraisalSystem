@@ -87,3 +87,10 @@ INSERT INTO `user_msg`(`user_name`, `log_name`, `log_password`, `contact`, `port
 	, '0'
 	FROM `teacher_msg`
 );
+
+ALTER TABLE teacher_performance.system_role MODIFY COLUMN id bigint(20) auto_increment NOT NULL COMMENT '主键';
+
+INSERT INTO `system_role`(`name`, `menus_value`, `is_deleted`, `remark`) VALUES
+('管理员角色', 'info,course,course-hour,course-paper,course-job,modify,modify-finished,modify-modifying,assess,courseManage,userManage,aduitManage,systemManage', 0, '');
+
+ALTER TABLE system_menu CHANGE iconType `icon_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '图标类型';

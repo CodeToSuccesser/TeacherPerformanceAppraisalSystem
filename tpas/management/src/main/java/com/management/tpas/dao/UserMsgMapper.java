@@ -6,6 +6,8 @@ import com.management.tpas.model.RegisterMsgModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author dude
  * @version 1.0
@@ -19,4 +21,6 @@ public interface UserMsgMapper extends BaseMapper<UserMsg> {
     UserMsg selectByLogName(@Param("logName") String logName);
 
     void updateByLogName(@Param("data") RegisterMsgModel model);
+
+    List<UserMsg> getUserMsgList();
 }

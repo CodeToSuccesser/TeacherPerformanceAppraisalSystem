@@ -55,11 +55,11 @@ public class UserController {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
         }
         // 判断用户类型
-        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(loginMsgModel.getUserType());
+//        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(loginMsgModel.getUserType());
         // 用户类型错误
-        if (null == userTypeEnum) {
-            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-        }
+//        if (null == userTypeEnum) {
+//            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
+//        }
         // 获取账号信息,生成jwt和设置缓存
         return new BaseResponse<>(userMsgService.getByLoginMsg(loginMsgModel));
     }
@@ -103,11 +103,11 @@ public class UserController {
             model.setType(userMsgModel.getUserType());
             model.setLogName(userMsgModel.getLogName());
         }
-        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(model.getType());
-        // 用户类型错误
-        if (null == userTypeEnum) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
-        }
+//        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(model.getType());
+//        // 用户类型错误
+//        if (null == userTypeEnum) {
+//            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
+//        }
         return new BaseResponse<>(userMsgService.updateUserMsg(model, file));
     }
 

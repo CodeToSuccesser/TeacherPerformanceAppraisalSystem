@@ -2,18 +2,21 @@ package com.management.tpas.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author dude
  * @version 1.0
  * @classname UserMsgModel
- * @description TODO
+ * @description 用户信息model
  * @date 2020/8/9
  **/
+@ApiModel(value = "用户信息model")
 public class UserMsgModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,6 +53,9 @@ public class UserMsgModel implements Serializable {
     private Date createTime;
 
     private String token = "";
+
+    @ApiModelProperty(value = "权限菜单")
+    private List<RouterMenus> routerMenus;
 
     public Long getId() {
         return id;
@@ -131,6 +137,14 @@ public class UserMsgModel implements Serializable {
         this.rolesName = rolesName;
     }
 
+    public List<RouterMenus> getRouterMenus() {
+        return routerMenus;
+    }
+
+    public void setRouterMenus(List<RouterMenus> routerMenus) {
+        this.routerMenus = routerMenus;
+    }
+
     @Override
     public String toString() {
         return "UserMsgModel{" +
@@ -140,10 +154,11 @@ public class UserMsgModel implements Serializable {
                 ", contact='" + contact + '\'' +
                 ", portrait='" + portrait + '\'' +
                 ", userType=" + userType +
-                ", rolesValue='" + rolesName + '\'' +
+                ", rolesName='" + rolesName + '\'' +
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +
                 ", token='" + token + '\'' +
+                ", routerMenus=" + routerMenus +
                 '}';
     }
 }

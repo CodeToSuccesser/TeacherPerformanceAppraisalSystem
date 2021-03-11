@@ -26,6 +26,9 @@ public class RegisterMsgModel implements Serializable {
     @ApiModelProperty(value = "登录密码")
     private String password;
 
+    @ApiModelProperty(value = "角色名称")
+    private String rolesName;
+
     @ApiModelProperty(value = "注册用户类型")
     private Integer type;
 
@@ -85,5 +88,13 @@ public class RegisterMsgModel implements Serializable {
 
     public void setPortrait(String portrait) {
         this.portrait = portrait;
+    }
+
+    public String getRolesName() {
+        return rolesName;
+    }
+
+    public void setRolesName(String rolesName) {
+        this.rolesName = rolesName;
     }
 }

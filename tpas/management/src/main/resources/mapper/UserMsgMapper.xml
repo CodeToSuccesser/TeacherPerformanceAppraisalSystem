@@ -31,6 +31,7 @@
     <update id="updateByLogName" parameterType="com.management.tpas.model.RegisterMsgModel">
         update user_msg
         <set>
+            roles_name = #{data.rolesName}
             <if test="data.password != null and data.password != ''">
                 , log_password = #{data.password}
             </if>
@@ -43,5 +44,11 @@
         </set>
         where log_name = #{data.logName} and is_deleted = 0
     </update>
+
+    <select id="getUserMsgList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_msg
+        WHERE is_deleted = 0
+    </select>
 
 </mapper>
