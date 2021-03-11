@@ -24,7 +24,8 @@ export function getPaperInfo(data) {
 export function downloadPaperTemplate() {
   return request({
     url: '/paper/info/download/template',
-    method: 'get'
+    method: 'get',
+    responseType: 'blob'
   })
 }
 
@@ -37,6 +38,7 @@ export function exportPaperInfo(data) {
   return request({
     url: '/paper/info/export',
     method: 'post',
+    responseType: 'blob',
     data
   })
 }

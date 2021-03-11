@@ -24,7 +24,8 @@ export function getCourseHours(data) {
 export function downCourseHoursTemplate() {
   return request({
     url: '/course/hours/download/template',
-    method: 'get'
+    method: 'get',
+    responseType: 'blob'
   })
 }
 
@@ -37,6 +38,7 @@ export function exportCourseFile(data) {
   return request({
     url: '/course/hours/export',
     method: 'post',
+    responseType: 'blob',
     data
   })
 }
