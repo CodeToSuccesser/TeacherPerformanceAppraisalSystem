@@ -191,6 +191,8 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
             RouterMenus childMenu = new RouterMenus();
             childMenu.setName(child.getLabel());
             childMenu.setPath(child.getPath());
+            childMenu.setLevel(child.getLevel());
+            childMenu.setParentValue(parentValue);
             childMenu.setMeta(new Meta());
             childMenu.getMeta().setIcon(child.getIconType());
             childMenu.getMeta().setTitle(child.getLabel());
