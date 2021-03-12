@@ -41,7 +41,8 @@ module.exports = {
     proxy: {
       // 配置代理服务器，代理所有请求路径
       '/': {
-        target: 'http://39.108.78.152:' + process.env.VUE_APP_PORT,
+        // target: 'http://39.108.78.152:' + process.env.VUE_APP_PORT,
+        target: 'http://localhost:' + process.env.VUE_APP_PORT,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

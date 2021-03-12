@@ -10,7 +10,8 @@ const getDefaultState = () => {
     avatar: '',
     contact: '',
     userType: '',
-    id: ''
+    rolesName: [],
+    routerMenus: []
   }
 }
 
@@ -38,8 +39,11 @@ const mutations = {
   SET_USER_TYPE: (state, userType) => {
     state.userType = userType
   },
-  SET_USER_ID: (state, id) => {
-    state.id = id
+  SET_ROLES_NAME: (state, rolesName) => {
+    state.rolesName = rolesName
+  },
+  SET_ROUTER_MENUS: (state, routerMenus) => {
+    state.routerMenus = routerMenus
   }
 }
 
@@ -56,7 +60,8 @@ const actions = {
         commit('SET_ACCOUNT', data.logName)
         commit('SET_CONTACT', data.contact)
         commit('SET_USER_TYPE', data.userType)
-        commit('SET_USER_ID', data.id)
+        commit('SET_ROLES_NAME', data.rolesName)
+        commit('SET_ROUTER_MENUS', data.routerMenus)
         setToken(data.token)
         resolve()
       }).catch(error => {

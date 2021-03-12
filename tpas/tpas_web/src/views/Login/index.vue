@@ -59,7 +59,6 @@
 </template>
 
 <script>
-// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -98,7 +97,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$store.state.app.device === 'mobile' ? 'Login-container-mobile' : 'Login-container'
+      return this.$store.state.app.device === 'mobile' ? 'login-container-mobile' : 'login-container'
     }
   },
   watch: {

@@ -270,4 +270,9 @@ export function resetRouter() {
   router.matcher = newRouter.matcher // reset router
 }
 
+router.$addRoutes = function(params) {
+  router.matcher = new Router().matcher
+  router.addRoutes(params)
+}
+
 export default router

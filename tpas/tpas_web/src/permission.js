@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { generateRoutes } from '@/store/modules/permission'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -24,7 +25,7 @@ router.beforeEach(async(to, from, next) => {
   const token = getToken()
 
   if (token) {
-    if (to.path === '/Login') {
+    if (to.path === '/login') {
       // 系统根路由
       Message('您已登录,如需切换用户请退出重新登录')
       next({ path: '/' })
@@ -34,13 +35,11 @@ router.beforeEach(async(to, from, next) => {
       if (addRoutes === undefined || addRoutes.length <= 0) {
         try {
           // 根据用户角色加载路由
-          const role = (store.getters.userType === undefined || store.getters.userType === '') ? sessionStorage.getItem('userType') : store.getters.userType
-          await store.dispatch(
-            'permission/generateRoutes',
-            role
-          )
-          // 动态加载路由
-          router.addRoutes(store.getters.routes)
+          const roles = (store.getters.rolesName === null || store.getters.rolesName === []) ? sessionStorage.getItem('rolesName') : store.getters.rolesName
+          const routerMenus = (store.getters.routerMenus === null || store.getters.routerMenus === []) ? sessionStorage.getItem('routerMenus') : store.getters.routerMenus
+          generateRoutes(roles, routerMenus)
+          router.$addRoutes(store.getters.routes)
+          router.options.routes = store.getters.routes
           next({ ...to, replace: true })
         } catch (error) {
           // 重置token并跳转到登录页面重新登录
