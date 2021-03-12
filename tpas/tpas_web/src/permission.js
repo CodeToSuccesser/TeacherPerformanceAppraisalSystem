@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { generateRoutes } from '@/store/modules/permission'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -22,8 +23,10 @@ router.beforeEach(async(to, from, next) => {
 
   // 此处进行鉴权操作
   const token = getToken()
+  console.log("router.beforeEach: ", token)
 
   if (token) {
+    console.log("to.path: ", to.path)
     if (to.path === '/login') {
       // 系统根路由
       Message('您已登录,如需切换用户请退出重新登录')
@@ -31,19 +34,36 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       const addRoutes = store.getters.addRoutes
+      console.log("per.addRoutes: ", addRoutes)
       if (addRoutes === undefined || addRoutes.length <= 0) {
         try {
           // 根据用户角色加载路由
-          const role = (store.getters.userType === undefined || store.getters.userType === '') ? sessionStorage.getItem('userType') : store.getters.userType
-          await store.dispatch(
-            'permission/generateRoutes',
-            role
-          )
-          // 动态加载路由
-          router.addRoutes(store.getters.routes)
+          // const role = (store.getters.userType === undefined || store.getters.userType === '') ? sessionStorage.getItem('userType') : store.getters.userType
+          // await store.dispatch(
+          //   'permission/generateRoutes',
+          //   role
+          // )
+          // // 动态加载路由
+          // router.addRoutes(store.getters.routes)
+          // next({ ...to, replace: true })
+
+          // 根据用户角色加载路由
+          const roles = (store.getters.rolesName === null || store.getters.rolesName === []) ? sessionStorage.getItem('rolesName') : store.getters.rolesName
+          const routerMenus = (store.getters.routerMenus === null || store.getters.routerMenus === []) ? sessionStorage.getItem('routerMenus') : store.getters.routerMenus
+          generateRoutes(roles, routerMenus)
+          // store.dispatch(
+          //   'permission/generateRoutes',
+          //   (roles, routerMenus)
+          // ).then(() => {
+          //
+          // })
+          router.$addRoutes(store.getters.routes)
+          router.options.routes = store.getters.routes
+          console.log("per.addRoutes(after): ", store.getters.routes)
           next({ ...to, replace: true })
         } catch (error) {
           // 重置token并跳转到登录页面重新登录
+          console.log("error: ", error)
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
           next(`/login`)

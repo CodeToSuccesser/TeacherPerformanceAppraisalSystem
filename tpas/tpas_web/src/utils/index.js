@@ -115,3 +115,14 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function string2List(data) {
+  let target = []
+  if (!data) {
+    return target
+  }
+  data.split(',').forEach(it => {
+    target.push(it.trim())
+  })
+  return target
+}

@@ -61,155 +61,155 @@ export const constantRoutes = [
  * asyncRoutes
  * 权限校验路由列表
  */
-export const asyncRoutes = [
-
-  {
-    path: '/course',
-    component: Layout,
-    redirect: '/course/course-hour',
-    alwaysShow: true,
-    name: '教学管理',
-    meta: { title: '教学管理', icon: 'el-icon-s-help', roles: [0, 1] },
-    children: [
-      {
-        path: 'course-hour',
-        name: '课时信息',
-        component: () => import('@/views/course/course-hour'),
-        meta: { title: '课时信息', icon: 'table', roles: [0, 1] }
-      },
-      {
-        path: 'paper',
-        name: '论文指导信息',
-        component: () => import('@/views/course/paper'),
-        meta: { title: '论文指导信息', icon: 'education', roles: [0, 1] }
-      },
-      {
-        path: 'intern',
-        name: '实习带队信息',
-        component: () => import('@/views/course/intern'),
-        meta: { title: '实习带队信息', icon: 'tree', roles: [0, 1] }
-      }
-    ]
-  },
-
-  {
-    path: '/modify',
-    component: Layout,
-    redirect: '/modify/finished',
-    name: '我的修改',
-    meta: {
-      title: '我的修改', icon: 'nested', roles: [0, 1]
-    },
-    children: [
-      {
-        path: 'finished',
-        component: () => import('@/views/modify/finished'), // Parent router-view
-        name: '已完成',
-        meta: { title: '已完成', icon: 'clipboard', roles: [0, 1] }
-      },
-      {
-        path: 'modifying',
-        component: () => import('@/views/modify/modifying'),
-        name: '进行中',
-        meta: { title: '进行中', icon: 'list', roles: [0, 1] }
-      }
-    ]
-  },
-
-  {
-    path: '/assess',
-    meta: {
-      title: '考核结果', icon: 'form', roles: [0, 1]
-    },
-    name: '考核结果',
-    redirect: '/assess',
-    component: Layout,
-    children: [
-      {
-        path: 'assess',
-        name: '考核结果',
-        component: () => import('@/views/assess/index'),
-        meta: { title: '考核结果', icon: 'form', roles: [0, 1] }
-      }
-    ]
-  },
-
-  {
-    path: '/courseManage',
-    meta: {
-      title: '课程管理', icon: 'form', roles: [1]
-    },
-    name: '课程管理',
-    redirect: '/courseManage',
-    component: Layout,
-    children: [
-      {
-        path: 'courseManage',
-        name: '课程管理',
-        component: () => import('@/views/courserManage/index'),
-        meta: { title: '课程管理', icon: 'form', roles: [1] }
-      }
-    ]
-  },
-
-  {
-    path: '/userManage',
-    meta: {
-      title: '用户管理', icon: 'form', roles: [1]
-    },
-    name: '用户管理',
-    redirect: '/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'userManage',
-        name: '用户管理',
-        component: () => import('@/views/userManage/index'),
-        meta: { title: '用户管理', icon: 'form', roles: [1] }
-      }
-    ]
-  },
-
-  {
-    path: '/aduitManage',
-    meta: {
-      title: '操作记录', icon: 'form', roles: [0, 1]
-    },
-    name: '操作记录',
-    redirect: '/aduitManage',
-    component: Layout,
-    children: [
-      {
-        path: 'aduitManage',
-        name: '操作记录',
-        component: () => import('@/views/aduitManage/index'),
-        meta: { title: '操作记录', icon: 'form', roles: [0, 1] }
-      }
-    ]
-  },
-
-  {
-    path: '/systemManage',
-    meta: {
-      title: '系统管理', icon: 'form', roles: [1]
-    },
-    name: '系统管理',
-    redirect: '/systemManage',
-    component: Layout,
-    children: [
-      {
-        path: 'systemManage',
-        name: '系统管理',
-        component: () => import('@/views/systemManage/index'),
-        meta: { title: '系统管理', icon: 'form', roles: [1] }
-      }
-    ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', name: '404', hidden: true, meta: {}}
-
-]
+export const asyncRoutes = []
+// export const asyncRoutes = [
+//
+//   {
+//     path: '/course',
+//     component: Layout,
+//     redirect: '/course/course-hour',
+//     alwaysShow: true,
+//     name: '教学管理',
+//     meta: { title: '教学管理', icon: 'el-icon-s-help', roles: [0, 1] },
+//     children: [
+//       {
+//         path: 'course-hour',
+//         name: '课时信息',
+//         component: () => import('@/views/course/course-hour'),
+//         meta: { title: '课时信息', icon: 'table', roles: [0, 1] }
+//       },
+//       {
+//         path: 'paper',
+//         name: '论文指导信息',
+//         component: () => import('@/views/course/paper'),
+//         meta: { title: '论文指导信息', icon: 'education', roles: [0, 1] }
+//       },
+//       {
+//         path: 'job',
+//         name: '实习带队信息',
+//         component: () => import('@/views/course/job'),
+//         meta: { title: '实习带队信息', icon: 'tree', roles: [0, 1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/modify',
+//     component: Layout,
+//     redirect: '/modify/finished',
+//     name: '我的修改',
+//     meta: {
+//       title: '我的修改', icon: 'nested', roles: [0, 1]
+//     },
+//     children: [
+//       {
+//         path: 'finished',
+//         component: () => import('@/views/modify/finished'), // Parent router-view
+//         name: '已完成',
+//         meta: { title: '已完成', icon: 'clipboard', roles: [0, 1] }
+//       },
+//       {
+//         path: 'modifying',
+//         component: () => import('@/views/modify/modifying'),
+//         name: '进行中',
+//         meta: { title: '进行中', icon: 'list', roles: [0, 1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/assess',
+//     meta: {
+//       title: '考核结果', icon: 'form', roles: [0, 1]
+//     },
+//     name: '考核结果',
+//     redirect: '/assess',
+//     component: Layout,
+//     children: [
+//       {
+//         path: 'assess',
+//         name: '考核结果',
+//         component: () => import('@/views/assess/index'),
+//         meta: { title: '考核结果', icon: 'form', roles: [0, 1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/courseManage',
+//     meta: {
+//       title: '课程管理', icon: 'form', roles: [1]
+//     },
+//     name: '课程管理',
+//     redirect: '/courseManage',
+//     component: Layout,
+//     children: [
+//       {
+//         path: 'courseManage',
+//         name: '课程管理',
+//         component: () => import('@/views/courserManage/index'),
+//         meta: { title: '课程管理', icon: 'form', roles: [1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/userManage',
+//     meta: {
+//       title: '用户管理', icon: 'form', roles: [1]
+//     },
+//     name: '用户管理',
+//     redirect: '/userManage',
+//     component: Layout,
+//     children: [
+//       {
+//         path: 'userManage',
+//         name: '用户管理',
+//         component: () => import('@/views/userManage/index'),
+//         meta: { title: '用户管理', icon: 'form', roles: [1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/aduitManage',
+//     meta: {
+//       title: '操作记录', icon: 'form', roles: [0, 1]
+//     },
+//     name: '操作记录',
+//     redirect: '/aduitManage',
+//     component: Layout,
+//     children: [
+//       {
+//         path: 'aduitManage',
+//         name: '操作记录',
+//         component: () => import('@/views/aduitManage/index'),
+//         meta: { title: '操作记录', icon: 'form', roles: [0, 1] }
+//       }
+//     ]
+//   },
+//
+//   {
+//     path: '/systemManage',
+//     meta: {
+//       title: '系统管理', icon: 'form', roles: [1]
+//     },
+//     name: '系统管理',
+//     redirect: '/systemManage',
+//     component: Layout,
+//     children: [
+//       {
+//         path: 'systemManage',
+//         name: '系统管理',
+//         component: () => import('@/views/systemManage/index'),
+//         meta: { title: '系统管理', icon: 'form', roles: [1] }
+//       }
+//     ]
+//   },
+//
+//   // 404 page must be placed at the end !!!
+//
+// ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -224,5 +224,18 @@ export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+// router.$addRoutes = (params) => {
+//   router.matcher = new Router({
+//     mode: 'history',
+//     routes: [...StaticBaseRouter],
+//   }).matcher;
+//   router.addRoutes(params)
+// }
+router.$addRoutes = function (params){
+  router.matcher = new Router().matcher;
+  router.addRoutes(params)
+}
+
 
 export default router
