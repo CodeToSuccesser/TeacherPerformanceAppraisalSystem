@@ -75,9 +75,6 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
         }
         // 获取账号信息
         UserMsgModel userMsgModel = BeanMapper.map(userMsg, UserMsgModel.class);
-        // 查找角色、设置菜单
-        List<String> roleNames = CommonUtil.parseStringList(userMsgModel.getRolesName(), ",");
-        userMsgModel.setRouterMenus(getRouterMenu(roleNames));
         // 生成jwt和设置缓存
         String key = GlobalConst.REDIS_KEY_PREFIX + userMsgModel.getUserType().toString() + userMsgModel.getId().toString();
         String token = JwtUtil.createJWT(JacksonUtil.object2Json(userMsgModel), JwtConfig.JWT_SECRET);
@@ -85,6 +82,9 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
         redisTemplate.opsForValue().set(key, userMsgModel);
         //更新过期时间
         redisTemplate.expire(key, JwtConfig.EXPIRE_TIME, TimeUnit.HOURS);
+        // 查找角色、设置菜单
+        List<String> roleNames = CommonUtil.parseStringList(userMsgModel.getRolesName(), ",");
+        userMsgModel.setRouterMenus(getRouterMenu(roleNames));
 
         return userMsgModel;
     }
