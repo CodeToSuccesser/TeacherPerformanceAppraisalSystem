@@ -88,9 +88,21 @@ INSERT INTO `user_msg`(`user_name`, `log_name`, `log_password`, `contact`, `port
 	FROM `teacher_msg`
 );
 
+delete * from system_role;
+
 ALTER TABLE teacher_performance.system_role MODIFY COLUMN id bigint(20) auto_increment NOT NULL COMMENT '主键';
 
-INSERT INTO `system_role`(`name`, `menus_value`, `is_deleted`, `remark`) VALUES
-('管理员角色', 'info,course,course-hour,course-paper,course-job,modify,modify-finished,modify-modifying,assess,courseManage,userManage,aduitManage,systemManage', 0, '');
-
+INSERT INTO system_role (name,menus_value,create_time,is_deleted,remark) VALUES
+('教师角色','info,course,course-hour,course-paper,course-job,modify,modify-finished,modify-modifying,assess,assess-index,info-index','2021-02-09 22:09:57.0',0,'')
+,('管理员角色','info,course,course-hour,course-paper,course-job,modify,modify-finished,modify-modifying,assess,courseManage,courseManage-index,userManage,userManage-index,aduitManage,aduitManage-index,systemManage,systemManage-index,info-index','2021-03-11 16:46:13.0',0,'');
 ALTER TABLE system_menu CHANGE iconType `icon_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '图标类型';
+
+
+INSERT INTO teacher_performance.system_menu (value,label,`path`,icon_type,`level`,parent_value,full_value,create_time,is_deleted) VALUES
+('assess-index','考核结果','/index','form',1,'assess','assess|assess-index','2021-02-09 22:09:57.0',0)
+,('courseManage-index','课程管理','/index','form',1,'courseManage','courseManage|courseManage-index','2021-02-09 22:09:57.0',0)
+,('userManage-index','用户管理','/index','form',1,'userManage','userManage|userManage-index','2021-02-09 22:09:57.0',0)
+,('aduitManage-index','操作记录','/index','form',1,'aduitManage','aduitManage|aduitManage-index','2021-02-09 22:09:57.0',0)
+,('info-index','个人中心','/index','user',1,'info','info|info-index','2021-02-09 22:09:57.0',0)
+,('systemManage-index','系统管理','/index','form',1,'systemManage','systemManage|systemManage-index','2021-02-09 22:09:57.0',0)
+;
