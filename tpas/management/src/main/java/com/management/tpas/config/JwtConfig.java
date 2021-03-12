@@ -15,7 +15,7 @@ public class JwtConfig {
 
     public static int EXPIRE_TIME = 0;// 有效时间（hour）
 
-    public static String JWT_SECRET = "JwtSECRET";
+    public static String JWT_SECRET = "75vsncevnh2x5cj8tlm5vqqdi6t5ccs9";
 
     @Value("${jwt.expire-time}")
     public void setExpireTime(int expireTime) {
