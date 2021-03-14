@@ -22,3 +22,14 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function modifyUserInfo(data) {
+  return request({
+    url: '/user/modifyUserInfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: data
+  })
+}

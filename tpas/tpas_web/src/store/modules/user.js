@@ -1,17 +1,14 @@
-import { login, getInfo } from '@/api/user'
+import { login, getInfo, modifyUserInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
-import store from "@/store";
-import {generateRoutes} from "@/store/modules/permission";
+import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
     account: '',
-    avatar: '',
+    portrait: '',
     contact: '',
-    userType: '',
     rolesName: [],
     routerMenus: []
   }
@@ -29,17 +26,14 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_PORTRAIT: (state, portrait) => {
+    state.portrait = portrait
   },
   SET_ACCOUNT: (state, account) => {
     state.account = account
   },
   SET_CONTACT: (state, contact) => {
     state.contact = contact
-  },
-  SET_USER_TYPE: (state, userType) => {
-    state.userType = userType
   },
   SET_ROLES_NAME: (state, rolesName) => {
     state.rolesName = rolesName
@@ -58,13 +52,11 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.userName)
-        commit('SET_AVATAR', data.avatar)
+        commit('SET_PORTRAIT', data.portrait)
         commit('SET_ACCOUNT', data.logName)
         commit('SET_CONTACT', data.contact)
-        commit('SET_USER_TYPE', data.userType)
         commit('SET_ROLES_NAME', data.rolesName)
         commit('SET_ROUTER_MENUS', data.routerMenus)
-        console.log("setToken(data.token): ", data.token)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -83,10 +75,10 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        const { name, portrait } = data
 
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_PORTRAIT', portrait)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -110,6 +102,21 @@ const actions = {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
+    })
+  },
+
+  // modify info
+  modifyUserInfo({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      modifyUserInfo(userInfo).then(response => {
+        const { data } = response
+        commit('SET_NAME', data.userName)
+        commit('SET_PORTRAIT', data.portrait.substring(1))
+        commit('SET_CONTACT', data.contact)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
     })
   }
 }

@@ -139,17 +139,8 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
                 throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
             }
         }
-        // 校验role
-        List<String> roleNames = CommonUtil.parseStringList(model.getRolesName(), ",");
-        if (!roleNames.isEmpty()) {
-            int count = roleMapper.countMenusByName(roleNames);
-            if(count != roleNames.size()) {
-                throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
-            }
-        }
         userMsgMapper.updateByLogName(model);
         UserMsgModel userMsgModel = BeanMapper.map(userMsgMapper.selectByLogName(model.getLogName()), UserMsgModel.class);
-//        userMsgModel.setUserType(Integer.parseInt(userMsgModel.getRolesName().split(",")[0]));
         return userMsgModel;
     }
 

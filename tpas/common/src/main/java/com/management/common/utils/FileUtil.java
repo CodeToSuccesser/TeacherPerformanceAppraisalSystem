@@ -46,7 +46,7 @@ public class FileUtil {
                 throw new BusinessException(UPLOAD_FILE_WRONG);
             }
             // 暂存文件
-            File filePath = new File(basePath);
+            File filePath = new File(System.getProperty("user.dir"), basePath);
             if (!filePath.exists()) {
                 filePath.mkdirs();
             }
@@ -62,7 +62,7 @@ public class FileUtil {
             ImageIO.write(image, "jpg", targetFile);
             // 删除暂存文件
             templateFile.delete();
-            return targetFile.getPath();
+            return basePath + File.separator + targetFile.getName();
         } catch (IOException e) {
             logger.error("上传头像文件发生异常: ", e);
             throw new BusinessException(FILE_OPERATION_ERROR);

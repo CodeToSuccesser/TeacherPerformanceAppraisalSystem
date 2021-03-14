@@ -59,89 +59,85 @@
 </template>
 
 <script>
-  // import { validUsername } from '@/utils/validate'
 
-  import store from "@/store";
-  import router from "@/router";
-
-  export default {
-    name: 'Login',
-    data() {
-      const validateUsername = (rule, value, callback) => {
-        // if (!validUsername(value)) {
-        //   callback(new Error('Please enter the correct user name'))
-        // } else {
-        //   callback()
-        // }
-        callback()
-      }
-      const validatePassword = (rule, value, callback) => {
-        // if (value.length < 6) {
-        //   callback(new Error('The password can not be less than 6 digits'))
-        // } else {
-        //   callback()
-        // }
-        callback()
-      }
-      return {
-        loginForm: {
-          // username: 'admin',
-          // password: '111111',
-          type: '0'
-        },
-        loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-        },
-        loading: false,
-        passwordType: 'password',
-        redirect: undefined,
-        radio: '0'
-      }
-    },
-    computed: {
-      isMobile() {
-        return this.$store.state.app.device === 'mobile' ? 'login-container-mobile' : 'login-container'
-      }
-    },
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
-    },
-    methods: {
-      showPwd() {
-        if (this.passwordType === 'password') {
-          this.passwordType = ''
-        } else {
-          this.passwordType = 'password'
-        }
-        this.$nextTick(() => {
-          this.$refs.password.focus()
-        })
+export default {
+  name: 'Login',
+  data() {
+    const validateUsername = (rule, value, callback) => {
+      // if (!validUsername(value)) {
+      //   callback(new Error('Please enter the correct user name'))
+      // } else {
+      //   callback()
+      // }
+      callback()
+    }
+    const validatePassword = (rule, value, callback) => {
+      // if (value.length < 6) {
+      //   callback(new Error('The password can not be less than 6 digits'))
+      // } else {
+      //   callback()
+      // }
+      callback()
+    }
+    return {
+      loginForm: {
+        // username: 'admin',
+        // password: '111111',
+        type: '0'
       },
-      handleLogin() {
-        this.$refs.loginForm.validate(valid => {
-          if (valid) {
-            this.loginForm.type = Number(this.loginForm.type)
-            this.loading = true
-            this.$store.dispatch('user/login', this.loginForm).then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            }).catch(() => {
-              this.loading = false
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+      loginRules: {
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      loading: false,
+      passwordType: 'password',
+      redirect: undefined,
+      radio: '0'
+    }
+  },
+  computed: {
+    isMobile() {
+      return this.$store.state.app.device === 'mobile' ? 'login-container-mobile' : 'login-container'
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    showPwd() {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
+      } else {
+        this.passwordType = 'password'
       }
+      this.$nextTick(() => {
+        this.$refs.password.focus()
+      })
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loginForm.type = Number(this.loginForm.type)
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
+}
 </script>
 
 <style lang="scss">

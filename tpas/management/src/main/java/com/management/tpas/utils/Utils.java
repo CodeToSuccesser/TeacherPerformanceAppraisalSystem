@@ -31,12 +31,16 @@ public class Utils {
      * @date 2020/9/3
      **/
     public static String getBody(HttpServletRequest request) {
-        boolean ipUploadFile = request.getContentType().toLowerCase().contains(
-                MediaType.MULTIPART_FORM_DATA_VALUE.toLowerCase());
-        if(ipUploadFile){
-            return JacksonUtil.object2Json(request.getParameterMap());
-        } else {
-            return JacksonUtil.object2Json(new RequestWrapper(request).getRequestBody());
+        try {
+            boolean ipUploadFile = request.getContentType().toLowerCase().contains(
+                    MediaType.MULTIPART_FORM_DATA_VALUE.toLowerCase());
+            if (ipUploadFile) {
+                return JacksonUtil.object2Json(request.getParameterMap());
+            } else {
+                return JacksonUtil.object2Json(new RequestWrapper(request).getRequestBody());
+            }
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 

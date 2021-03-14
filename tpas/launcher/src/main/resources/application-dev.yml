@@ -62,7 +62,7 @@ upload:
     width: 320
   # 头像大小(MB)
   portrait-max-length: 1
-  file-path: ./file
+  file-path: /file
   file-menu:
     # 模板文件
     sample: ./sample

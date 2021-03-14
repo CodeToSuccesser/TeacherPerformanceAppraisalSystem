@@ -147,7 +147,7 @@ export const asyncRoutes = []
 //       {
 //         path: 'courseManage',
 //         name: '课程管理',
-//         component: () => import('@/views/courserManage/index'),
+//         component: () => import('@/views/courseManage/index'),
 //         meta: { title: '课程管理', icon: 'form', roles: [1] }
 //       }
 //     ]
@@ -232,10 +232,9 @@ export function resetRouter() {
 //   }).matcher;
 //   router.addRoutes(params)
 // }
-router.$addRoutes = function (params){
-  router.matcher = new Router().matcher;
+router.$addRoutes = function(params) {
+  router.matcher = new Router().matcher
   router.addRoutes(params)
 }
-
 
 export default router

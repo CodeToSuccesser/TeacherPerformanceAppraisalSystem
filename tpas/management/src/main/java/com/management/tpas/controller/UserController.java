@@ -54,12 +54,6 @@ public class UserController {
                 .isBlank(loginMsgModel.getLogPassword()) || null == loginMsgModel.getUserType()) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
         }
-        // 判断用户类型
-//        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(loginMsgModel.getUserType());
-        // 用户类型错误
-//        if (null == userTypeEnum) {
-//            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-//        }
         // 获取账号信息,生成jwt和设置缓存
         return new BaseResponse<>(userMsgService.getByLoginMsg(loginMsgModel));
     }
@@ -76,7 +70,6 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> insertUser(@RequestBody RegisterMsgModel registerMsgModel) {
-        UserTypeEnum userTypeEnum = validRegisterMsgModelAndGetType(registerMsgModel);
         // 插入新数据
         UserMsgModel userMsgModel = userMsgService.insertUserMsg(registerMsgModel);
         if(userMsgModel == null) {
@@ -103,28 +96,7 @@ public class UserController {
             model.setType(userMsgModel.getUserType());
             model.setLogName(userMsgModel.getLogName());
         }
-//        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(model.getType());
-//        // 用户类型错误
-//        if (null == userTypeEnum) {
-//            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
-//        }
         return new BaseResponse<>(userMsgService.updateUserMsg(model, file));
     }
 
-    private UserTypeEnum validRegisterMsgModelAndGetType(RegisterMsgModel registerMsgModel) {
-        if (registerMsgModel == null || StringUtils.isBlank(registerMsgModel.getLogName()) || StringUtils
-                .isBlank(registerMsgModel.getRegisterName()) || StringUtils.isBlank(registerMsgModel.getPassword())
-                || registerMsgModel.getType() == null) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
-        }
-
-        // 判断注册用户类型
-        UserTypeEnum userTypeEnum = UserTypeEnum.getByFlag(registerMsgModel.getType());
-        // 用户类型错误
-        if (null == userTypeEnum) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG.code, ErrorCodeEnum.PARAM_IS_WRONG.msg);
-        }
-
-        return userTypeEnum;
-    }
 }
