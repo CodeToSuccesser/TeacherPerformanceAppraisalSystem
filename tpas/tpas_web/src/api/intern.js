@@ -96,3 +96,28 @@ export function insertInternInfo(data) {
   })
 }
 
+/**
+ * 实习带队修改申请
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getInternModifyRecord(data) {
+  return request({
+    url: '/intern/info/getModifyRecord',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 审批实习带队修改申请
+ * @param id
+ * @param result
+ * @returns {AxiosPromise}
+ */
+export function auditInternModify(id, result) {
+  return request({
+    url: '/intern/info/' + id + '/audit?result=' + result,
+    method: 'post'
+  })
+}
