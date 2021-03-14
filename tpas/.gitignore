@@ -35,3 +35,10 @@ build/
 logs
 /launcher/src/main/resources/static/
 /launcher/src/main/resources/template/
+
+file
+file/
+tpas_web/node/node
+tpas_web/node/node.exe
+tpas_web/node/npm
+tpas_web/node/npm.cmd

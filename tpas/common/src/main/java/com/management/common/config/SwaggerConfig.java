@@ -24,6 +24,10 @@ public class SwaggerConfig {
     @Value("${swagger.enable}")
     private final Boolean swaggerEnable = true;
 
+    public Boolean getSwaggerEnable() {
+        return swaggerEnable;
+    }
+
     @Bean
     public Docket createManagementApi(){
         return new Docket(DocumentationType.SWAGGER_2)

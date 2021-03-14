@@ -60,12 +60,12 @@ export const constantRoutes = [
   {
     path: '/Info',
     component: Layout,
-    redirect: '/Info',
+    redirect: '/info',
     children: [
       {
         path: 'info',
         name: '个人中心',
-        component: () => import('@/views/Info/index'),
+        component: () => import('@/views/info/index'),
         meta: { title: '个人中心', icon: 'user' }
       }
     ]

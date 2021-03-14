@@ -1,10 +1,14 @@
 package com.management.tpas.intercepter;
 
+import com.management.common.config.FileConfig;
+import com.management.common.config.SwaggerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.io.File;
 
 /**
  * @author dude
@@ -21,6 +25,12 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
 
     @Autowired
     private ParamInterceptor paramInterceptor;
+
+    @Autowired
+    private FileConfig fileConfig;
+
+    @Autowired
+    private SwaggerConfig swaggerConfig;
 
     /**
      * @description 拦截器配置
@@ -59,7 +69,20 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        // swagger静态映射
+        if (swaggerConfig.getSwaggerEnable()) {
+            registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        }
+        // 图片访问
+        File filePath = new File(System.getProperty("user.dir"), fileConfig.baseFilePath);
+        if (filePath.exists() && filePath.isDirectory()) {
+            String pathPatterns = fileConfig.baseFilePath.concat(File.separator).concat("**");
+            String localPath = "file://".concat(System.getProperty("user.dir"))
+                    .concat(fileConfig.baseFilePath)
+                    .concat(File.separator);
+            registry.addResourceHandler(pathPatterns)
+                    .addResourceLocations(localPath);
+        }
     }
 
 }

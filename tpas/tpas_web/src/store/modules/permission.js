@@ -42,9 +42,9 @@ export function filterAsyncRoutes(routes, role) {
  */
 export function generaMenu(routes, routeMenu, parent) {
   routeMenu.forEach(item => {
-    if (item.path.replace("/", "") !== 'info') {
+    if (item.path.replace('/', '') !== 'info') {
       const menu = {
-        path: item.level === 0 ? item.path : item.path.replace("/", ""),
+        path: item.level === 0 ? item.path : item.path.replace('/', ''),
         component: item.level === 0 ? require('@/layout').default : require(`@/views/${item.parentValue}${item.path}`).default,
         // : item.level === 0 ? Layout : resolve => require([`@/views/${item.parentValue}${item.path}`], resolve),
         // hidden: true,
@@ -64,7 +64,7 @@ export function generateRoutes(roles, routerMenus) {
   // const { roles, routerMenus } = data
   const loadMenuData = []
   Object.assign(loadMenuData, routerMenus)
-  generaMenu(asyncRoutes, loadMenuData, "")
+  generaMenu(asyncRoutes, loadMenuData, '')
   asyncRoutes.push({ path: '*', redirect: '/404', hidden: true })
   const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
   mutations.SET_ROUTES(state, accessedRoutes)
