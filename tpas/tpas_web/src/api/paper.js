@@ -88,9 +88,9 @@ export function deletePaperInfo(data) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function insertCourseHours(data) {
+export function insertPaperInfo(data) {
   return request({
-    url: '/course/hours/insert',
+    url: '/paper/info/insert',
     method: 'post',
     data
   })
