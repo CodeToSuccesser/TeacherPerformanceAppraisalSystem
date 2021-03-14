@@ -96,3 +96,29 @@ export function insertCourseHours(data) {
   })
 }
 
+
+/**
+ * 获取论文指导申请记录
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getPaperModifyRecord(data) {
+  return request({
+    url: '/paper/info/getModifyRecord',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 审批论文指导修改申请
+ * @param id
+ * @param result
+ * @returns {AxiosPromise}
+ */
+export function auditPaperModify(id, result) {
+  return request({
+    url: '/paper/info/' + id + '/audit?result=' + result,
+    method: 'post'
+  })
+}

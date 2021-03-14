@@ -59,8 +59,8 @@
     <select id="selectModifyRecords" resultMap="ModelResultMap">
         select pmr.id, pmr.paper_id, pmr.apply_type, pmr.apply_id, pmr.major_id, pmr.student_number, pmr.semester,pmr.school_year,
         pmr.remark, pmr.is_deleted,pmr.modify_major_id,pmr.modify_student_number,pmr.modify_semester,pmr.modify_school_year,
-        pmr.check_time,pmr.modify_remark, pmr.check_result,pmr.admin_id, pmr.update_time, pmr.create_time
-        from paper_modify_record pmr
+        pmr.check_time,pmr.modify_remark, pmr.check_result,pmr.admin_id, pmr.update_time, pmr.create_time, m.major_code, m.major_name
+        from paper_modify_record pmr inner join major m on pmr.major_id = m.id
         <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
         <where>
             <if test="data.applyName != null and data.applyName != ''">

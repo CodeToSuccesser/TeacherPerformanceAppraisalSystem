@@ -23,6 +23,12 @@ public class PaperModifyRecordModel {
     @ApiModelProperty(value = "论文指导信息编码")
     private Long paperId;
 
+    @ApiModelProperty(value = "专业代码")
+    private String majorCode;
+
+    @ApiModelProperty(value = "专业名称")
+    private String majorName;
+
     /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
@@ -286,5 +292,21 @@ public class PaperModifyRecordModel {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getMajorCode() {
+        return majorCode;
+    }
+
+    public void setMajorCode(String majorCode) {
+        this.majorCode = majorCode;
+    }
+
+    public String getMajorName() {
+        return majorName;
+    }
+
+    public void setMajorName(String majorName) {
+        this.majorName = majorName;
     }
 }

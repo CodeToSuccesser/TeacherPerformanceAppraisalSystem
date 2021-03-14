@@ -24,6 +24,24 @@ public class CourseHoursModifyRecordModel {
     @ApiModelProperty(value = "课时信息编码")
     private Long hoursId;
 
+    @ApiModelProperty(value = "课程名称")
+    private String courseName;
+
+    @ApiModelProperty(value = "课程编号")
+    private String courseCode;
+
+    @ApiModelProperty(value = "课程id")
+    private Long courseId;
+
+    @ApiModelProperty(value = "学期")
+    private Integer semester;
+
+    @ApiModelProperty(value = "学年")
+    private String schoolYear;
+
+    @ApiModelProperty(value = "开课学院")
+    private String institute;
+
     /**
      * 提出修改用户类型, 默认0 教师, 1 管理员
      */
@@ -383,4 +401,54 @@ public class CourseHoursModifyRecordModel {
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Integer semester) {
+        this.semester = semester;
+    }
+
+    public String getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+        this.schoolYear = schoolYear;
+    }
+
+    public String getInstitute() {
+        return institute;
+    }
+
+    public void setInstitute(String institute) {
+        this.institute = institute;
+    }
+
+
 }

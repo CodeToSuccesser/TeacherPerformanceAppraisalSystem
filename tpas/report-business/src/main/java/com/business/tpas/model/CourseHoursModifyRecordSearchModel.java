@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description 课时修改记录申请查询模型层
@@ -22,7 +23,7 @@ public class CourseHoursModifyRecordSearchModel extends PageModel {
     private Date endTime;
 
     @ApiModelProperty("申请状态")
-    private Integer checkResult;
+    private List<Integer> checkResult;
 
     public String getApplyName() {
         return applyName;
@@ -48,11 +49,11 @@ public class CourseHoursModifyRecordSearchModel extends PageModel {
         this.endTime = endTime;
     }
 
-    public Integer getCheckResult() {
+    public List<Integer> getCheckResult() {
         return checkResult;
     }
 
-    public void setCheckResult(Integer checkResult) {
+    public void setCheckResult(List<Integer> checkResult) {
         this.checkResult = checkResult;
     }
 }

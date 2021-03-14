@@ -96,3 +96,28 @@ export function insertCourseHours(data) {
   })
 }
 
+/**
+ * 获取课时记录修改申请
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getCourseHoursModifyRecord(data) {
+  return request({
+    url: '/course/hours/getModifyRecord',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 审批课时修改记录
+ * @param id
+ * @param result
+ * @returns {AxiosPromise}
+ */
+export function auditCourseHoursModify(id, result) {
+  return request({
+    url: '/course/hours/' + id + '/audit?result=' + result,
+    method: 'post'
+  })
+}
