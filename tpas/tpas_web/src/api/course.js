@@ -64,7 +64,7 @@ export function importCourseHoursFile(data) {
  */
 export function modifyCourseHours(data, id) {
   return request({
-    url: '/course/hours/' + id + '/Modify',
+    url: '/course/hours/' + id + '/modify',
     method: 'post',
     data
   })

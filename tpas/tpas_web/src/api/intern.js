@@ -11,7 +11,7 @@ import request from '@/utils/request'
  */
 export function getInternInfo(data) {
   return request({
-    url: '/intern/Info/getInternInfo',
+    url: '/intern/info/getInternInfo',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function getInternInfo(data) {
  */
 export function downInternInfoTemplate() {
   return request({
-    url: '/intern/Info/download/template',
+    url: '/intern/info/download/template',
     method: 'get',
     responseType: 'blob'
   })
@@ -36,7 +36,7 @@ export function downInternInfoTemplate() {
  */
 export function exportInternFile(data) {
   return request({
-    url: '/intern/Info/export',
+    url: '/intern/info/export',
     method: 'post',
     responseType: 'blob',
     data
@@ -50,7 +50,7 @@ export function exportInternFile(data) {
  */
 export function importInternInfoFile(data) {
   return request({
-    url: '/intern/Info/import',
+    url: '/intern/info/import',
     method: 'post',
     data
   })
@@ -64,7 +64,7 @@ export function importInternInfoFile(data) {
  */
 export function modifyInternInfo(data, id) {
   return request({
-    url: '/intern/Info/' + id + '/Modify',
+    url: '/intern/info/' + id + '/modify',
     method: 'post',
     data
   })
@@ -90,7 +90,7 @@ export function deleteInternInfos(data) {
  */
 export function insertInternInfo(data) {
   return request({
-    url: '/intern/Info/insert',
+    url: '/intern/info/insert',
     method: 'post',
     data
   })
@@ -103,7 +103,7 @@ export function insertInternInfo(data) {
  */
 export function getInternModifyRecord(data) {
   return request({
-    url: '/intern/Info/getModifyRecord',
+    url: '/intern/info/getModifyRecord',
     method: 'post',
     data
   })
@@ -117,7 +117,7 @@ export function getInternModifyRecord(data) {
  */
 export function auditInternModify(id, result) {
   return request({
-    url: '/intern/Info/' + id + '/audit?result=' + result,
+    url: '/intern/info/' + id + '/audit?result=' + result,
     method: 'post'
   })
 }

@@ -25,7 +25,7 @@ router.beforeEach(async(to, from, next) => {
   const token = getToken()
 
   if (token) {
-    if (to.path === '/login') {
+    if (to.path === '/Login') {
       // 系统根路由
       Message('您已登录,如需切换用户请退出重新登录')
       next({ path: '/' })
@@ -45,7 +45,7 @@ router.beforeEach(async(to, from, next) => {
           // 重置token并跳转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
-          next(`/login`)
+          next(`/Login`)
           NProgress.done()
         }
       } else {
@@ -59,7 +59,7 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       // 跳转到登录页需重新登录
-      next(`/login`)
+      next(`/Login`)
       NProgress.done()
     }
   }

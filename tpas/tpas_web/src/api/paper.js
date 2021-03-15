@@ -11,7 +11,7 @@ import request from '@/utils/request'
  */
 export function getPaperInfo(data) {
   return request({
-    url: '/paper/Info/getPaperInfo',
+    url: '/paper/info/getPaperInfo',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function getPaperInfo(data) {
  */
 export function downloadPaperTemplate() {
   return request({
-    url: '/paper/Info/download/template',
+    url: '/paper/info/download/template',
     method: 'get',
     responseType: 'blob'
   })
@@ -36,7 +36,7 @@ export function downloadPaperTemplate() {
  */
 export function exportPaperInfo(data) {
   return request({
-    url: '/paper/Info/export',
+    url: '/paper/info/export',
     method: 'post',
     responseType: 'blob',
     data
@@ -50,7 +50,7 @@ export function exportPaperInfo(data) {
  */
 export function importPaperInfo(data) {
   return request({
-    url: '/paper/Info/import',
+    url: '/paper/info/import',
     method: 'post',
     data
   })
@@ -64,7 +64,7 @@ export function importPaperInfo(data) {
  */
 export function modifyPaperInfo(data, id) {
   return request({
-    url: '/paper/Info/' + id + '/Modify',
+    url: '/paper/info/' + id + '/modify',
     method: 'post',
     data
   })
@@ -77,7 +77,7 @@ export function modifyPaperInfo(data, id) {
  */
 export function deletePaperInfo(data) {
   return request({
-    url: '/paper/Info/deletePaperInfo',
+    url: '/paper/info/deletePaperInfo',
     method: 'post',
     data
   })
@@ -90,7 +90,7 @@ export function deletePaperInfo(data) {
  */
 export function insertPaperInfo(data) {
   return request({
-    url: '/paper/Info/insert',
+    url: '/paper/info/insert',
     method: 'post',
     data
   })
@@ -103,7 +103,7 @@ export function insertPaperInfo(data) {
  */
 export function getPaperModifyRecord(data) {
   return request({
-    url: '/paper/Info/getModifyRecord',
+    url: '/paper/info/getModifyRecord',
     method: 'post',
     data
   })
@@ -117,7 +117,7 @@ export function getPaperModifyRecord(data) {
  */
 export function auditPaperModify(id, result) {
   return request({
-    url: '/paper/Info/' + id + '/audit?result=' + result,
+    url: '/paper/info/' + id + '/audit?result=' + result,
     method: 'post'
   })
 }

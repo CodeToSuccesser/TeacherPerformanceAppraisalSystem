@@ -98,8 +98,7 @@
                 and chmr.create_time <![CDATA[ <= ]]> #{data.endTime}
             </if>
             <if test="data.checkResult != null">
-                and chmr.check_result in 
-                <foreach collection=""
+                and chmr.check_result = #{data.checkResult}
             </if>
             and chmr.is_deleted = 0
         </where>
