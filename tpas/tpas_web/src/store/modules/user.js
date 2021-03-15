@@ -44,7 +44,7 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // user Login
   login({ commit }, userInfo) {
     const { username, password, type } = userInfo
     return new Promise((resolve, reject) => {
@@ -65,7 +65,7 @@ const actions = {
     })
   },
 
-  // get user info
+  // get user Info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {

@@ -11,7 +11,7 @@ import request from '@/utils/request'
  */
 export function getPaperInfo(data) {
   return request({
-    url: '/paper/info/getPaperInfo',
+    url: '/paper/Info/getPaperInfo',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function getPaperInfo(data) {
  */
 export function downloadPaperTemplate() {
   return request({
-    url: '/paper/info/download/template',
+    url: '/paper/Info/download/template',
     method: 'get',
     responseType: 'blob'
   })
@@ -36,7 +36,7 @@ export function downloadPaperTemplate() {
  */
 export function exportPaperInfo(data) {
   return request({
-    url: '/paper/info/export',
+    url: '/paper/Info/export',
     method: 'post',
     responseType: 'blob',
     data
@@ -50,7 +50,7 @@ export function exportPaperInfo(data) {
  */
 export function importPaperInfo(data) {
   return request({
-    url: '/paper/info/import',
+    url: '/paper/Info/import',
     method: 'post',
     data
   })
@@ -64,7 +64,7 @@ export function importPaperInfo(data) {
  */
 export function modifyPaperInfo(data, id) {
   return request({
-    url: '/paper/info/' + id + '/modify',
+    url: '/paper/Info/' + id + '/Modify',
     method: 'post',
     data
   })
@@ -77,7 +77,7 @@ export function modifyPaperInfo(data, id) {
  */
 export function deletePaperInfo(data) {
   return request({
-    url: '/paper/info/deletePaperInfo',
+    url: '/paper/Info/deletePaperInfo',
     method: 'post',
     data
   })
@@ -90,12 +90,11 @@ export function deletePaperInfo(data) {
  */
 export function insertPaperInfo(data) {
   return request({
-    url: '/paper/info/insert',
+    url: '/paper/Info/insert',
     method: 'post',
     data
   })
 }
-
 
 /**
  * 获取论文指导申请记录
@@ -104,7 +103,7 @@ export function insertPaperInfo(data) {
  */
 export function getPaperModifyRecord(data) {
   return request({
-    url: '/paper/info/getModifyRecord',
+    url: '/paper/Info/getModifyRecord',
     method: 'post',
     data
   })
@@ -118,7 +117,7 @@ export function getPaperModifyRecord(data) {
  */
 export function auditPaperModify(id, result) {
   return request({
-    url: '/paper/info/' + id + '/audit?result=' + result,
+    url: '/paper/Info/' + id + '/audit?result=' + result,
     method: 'post'
   })
 }

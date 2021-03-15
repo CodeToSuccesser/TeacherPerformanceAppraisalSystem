@@ -24,9 +24,9 @@ const users = {
 }
 
 module.exports = [
-  // user login
+  // user Login
   {
-    url: '/vue-admin-template/user/login',
+    url: '/vue-admin-template/user/Login',
     type: 'post',
     response: config => {
       const { username } = config.body
@@ -47,9 +47,9 @@ module.exports = [
     }
   },
 
-  // get user info
+  // get user Info
   {
-    url: '/vue-admin-template/user/info\.*',
+    url: '/vue-admin-template/user/Info\.*',
     type: 'get',
     response: config => {
       const { token } = config.query

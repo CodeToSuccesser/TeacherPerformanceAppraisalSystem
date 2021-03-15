@@ -169,7 +169,6 @@
 
   </div>
 
-
 </template>
 
 <script>
@@ -191,7 +190,7 @@ export default {
           paramValue: 0,
           columnName: 'teachingHours',
           remark: '理论课C1, 理论课学时',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }, {
           id: 2,
           cType: '授课',
@@ -202,7 +201,7 @@ export default {
           paramValue: 0,
           columnName: 'experimentHours',
           remark: '课程实验C1, 实验学时',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }, {
           id: 3,
           cType: '授课',
@@ -213,7 +212,7 @@ export default {
           paramValue: 0,
           columnName: 'experimentHours',
           remark: '实验课程C1, 实验学时',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }, {
           id: 4,
           cType: '授课',
@@ -224,7 +223,7 @@ export default {
           paramValue: 0,
           columnName: '',
           remark: '全日制本、专科授课C2',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }, {
           id: 5,
           cType: '授课',
@@ -235,7 +234,7 @@ export default {
           paramValue: 0.2,
           columnName: '',
           remark: '全日制研究生授课C2',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }, {
           id: 6,
           cType: '授课',
@@ -246,7 +245,7 @@ export default {
           paramValue: 0.3,
           columnName: '',
           remark: '研究生课程班授课C2',
-          createTime:'2021-02-23 20:58:51.0'
+          createTime: '2021-02-23 20:58:51.0'
         }
       ],
       paramForm: {
@@ -259,7 +258,7 @@ export default {
         paramValue: 0,
         columnName: 'teachingHours',
         remark: '理论课C1, 理论课学时',
-        createTime:'2021-02-23 20:58:51.0'
+        createTime: '2021-02-23 20:58:51.0'
       },
       rules: [
         {
@@ -271,7 +270,7 @@ export default {
           rightValue: 0,
           remark: '理论课-上机学时0',
           createTime: '2021-02-23 20:56:28.0'
-        },{
+        }, {
           id: 2,
           cType: '授课',
           valueName: 'experimentHours',
@@ -289,7 +288,8 @@ export default {
           rightValue: '',
           remark: '课程实验',
           createTime: '2021-02-23 20:56:28.0'
-      }],
+        }
+      ],
       ruleForm: {
         id: 1,
         cType: '授课',
@@ -345,13 +345,13 @@ export default {
     paramEditEnsureOrCancel: function() {
       this.paramEditVisible = false
     },
-    ruleEditEnsureOrCancel: function () {
+    ruleEditEnsureOrCancel: function() {
       this.ruleEditVisible = false
     },
     ruleEdit: function() {
       this.ruleEditVisible = true
     },
-    assessEditEnsureOrCancel: function () {
+    assessEditEnsureOrCancel: function() {
       this.assessEditVisible = false
     },
     assessEdit: function() {

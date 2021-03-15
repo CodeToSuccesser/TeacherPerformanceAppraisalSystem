@@ -11,7 +11,7 @@ import request from '@/utils/request'
  */
 export function getInternInfo(data) {
   return request({
-    url: '/intern/info/getInternInfo',
+    url: '/intern/Info/getInternInfo',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function getInternInfo(data) {
  */
 export function downInternInfoTemplate() {
   return request({
-    url: '/intern/info/download/template',
+    url: '/intern/Info/download/template',
     method: 'get',
     responseType: 'blob'
   })
@@ -36,7 +36,7 @@ export function downInternInfoTemplate() {
  */
 export function exportInternFile(data) {
   return request({
-    url: '/intern/info/export',
+    url: '/intern/Info/export',
     method: 'post',
     responseType: 'blob',
     data
@@ -50,7 +50,7 @@ export function exportInternFile(data) {
  */
 export function importInternInfoFile(data) {
   return request({
-    url: '/intern/info/import',
+    url: '/intern/Info/import',
     method: 'post',
     data
   })
@@ -64,7 +64,7 @@ export function importInternInfoFile(data) {
  */
 export function modifyInternInfo(data, id) {
   return request({
-    url: '/intern/info/' + id + '/modify',
+    url: '/intern/Info/' + id + '/Modify',
     method: 'post',
     data
   })
@@ -77,7 +77,7 @@ export function modifyInternInfo(data, id) {
  */
 export function deleteInternInfos(data) {
   return request({
-    url: '/intern/info/deleteInternInfo',
+    url: '/intern/Info/deleteInternInfo',
     method: 'post',
     data
   })
@@ -90,7 +90,7 @@ export function deleteInternInfos(data) {
  */
 export function insertInternInfo(data) {
   return request({
-    url: '/intern/info/insert',
+    url: '/intern/Info/insert',
     method: 'post',
     data
   })
@@ -103,7 +103,7 @@ export function insertInternInfo(data) {
  */
 export function getInternModifyRecord(data) {
   return request({
-    url: '/intern/info/getModifyRecord',
+    url: '/intern/Info/getModifyRecord',
     method: 'post',
     data
   })
@@ -117,7 +117,7 @@ export function getInternModifyRecord(data) {
  */
 export function auditInternModify(id, result) {
   return request({
-    url: '/intern/info/' + id + '/audit?result=' + result,
+    url: '/intern/Info/' + id + '/audit?result=' + result,
     method: 'post'
   })
 }

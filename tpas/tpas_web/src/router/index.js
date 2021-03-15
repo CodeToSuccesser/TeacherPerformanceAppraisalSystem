@@ -31,8 +31,8 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
+    path: '/Login',
+    component: () => import('@/views/Login/index'),
     hidden: true
   },
 
@@ -45,27 +45,27 @@ export const constantRoutes = [
   {
     path: '/',
     name: '公示',
-    redirect: '/publicity',
+    redirect: '/Publicity',
     component: Layout,
     children: [
       {
-        path: 'publicity',
+        path: 'Publicity',
         name: '公示',
-        component: () => import('@/views/publicity/index'),
+        component: () => import('@/views/Publicity/index'),
         meta: { title: '公示', icon: 'el-icon-chat-line-square' }
       }
     ]
   },
 
   {
-    path: '/info',
+    path: '/Info',
     component: Layout,
-    redirect: '/info',
+    redirect: '/Info',
     children: [
       {
         path: 'info',
         name: '个人中心',
-        component: () => import('@/views/info/index'),
+        component: () => import('@/views/Info/index'),
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
@@ -79,74 +79,74 @@ export const constantRoutes = [
 export const asyncRoutes = [
 
   {
-    path: '/assessmentInfo',
+    path: '/AssessmentInfo',
     component: Layout,
-    redirect: '/assessmentInfo/assessmentInfo-hour',
+    redirect: '/AssessmentInfo/AssessmentInfo-hour',
     alwaysShow: true,
     name: '教务信息',
     meta: { title: '教务信息', icon: 'el-icon-s-help', roles: [0, 1] },
     children: [
       {
-        path: 'assessmentInfo-hour',
+        path: 'course-hour',
         name: '课时信息',
-        component: () => import('@/views/assessmentInfo/course-hour'),
+        component: () => import('@/views/AssessmentInfo/CourseHour'),
         meta: { title: '课时信息', icon: 'table', roles: [0, 1] }
       },
       {
         path: 'paper',
         name: '论文指导信息',
-        component: () => import('@/views/assessmentInfo/paper'),
+        component: () => import('@/views/AssessmentInfo/Paper'),
         meta: { title: '论文指导信息', icon: 'education', roles: [0, 1] }
       },
       {
         path: 'intern',
         name: '实习带队信息',
-        component: () => import('@/views/assessmentInfo/intern'),
+        component: () => import('@/views/AssessmentInfo/Intern'),
         meta: { title: '实习带队信息', icon: 'tree', roles: [0, 1] }
       },
       {
-        path: 'other',
-        name: '其他',
-        component: () => import('@/views/assessmentInfo/others'),
-        meta: { title: '其他', icon: 'el-icon-files', roles: [0, 1] }
+        path: 'task',
+        name: '任务待办',
+        component: () => import('@/views/AssessmentInfo/Task'),
+        meta: { title: '任务待办', icon: 'el-icon-date', roles: [0, 1] }
       },
       {
-        path: 'taskManage',
-        name: '任务待办',
-        component: () => import('@/views/taskManage/index'),
-        meta: { title: '任务待办', icon: 'el-icon-date', roles: [0, 1] }
+        path: 'others',
+        name: '其他',
+        component: () => import('@/views/AssessmentInfo/Others'),
+        meta: { title: '其他', icon: 'el-icon-files', roles: [0, 1] }
       }
     ]
   },
 
   {
-    path: '/taskManage',
+    path: '/AffairManage',
     meta: {
       title: '教务管理', icon: 'el-icon-date', roles: [0, 1]
     },
     name: '教务管理',
-    redirect: '/taskManage',
+    redirect: '/AffairManage',
     component: Layout,
     children: [
       {
         path: 'taskManage',
         name: '任务分配',
-        component: () => import('@/views/taskManage/index'),
+        component: () => import('@/views/AffairManage/TaskManage'),
         meta: { title: '任务分配', icon: 'el-icon-date', roles: [0, 1] }
       },
       {
-        path: 'aduitManage',
+        path: 'AffairManage',
         name: '修改审批',
-        component: () => import('@/views/aduitManage/index'),
+        component: () => import('@/views/AffairManage/AduitManage'),
         meta: { title: '修改审批', icon: 'el-icon-document-copy', roles: [0, 1] }
       }
     ]
   },
 
   {
-    path: '/modify',
+    path: '/Modify',
     component: Layout,
-    redirect: '/modify/modifying',
+    redirect: '/Modify/modifying',
     name: '我的修改申请',
     meta: {
       title: '我的修改', icon: 'nested', roles: [0, 1]
@@ -154,13 +154,13 @@ export const asyncRoutes = [
     children: [
       {
         path: 'modifying',
-        component: () => import('@/views/modify/modifying'),
+        component: () => import('@/views/Modify/Modifying'),
         name: '进行中',
         meta: { title: '进行中', icon: 'el-icon-document-remove', roles: [0, 1] }
       },
       {
         path: 'finished',
-        component: () => import('@/views/modify/finished'), // Parent router-view
+        component: () => import('@/views/Modify/Finished'), // Parent router-view
         name: '已完成',
         meta: { title: '已完成', icon: 'el-icon-document-checked', roles: [0, 1] }
       }
@@ -168,84 +168,84 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/assess',
+    path: '/Assess',
     meta: {
       title: '考核结果', icon: 'el-icon-data-line', roles: [0, 1]
     },
     name: '考核结果',
-    redirect: '/assess/score',
+    redirect: '/Assess/score',
     component: Layout,
     children: [
       {
         path: 'score',
         name: '考核成绩',
-        component: () => import('@/views/assess/score'),
+        component: () => import('@/views/Assess/Score'),
         meta: { title: '考核成绩', icon: 'el-icon-finished', roles: [0, 1] }
       },
       {
         path: 'analysis',
         name: '汇总分析',
-        component: () => import('@/views/assess/analysis'),
+        component: () => import('@/views/Assess/Analysis'),
         meta: { title: '汇总分析', icon: 'el-icon-data-line', roles: [0, 1] }
       }
     ]
   },
 
   {
-    path: '/systemManage',
+    path: '/SystemManage',
     meta: {
       title: '系统管理', icon: 'el-icon-set-up', roles: [1]
     },
     name: '系统管理',
-    redirect: '/systemManage',
+    redirect: '/SystemManage',
     component: Layout,
     children: [
       {
-        path: 'systemManage',
+        path: 'SystemManage',
         name: '绩效规则管理',
-        component: () => import('@/views/systemManage/rules-manage'),
+        component: () => import('@/views/SystemManage/RulesManage'),
         meta: { title: '考核规则管理', icon: 'el-icon-odometer', roles: [1] }
       },
       {
         path: 'courseManage',
         name: '课程管理',
-        component: () => import('@/views/systemManage/course-manage'),
+        component: () => import('@/views/SystemManage/CourseManage'),
         meta: { title: '课程管理', icon: 'el-icon-document', roles: [1] }
       },
       {
         path: 'majorManage',
         name: '专业管理',
-        component: () => import('@/views/systemManage/major-manage'),
+        component: () => import('@/views/SystemManage/MajorManage'),
         meta: { title: '专业管理', icon: 'el-icon-office-building', roles: [1] }
       },
       {
-        path: 'publicity',
+        path: 'Publicity',
         name: '公示管理',
-        component: () => import('@/views/publicity/index'),
+        component: () => import('@/views/SystemManage/PublicityManage'),
         meta: { title: '公示管理', icon: 'el-icon-chat-line-square', roles: [1] }
       }
     ]
   },
 
   {
-    path: '/userAndRolesManage',
+    path: '/UserAndRolesManage',
     meta: {
       title: '用户及权限管理', icon: 'user', roles: [1]
     },
     name: '用户管理',
-    redirect: '/userAndRolesManage/user-manage',
+    redirect: '/UserAndRolesManage/user-manage',
     component: Layout,
     children: [
       {
         path: 'user-manage',
         name: '用户管理',
-        component: () => import('@/views/userAndRolesManage/user-manage'),
+        component: () => import('@/views/UserAndRolesManage/UserManage'),
         meta: { title: '用户管理', icon: 'user', roles: [1] }
       },
       {
         path: 'roles-manage',
         name: '角色权限管理',
-        component: () => import('@/views/userAndRolesManage/roles-manage'),
+        component: () => import('@/views/UserAndRolesManage/RolesManage'),
         meta: { title: '角色权限管理', icon: 'el-icon-unlock', roles: [1] }
       }
     ]

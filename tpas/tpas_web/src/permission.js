@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/Login'] // no redirect whitelist
 
 // 进入一个页面时会触发该事件
 // 即将要进入的路由
@@ -24,7 +24,7 @@ router.beforeEach(async(to, from, next) => {
   const token = getToken()
 
   if (token) {
-    if (to.path === '/login') {
+    if (to.path === '/Login') {
       // 系统根路由
       Message('您已登录,如需切换用户请退出重新登录')
       next({ path: '/' })

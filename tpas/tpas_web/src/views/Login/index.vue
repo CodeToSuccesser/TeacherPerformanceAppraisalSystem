@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$store.state.app.device === 'mobile' ? 'login-container-mobile' : 'login-container'
+      return this.$store.state.app.device === 'mobile' ? 'Login-container-mobile' : 'Login-container'
     }
   },
   watch: {
