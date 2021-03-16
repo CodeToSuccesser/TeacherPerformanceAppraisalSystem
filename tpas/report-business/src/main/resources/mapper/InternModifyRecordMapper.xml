@@ -76,7 +76,10 @@
                 and imr.create_time <![CDATA[ <= ]]> #{data.endTime}
             </if>
             <if test="data.checkResult != null">
-                and imr.check_result = #{data.checkResult}
+                and imr.check_result in
+                <foreach collection="data.checkResult" item="item" index="index" open="(" close=")" separator="," >
+                    #{item}
+                </foreach>
             </if>
             and imr.is_deleted = 0
         </where>

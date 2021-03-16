@@ -4,6 +4,7 @@ import com.management.common.model.PageModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description 实习带队信息修改记录查询条件
@@ -20,7 +21,7 @@ public class InternModifyRecordSearchModel extends PageModel {
     private Date endTime;
 
     @ApiModelProperty("申请状态")
-    private Integer checkResult;
+    private List<Integer> checkResult;
 
     public String getApplyName() {
         return applyName;
@@ -46,11 +47,11 @@ public class InternModifyRecordSearchModel extends PageModel {
         this.endTime = endTime;
     }
 
-    public Integer getCheckResult() {
+    public List<Integer> getCheckResult() {
         return checkResult;
     }
 
-    public void setCheckResult(Integer checkResult) {
+    public void setCheckResult(List<Integer> checkResult) {
         this.checkResult = checkResult;
     }
 }
