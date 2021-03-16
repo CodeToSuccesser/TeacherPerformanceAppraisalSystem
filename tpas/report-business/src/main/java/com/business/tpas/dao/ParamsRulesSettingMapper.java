@@ -75,4 +75,12 @@ public interface ParamsRulesSettingMapper extends BaseDao<ParamsRulesSetting> {
      **/
     List<ParamsRulesSetting> queryByCNumList(@Param("data") List<Integer> list);
 
+    /**
+     * 获取cNum值列表
+     *
+     * @author dude
+     * @date 2021/3/16
+     **/
+    List<Integer> getCNumList(@Param("data") ParamSearchModel searchModel);
+
 }

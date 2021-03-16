@@ -113,4 +113,10 @@ public class ParamsRulesSettingImpl extends BaseServiceImpl<ParamsRulesSettingMa
         }
         mapper.deleteModelById(model.getId());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> queryCNumList(ParamSearchModel model) {
+        return mapper.getCNumList(model);
+    }
 }

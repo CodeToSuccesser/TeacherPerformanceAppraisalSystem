@@ -32,7 +32,7 @@
 
     <sql id="Base_Column_List">
         id, c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
-        , remark, is_deleted, update_time, create_time
+        , remark, is_deleted, update_time, create_time, c_type
     </sql>
 
     <select id="queryParamsRulesSetting" resultMap="ModelResultMap">
@@ -40,6 +40,9 @@
         FROM params_rules_setting
         <where>
             is_deleted = 0
+            <if test="data.cType != null">
+                AND c_type = #{data.cType}
+            </if>
             <if test="data.cNum != null">
                 AND c_num = #{data.cNum}
             </if>
@@ -147,6 +150,17 @@
                 #{item}
             </foreach>
         </if>
+    </select>
+
+    <select id="getCNumList" resultType="java.lang.Integer">
+        SELECT DISTINCT c_num
+        FROM params_rules_setting
+        <where>
+            is_deleted = 0
+            <if test="data.cType != null">
+                AND c_type = #{data.cType}
+            </if>
+        </where>
     </select>
 
 </mapper>

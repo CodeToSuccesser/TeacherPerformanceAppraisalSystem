@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author dude
@@ -124,5 +125,17 @@ public class ParamsInfoController {
         }
         ruleSettingService.deleteModelById(model);
         return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "查询权值元素下表列表")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = Arrays.class),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/queryCNumList")
+    public BaseResponse<?> queryCNumList(@RequestBody ParamSearchModel searchModel) {
+        if (searchModel == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        List<Integer> list = paramsRulesSettingService.queryCNumList(searchModel);
+        return new BaseResponse<>(list);
     }
 }

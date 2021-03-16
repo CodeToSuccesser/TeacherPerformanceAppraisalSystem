@@ -17,6 +17,9 @@ public class ParamSearchModel extends PageModel {
     @ApiModelProperty(value = "id")
     private Long id;
 
+    @ApiModelProperty(value = "权值类型，1 授课 2 论文 3 实习")
+    private Integer cType;
+
     @ApiModelProperty(value = "Cn的n值, 1 表示C1")
     private Integer cNum;
 
@@ -45,5 +48,13 @@ public class ParamSearchModel extends PageModel {
 
     public void setcOption(Integer cOption) {
         this.cOption = cOption;
+    }
+
+    public Integer getcType() {
+        return cType;
+    }
+
+    public void setcType(Integer cType) {
+        this.cType = cType;
     }
 }

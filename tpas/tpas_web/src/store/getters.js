@@ -11,6 +11,10 @@ const getters = {
   addRoutes: state => state.permission.addRoutes,
   routes: state => state.permission.routes,
   permission_routes: state => state.permission.routes,
-  id: state => state.user.id
+  id: state => state.user.id,
+  paramType: state => state.sysParam.paramType,
+  paramValueType: state => state.sysParam.paramValueType,
+  paramColumnName: state => state.sysParam.paramColumnName,
+  paramCNumList: state => state.sysParam.paramCNumList
 }
 export default getters

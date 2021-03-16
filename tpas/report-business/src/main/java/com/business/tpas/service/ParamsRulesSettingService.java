@@ -6,6 +6,8 @@ import com.business.tpas.model.ParamsRulesSettingModel;
 import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 
+import java.util.List;
+
 /**
  * @author dude
  * @version 1.0
@@ -41,4 +43,12 @@ public interface ParamsRulesSettingService extends BaseService<ParamsRulesSettin
      * @date 2021/3/1
      **/
     void deleteModelById(ParamsRulesSettingModel model);
+
+    /**
+     * 获取权值元素下表
+     *
+     * @author dude
+     * @date 2021/3/16
+     **/
+    List<Integer> queryCNumList(ParamSearchModel model);
 }
