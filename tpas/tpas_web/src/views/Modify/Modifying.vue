@@ -471,7 +471,7 @@ export default {
     },
     getCourseModifyRecord: function() {
       const body = {
-        checkResult: 0
+        checkResult: [0]
       }
       getCourseHoursModifyRecord(body)
         .then(response => {
@@ -484,7 +484,7 @@ export default {
     },
     getPaperModifyRecord: function() {
       const body = {
-        checkResult: 0
+        checkResult: [0]
       }
       getPaperModifyRecord(body)
         .then(response => {
@@ -497,7 +497,7 @@ export default {
     },
     getInternModifyRecord: function() {
       const body = {
-        checkResult: 0
+        checkResult: [0]
       }
       getInternModifyRecord(body)
         .then(response => {

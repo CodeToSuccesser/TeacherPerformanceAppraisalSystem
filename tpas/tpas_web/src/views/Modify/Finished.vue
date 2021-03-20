@@ -142,13 +142,13 @@
               <span>{{ (paperPageSize - 1) * (paperCurPageNum - 1) + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="专业代码号" prop="majorCode" align="center"/>
-          <el-table-column label="专业名称" prop="majorName" align="center"/>
-          <el-table-column label="学年" prop="schoolYear" align="center"/>
-          <el-table-column label="学期" prop="semester" align="center"/>
-          <el-table-column label="申请时间" prop="createTime" align="center"/>
-          <el-table-column label="审核结果" prop="checkResult" align="center"/>
-          <el-table-column label="审核时间" prop="checkTime" align="center"/>
+          <el-table-column label="专业代码号" prop="majorCode" align="center" />
+          <el-table-column label="专业名称" prop="majorName" align="center" />
+          <el-table-column label="学年" prop="schoolYear" align="center" />
+          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="申请时间" prop="createTime" align="center" />
+          <el-table-column label="审核结果" prop="checkResult" align="center" />
+          <el-table-column label="审核时间" prop="checkTime" align="center" />
         </el-table>
 
       </el-tab-pane>
@@ -207,11 +207,11 @@
               <span>{{ (internPageSize - 1) * (internCurPageNum - 1) + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="学年" prop="schoolYear" align="center"/>
-          <el-table-column label="学期" prop="semester" align="center"/>
-          <el-table-column label="申请时间" prop="createTime" align="center"/>
-          <el-table-column label="审核结果" prop="checkResult" align="center"/>
-          <el-table-column label="审核时间" prop="checkTime" align="center"/>
+          <el-table-column label="学年" prop="schoolYear" align="center" />
+          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="申请时间" prop="createTime" align="center" />
+          <el-table-column label="审核结果" prop="checkResult" align="center" />
+          <el-table-column label="审核时间" prop="checkTime" align="center" />
         </el-table>
       </el-tab-pane>
     </el-tabs>
@@ -280,7 +280,7 @@ export default {
   methods: {
     getCourseModifyRecord: function() {
       const body = {
-        checkResult: 1
+        checkResult: [1, 2]
       }
       getCourseHoursModifyRecord(body)
         .then(response => {
@@ -293,7 +293,7 @@ export default {
     },
     getPaperModifyRecord: function() {
       const body = {
-        checkResult: 1
+        checkResult: [1, 2]
       }
       getPaperModifyRecord(body)
         .then(response => {
@@ -306,7 +306,7 @@ export default {
     },
     getInternModifyRecord: function() {
       const body = {
-        checkResult: 1
+        checkResult: [1, 2]
       }
       getInternModifyRecord(body)
         .then(response => {

@@ -134,9 +134,7 @@ export default {
           value: 1
         }
       ],
-      internInfo: [{
-        date: ''
-      }],
+      internInfo: [],
       internDialogVisible: false,
       internEditDisable: true,
       applyInternDialogVisible: false,

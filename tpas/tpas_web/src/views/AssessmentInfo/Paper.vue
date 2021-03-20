@@ -113,9 +113,7 @@ export default {
       pageSize: 25,
       curPageNum: 1,
       total: 0,
-      paperInfo: [{
-        date: ''
-      }],
+      paperInfo: [],
       searchForm: {
         selectedSemester: '',
         selectedSchoolYear: '',
