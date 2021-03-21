@@ -52,6 +52,9 @@ export function importCourseHoursFile(data) {
   return request({
     url: '/course/hours/import',
     method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+    },
     data
   })
 }

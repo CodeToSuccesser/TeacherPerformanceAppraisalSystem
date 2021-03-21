@@ -15,10 +15,11 @@
 
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
 
-      <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+      <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
+      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
+
     </el-form>
 
     <el-table :data="courseHourInfo" stripe style="width: 100% " :border="true" fit>
@@ -154,6 +155,35 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="导入文件信息"
+      :visible.sync="importDialogVisible"
+      width="30%"
+    >
+      <el-form>
+        <el-form-item label="选择上传文件：" style="margin-top: 10px">
+          <el-upload
+            action="#"
+            :on-change="getFile"
+            :on-remove="handleRemove"
+            :multiple="false"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            accept=".xlsx,.xls"
+            :auto-upload="false"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelImportFile">取 消</el-button>
+        <el-button type="primary" @click="importFile">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -161,10 +191,11 @@
 import {
   getCourseHours,
   downCourseHoursTemplate,
-  exportCourseFile
+  exportCourseFile, importCourseHoursFile
 } from '@/api/course'
 
 import { downloadExcel } from '@/utils/file'
+import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
 
 export default {
   data() {
@@ -190,6 +221,7 @@ export default {
           value: 1
         }
       ],
+      importDialogVisible: false,
       dialogTableVisible: false,
       courseDetailVisible: false,
       courseDetailEditDisable: true,
@@ -210,7 +242,8 @@ export default {
         expPerNumber: ''
       },
       formLabelWidth: '120px',
-      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
+      isAdmin: false,
+      fileList: []
     }
   },
   created() {
@@ -219,6 +252,8 @@ export default {
       pageNum: this.curPageNum
     }
     this.getCourseHours(param)
+    var roleName = this.$store.getters.rolesName === '' ? sessionStorage.getItem('rolesName') : this.$store.getters.rolesName
+    this.isAdmin = roleName === '管理员角色'
   },
   methods: {
     courseDetailEditEnsureOrCancel: function() {
@@ -245,7 +280,7 @@ export default {
         })
     },
     importCourseHour: function() {
-
+      this.importDialogVisible = true
     },
     exportCourseHour: function() {
       const param = {}
@@ -321,6 +356,46 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    handleRemove() {
+      this.fileList = []
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    getFile(file, fileList) {
+      this.fileList = fileList
+    },
+    cancelImportFile() {
+      this.fileList = []
+      this.importDialogVisible = false
+    },
+    importFile() {
+      if (!this.fileList || !this.fileList.length) {
+        this.$notify.error({
+          title: '错误',
+          message: '请选择上传的文件',
+          duration: 2000
+        })
+        return
+      }
+      const body = new FormData()
+      body.append('file', this.fileList[0].raw)
+
+      showFullScreenLoading('文件上传中')
+      importCourseHoursFile(body)
+        .then(response => {
+          this.$notify.success({
+            title: '导入成功',
+            message: '课时信息导入成功' + response.data.successCount + '条，导入失败' + response.data.failCount + '条'
+          })
+          this.importDialogVisible = false
+          hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
     }
   }
 }
@@ -353,6 +428,7 @@ export default {
 
   .button-add {
     float: right;
+    margin-left: 10px;
   }
 
   .pagination {

@@ -104,21 +104,65 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="导入文件信息"
+      :visible.sync="importDialogVisible"
+      top="5vh"
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="40%"
+    >
+
+      <el-form :model="importInternForm" label-width="120px">
+        <el-form-item label="选择上传文件：" style="margin-top: 10px">
+          <el-upload
+            action="#"
+            :on-change="getFile"
+            :on-remove="handleRemove"
+            :multiple="false"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            accept=".xlsx,.xls"
+            :auto-upload="false"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="学年：" style="margin-top: 10px">
+          <el-input v-model="importInternForm.schoolYear" placeholder="学年" clearable />
+        </el-form-item>
+        <el-form-item label="学期：" style="margin-top: 5px">
+          <el-input v-model="importInternForm.semester" placeholder="学期" clearable />
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelImportFile">取 消</el-button>
+        <el-button type="primary" @click="importFile">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { downInternInfoTemplate, getInternInfo, exportInternFile } from '@/api/intern'
+import { downInternInfoTemplate, getInternInfo, exportInternFile, importInternInfoFile } from '@/api/intern'
 import { downloadExcel } from '@/utils/file'
+import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
+
 
 export default {
   name: 'Intern',
   data() {
     return {
+      importDialogVisible: false,
       pageSize: 25,
       curPageNum: 1,
       total: 0,
+      importInternForm: {},
       searchForm: {
         selectedSchoolYear: '',
         selectedSemester: ''
@@ -155,7 +199,8 @@ export default {
         remark: ''
       },
       formLabelWidth: '140px',
-      isAdmin: this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
+      isAdmin: false,
+      fileList: []
     }
   },
   created() {
@@ -164,6 +209,8 @@ export default {
       pageNum: this.curPageNum
     }
     this.getInternInfo(param)
+    var roleName = this.$store.getters.rolesName === '' ? sessionStorage.getItem('rolesName') : this.$store.getters.rolesName
+    this.isAdmin = roleName === '管理员角色'
   },
   methods: {
     internEdit: function(scope) {
@@ -176,7 +223,7 @@ export default {
       this.internEditDisable = true
     },
     importIntern: function() {
-
+      this.importDialogVisible = true
     },
     exportIntern: function() {
       const param = {}
@@ -239,6 +286,57 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    handleRemove() {
+      this.fileList = []
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    getFile(file, fileList) {
+      this.fileList = fileList
+    },
+    cancelImportFile() {
+      this.fileList = []
+      this.importDialogVisible = false
+    },
+    importFile() {
+      if (!this.fileList || !this.fileList.length) {
+        this.$notify.error({
+          title: '错误',
+          message: '请选择上传的文件',
+          duration: 2000
+        })
+        return
+      }
+      if (!this.importInternForm.semester || !this.importInternForm.schoolYear) {
+        this.$notify.error({
+          title: '错误',
+          message: '请输入导入实习带队信息所属的学期及学年信息',
+          duration: 2000
+        })
+        return
+      }
+
+      const body = new FormData()
+      body.append('file', this.fileList[0].raw)
+      body.append('semester', this.importInternForm.semester)
+      body.append('schoolYear', this.importInternForm.schoolYear)
+
+      showFullScreenLoading('文件上传中')
+      importInternInfoFile(body)
+        .then(response => {
+          this.$notify.success({
+            title: '导入成功',
+            message: '实习带队信息导入成功' + response.data.successCount + '条，导入失败' + response.data.failCount + '条'
+          })
+          this.importDialogVisible = false
+          hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
     }
   }
 }
@@ -277,6 +375,11 @@ export default {
     margin-top: 20px ;
     float: right ;
     margin-bottom: 20px
+  }
+
+  .input{
+    margin-top: 10px;
+    margin-right: 10px;
   }
 
 </style>
