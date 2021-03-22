@@ -16,6 +16,17 @@
         <result column="is_deleted" property="isDeleted" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.management.tpas.model.SystemMenuModel">
+        <id column="id" property="id" />
+        <result column="value" property="value" />
+        <result column="label" property="label" />
+        <result column="path" property="path" />
+        <result column="icon_type" property="iconType" />
+        <result column="level" property="level" />
+        <result column="parent_value" property="parentValue" />
+        <result column="full_value" property="fullValue" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, `value`, label, path, icon_type, `level`, parent_value, full_value, create_time, is_deleted
@@ -39,6 +50,12 @@
             #{item}
         </foreach>
         AND is_deleted = 0
+    </select>
+
+    <select id="getMenu" resultMap="ModelResultMap">
+        SELECT  id, `value`, label, path, icon_type, `level`, parent_value, full_value
+        FROM system_menu
+        WHERE is_deleted = 0
     </select>
 
 </mapper>

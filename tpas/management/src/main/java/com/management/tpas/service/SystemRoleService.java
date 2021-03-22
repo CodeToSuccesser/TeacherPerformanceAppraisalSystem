@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 import com.management.common.model.PageModel;
 import com.management.tpas.entity.SystemRole;
+import com.management.tpas.model.RoleSearchModel;
 import com.management.tpas.model.SystemRoleModel;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  **/
 public interface SystemRoleService extends BaseService<SystemRole> {
 
-    PageInfo<SystemRoleModel> queryRoles(PageModel pageModel);
+    PageInfo<SystemRoleModel> queryRoles(RoleSearchModel searchModel);
 
     List<SystemRoleModel> getRoles();
 

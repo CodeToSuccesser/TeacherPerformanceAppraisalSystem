@@ -28,7 +28,12 @@
     <select id="getRoles" resultMap="ModelResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM system_role
-        WHERE is_deleted = 0
+        <where>
+            is_deleted = 0
+            <if test="data.name != null and data.name != ''">
+                AND `name` = #{data.name}
+            </if>
+        </where>
     </select>
 
     <select id="getRoleByName" resultMap="ModelResultMap">

@@ -2,6 +2,7 @@ package com.management.tpas.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.management.tpas.entity.SystemMenu;
+import com.management.tpas.model.SystemMenuModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,6 @@ public interface SystemMenuMapper extends BaseMapper<SystemMenu> {
     int countMenusByValue(@Param("data") List<String> nameList);
 
     List<SystemMenu> getMenusByValue(@Param("data") Collection<String> nameList);
+
+    List<SystemMenuModel> getMenu();
 }

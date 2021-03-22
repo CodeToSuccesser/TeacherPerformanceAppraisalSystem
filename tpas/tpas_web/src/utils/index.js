@@ -125,3 +125,37 @@ export function string2List(data) {
   }
   return target
 }
+
+/** 分组函数
+ * groupBy(list, function(item){
+ *   return [item.name];
+ * })
+ **/
+export function groupBy(array, f) {
+  const groups = {}
+  array.forEach(function(o) {
+    const group = JSON.stringify(f(o))
+    groups[group] = groups[group] || []
+    groups[group].push(o)
+  })
+  return Object.keys(groups).map(function(group) {
+    return groups[group]
+  })
+}
+
+export function groupToMenuTree(list, parentValue) {
+  const menuList = []
+  const childList = list.filter(menu => menu.parentValue === parentValue)
+  childList.forEach(item => {
+    const data = {
+      id: item.id,
+      label: item.label,
+      parentValue: item.parentValue,
+      level: item.level,
+      value: item.value,
+      children: groupToMenuTree(list, item.value)
+    }
+    menuList.push(data)
+  })
+  return menuList
+}

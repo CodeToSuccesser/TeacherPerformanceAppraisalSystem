@@ -2,6 +2,7 @@ package com.management.tpas.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.management.tpas.entity.SystemRole;
+import com.management.tpas.model.RoleSearchModel;
 import com.management.tpas.model.SystemRoleModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import java.util.List;
 @Repository
 public interface SystemRoleMapper extends BaseMapper<SystemRole> {
 
-    List<SystemRoleModel> getRoles();
+    List<SystemRoleModel> getRoles(@Param("data") RoleSearchModel searchModel);
 
     SystemRoleModel getRoleByName(@Param("name") String name);
 

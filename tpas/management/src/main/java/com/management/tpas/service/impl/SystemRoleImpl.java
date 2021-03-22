@@ -5,13 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
-import com.management.common.model.PageModel;
 import com.management.common.utils.CommonUtil;
 import com.management.tpas.dao.SystemMenuMapper;
 import com.management.tpas.dao.SystemRoleMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.SystemRole;
 import com.management.tpas.entity.UserMsg;
+import com.management.tpas.model.RoleSearchModel;
+import com.management.tpas.model.SystemMenuModel;
 import com.management.tpas.model.SystemRoleModel;
 import com.management.tpas.service.SystemRoleService;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author dude
@@ -42,16 +46,29 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
 
     @Override
     @Transactional(readOnly = true)
-    public PageInfo<SystemRoleModel> queryRoles(PageModel pageModel) {
-        PageHelper.startPage(pageModel.pageNum, pageModel.pageSize);
-        List<SystemRoleModel> list = systemRoleMapper.getRoles();
+    public PageInfo<SystemRoleModel> queryRoles(RoleSearchModel searchModel) {
+        List<SystemMenuModel> systemMenus = systemMenuMapper.getMenu();
+        Map<String, String> systemNameMap = systemMenus.stream().collect(Collectors.toMap(SystemMenuModel::getValue, SystemMenuModel::getLabel));
+        PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
+        List<SystemRoleModel> list = systemRoleMapper.getRoles(searchModel);
+        // 解析目录名称
+        for (SystemRoleModel role : list) {
+            List<String> menus = CommonUtil.parseStringList(role.getMenusValue(), ",");
+            if (!menus.isEmpty()) {
+                List<String> menusLabel = new ArrayList<>();
+                menus.forEach(it-> {
+                    menusLabel.add(systemNameMap.getOrDefault(it, it));
+                });
+                role.setMenusValue(StringUtils.join(menusLabel, ","));
+            }
+        }
         return new PageInfo<>(list);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<SystemRoleModel> getRoles() {
-        return systemRoleMapper.getRoles();
+        return systemRoleMapper.getRoles(new RoleSearchModel());
     }
 
     @Override

@@ -1,9 +1,10 @@
 package com.management.tpas.service;
 
 import com.management.common.base.BaseService;
-import com.management.tpas.dao.SystemMenuMapper;
 import com.management.tpas.entity.SystemMenu;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.management.tpas.model.SystemMenuModel;
+
+import java.util.List;
 
 /**
  * @author dude
@@ -14,4 +15,5 @@ import org.springframework.beans.factory.annotation.Autowired;
  **/
 public interface SystemMenuService extends BaseService<SystemMenu> {
 
+    List<SystemMenuModel> queryMenus();
 }

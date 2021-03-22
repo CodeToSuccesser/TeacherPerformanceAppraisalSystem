@@ -3,8 +3,8 @@ package com.management.tpas.controller;
 import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
-import com.management.common.model.PageModel;
-import com.management.tpas.entity.SystemRole;
+import com.management.tpas.model.RoleSearchModel;
+import com.management.tpas.model.SystemMenuModel;
 import com.management.tpas.model.SystemRoleModel;
 import com.management.tpas.service.SystemMenuService;
 import com.management.tpas.service.SystemRoleService;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author dude
@@ -42,11 +44,11 @@ public class SystemPermissionController {
     @ApiOperation("获取角色列表")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = SystemRoleModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
-    public BaseResponse<?> querySystemRoles(@RequestBody PageModel pageModel) {
-        if (pageModel == null) {
+    public BaseResponse<?> querySystemRoles(@RequestBody RoleSearchModel searchModel) {
+        if (searchModel == null) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
         }
-        PageInfo<SystemRoleModel> data = roleService.queryRoles(pageModel);
+        PageInfo<SystemRoleModel> data = roleService.queryRoles(searchModel);
         return new BaseResponse<>(data);
     }
 
@@ -79,8 +81,9 @@ public class SystemPermissionController {
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> queryMenus() {
-        // TODO
-        return null;
+        // TODO: 引入缓存
+        List<SystemMenuModel> list = menuService.queryMenus();
+        return new BaseResponse<>(list);
     }
 
 }
