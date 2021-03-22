@@ -35,13 +35,14 @@ router.beforeEach(async(to, from, next) => {
       if (addRoutes === undefined || addRoutes.length <= 0) {
         try {
           // 根据用户角色加载路由
-          const roles = (store.getters.rolesName === null || store.getters.rolesName === []) ? sessionStorage.getItem('rolesName') : store.getters.rolesName
-          const routerMenus = (store.getters.routerMenus === null || store.getters.routerMenus === []) ? sessionStorage.getItem('routerMenus') : store.getters.routerMenus
+          const roles = (store.getters.rolesName === null || store.getters.rolesName.length === 0) ? JSON.parse(JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName) : store.getters.rolesName
+          const routerMenus = (store.getters.routerMenus === null || store.getters.routerMenus.length === 0) ? JSON.parse(JSON.parse(sessionStorage.getItem('stateStore')).user.routerMenus) : store.getters.routerMenus
           generateRoutes(roles, routerMenus)
           router.$addRoutes(store.getters.routes)
           router.options.routes = store.getters.routes
           next({ ...to, replace: true })
         } catch (error) {
+          console.log('ERROR!!: ', error)
           // 重置token并跳转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')

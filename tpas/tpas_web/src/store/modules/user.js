@@ -5,6 +5,7 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
+    id: undefined,
     name: '',
     account: '',
     portrait: '',
@@ -40,6 +41,9 @@ const mutations = {
   },
   SET_ROUTER_MENUS: (state, routerMenus) => {
     state.routerMenus = routerMenus
+  },
+  SET_ID: (state, id) => {
+    state.id = id
   }
 }
 
@@ -50,6 +54,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ logName: username.trim(), logPassword: password, userType: type }).then(response => {
         const { data } = response
+        commit('SET_ID', data.id)
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.userName)
         commit('SET_PORTRAIT', data.portrait)
@@ -92,6 +97,7 @@ const actions = {
       removeToken()
       resetRouter()
       commit('RESET_STATE')
+      sessionStorage.clear()
       resolve()
     })
   },

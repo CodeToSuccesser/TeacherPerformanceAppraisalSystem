@@ -109,8 +109,8 @@ export function param2Obj(url) {
     const index = v.indexOf('=')
     if (index !== -1) {
       const name = v.substring(0, index)
-      const val = v.substring(index + 1, v.length)
-      obj[name] = val
+      const _val = v.substring(index + 1, v.length)
+      obj[name] = _val
     }
   })
   return obj
@@ -118,11 +118,10 @@ export function param2Obj(url) {
 
 export function string2List(data) {
   let target = []
-  if (!data) {
-    return target
+  if (data) {
+    data.split(',').forEach(it => {
+      target.push(it.trim())
+    })
   }
-  data.split(',').forEach(it => {
-    target.push(it.trim())
-  })
   return target
 }

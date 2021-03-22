@@ -91,12 +91,12 @@ export default {
     return {
       fileList: [],
       ruleForm: {
-        realName: this.$store.getters.name === '' ? sessionStorage.getItem('name') : this.$store.getters.name,
-        userName: this.$store.getters.account === '' ? sessionStorage.getItem('account') : this.$store.getters.account,
+        realName: this.$store.getters.name === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.name,
+        userName: this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.account,
         password: '',
         checkPassword: '',
-        contact: this.$store.getters.contact === '' ? sessionStorage.getItem('contact') : this.$store.getters.contact,
-        imageUrl: this.$store.getters.portrait === '' ? sessionStorage.getItem('portrait') : this.$store.getters.portrait
+        contact: this.$store.getters.contact === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.contact : this.$store.getters.contact,
+        imageUrl: this.$store.getters.portrait === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.portrait : this.$store.getters.portrait
       },
       rules: {
         realName: [
@@ -153,10 +153,10 @@ export default {
       }
     },
     modifyInfoStatus() {
-      this.ruleForm.contact = this.$store.getters.contact === '' ? sessionStorage.getItem('contact') : this.$store.getters.contact
+      this.ruleForm.contact = this.$store.getters.contact === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.contact : this.$store.getters.contact
       this.ruleForm.password = ''
       this.ruleForm.checkPassword = ''
-      this.imageUrl = this.$store.getters.portrait === '' ? sessionStorage.getItem('portrait') : this.$store.getters.portrait
+      this.imageUrl = this.$store.getters.portrait === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.portrait : this.$store.getters.portrait
       this.modifyInfo.modifyInfoVisible = !this.modifyInfo.modifyInfoVisible
     }
   }

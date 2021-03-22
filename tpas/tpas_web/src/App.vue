@@ -8,15 +8,23 @@
 export default {
   name: 'App',
   created() {
+    // 页面刷新之前保留原有信息
+    if (sessionStorage.getItem('stateStore')) {
+      const state = this.$store.state
+      const json = sessionStorage.getItem('stateStore')
+      const data = JSON.parse(json)
+      data.user.routerMenus = JSON.parse(data.user.routerMenus)
+      data.user.rolesName = JSON.parse(data.user.rolesName)
+      this.$store.replaceState(Object.assign({}, state, data))
+    }
     // 在页面刷新时将vuex里的信息保存到sessionStorage里
+    const that = this
     window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('rolesName', this.$store.getters.rolesName)
-      sessionStorage.setItem('name', this.$store.getters.name)
-      sessionStorage.setItem('account', this.$store.getters.account)
-      sessionStorage.setItem('contact', this.$store.getters.contact)
-      sessionStorage.setItem('portrait', this.$store.getters.portrait)
-      sessionStorage.setItem('id', this.$store.getters.id)
-      sessionStorage.setItem('routerMenus', this.$store.getters.routerMenus)
+      const state = that.$store.state
+      state.user.routerMenus = JSON.stringify(state.user.routerMenus)
+      state.user.rolesName = JSON.stringify(state.user.rolesName)
+      console.log('beforeunload: ', state)
+      sessionStorage.setItem('stateStore', JSON.stringify(state))
     })
   }
 }

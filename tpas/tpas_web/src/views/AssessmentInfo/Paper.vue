@@ -205,7 +205,7 @@ export default {
       pageNum: this.curPageNum
     }
     this.getPaperInfo(param)
-    var roleName = this.$store.getters.rolesName === '' ? sessionStorage.getItem('rolesName') : this.$store.getters.rolesName
+    var roleName = this.$store.getters.rolesName === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName : this.$store.getters.rolesName
     this.isAdmin = roleName === '管理员角色'
   },
   methods: {
@@ -221,7 +221,7 @@ export default {
     getPaperInfo: function(body) {
       const userType = this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
       if (Number(userType) !== 1) {
-        body.teacherId = Number(this.$store.getters.id === '' ? sessionStorage.getItem('id') : this.$store.getters.id)
+        body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
       }
       getPaperInfo(body).then(response => {
         const { data } = response
