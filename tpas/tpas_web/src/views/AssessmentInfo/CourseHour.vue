@@ -33,10 +33,10 @@
       <el-table-column :resizable="false" prop="studentsInstitute" sortable label="学生学院" align="center" />
       <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
       <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center">
-        {{ courseHourInfo.semester === 0 ? 1 : 2 }}
+        {{ Number(courseHourInfo.semester) === 0 ? 1 : 2 }}
       </el-table-column>
       <el-table-column :resizable="false" prop="primarySecondary" sortable label="是否主讲" align="center">
-        {{ courseHourInfo.primarySecondary === 0 ? '主讲' : '辅讲' }}
+        {{ Number(courseHourInfo.primarySecondary) === 0 ? '主讲' : '辅讲' }}
       </el-table-column>
       <el-table-column :resizable="false" label="操作" align="center">
         <template slot-scope="scope">
@@ -251,9 +251,9 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    this.getCourseHours(param)
     var roleName = this.$store.getters.rolesName === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName : this.$store.getters.rolesName
-    this.isAdmin = roleName === '管理员角色'
+    this.isAdmin = roleName === '管理员角色' || roleName === '全菜单'
+    this.getCourseHours(param)
   },
   methods: {
     courseDetailEditEnsureOrCancel: function() {
@@ -265,18 +265,20 @@ export default {
       this.courseDetailVisible = true
     },
     getCourseHours: function(body) {
-      const userType = this.$store.getters.userType === '' ? sessionStorage.getItem('userType') : this.$store.getters.userType
-      if (Number(userType) !== 1) {
+      if (!this.isAdmin) {
         body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
       }
+      showFullScreenLoading('加载中')
       getCourseHours(body)
         .then(response => {
           const { data } = response
           this.courseHourInfo = data.list
           this.total = data.total
+          hideFullScreenLoading()
         })
         .catch(error => {
           console.log(error)
+          hideFullScreenLoading()
         })
     },
     importCourseHour: function() {
@@ -293,18 +295,21 @@ export default {
       if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
         param.semester = this.searchForm.selectedSemester
       }
+      showFullScreenLoading('导出文件下载中')
       exportCourseFile(param)
         .then(response => {
           downloadExcel(response, '课时信息导出文件.xlsx')
+          hideFullScreenLoading()
         }).catch(error => {
           console.log(error)
+          hideFullScreenLoading()
         })
     },
     showDetail: function(scope) {
       this.courseDetailForm = this.courseHourInfo[scope.$index]
       // 转换显示
-      this.courseDetailForm.semester = this.courseDetailForm.semester === 0 ? 1 : 2
-      this.courseDetailForm.primarySecondary = this.courseDetailForm.primarySecondary === 0 ? '主讲' : '辅讲'
+      this.courseDetailForm.semester = Number(this.courseDetailForm.semester) === 0 ? 1 : 2
+      this.courseDetailForm.primarySecondary = Number(this.courseDetailForm.primarySecondary) === 0 ? '主讲' : '辅讲'
       this.courseDetailVisible = true
     },
     nextPage: function() {
@@ -349,12 +354,15 @@ export default {
       this.getCourseHours(param)
     },
     downloadTemplate: function() {
+      showFullScreenLoading('模板文件下载中')
       downCourseHoursTemplate()
         .then(response => {
           downloadExcel(response, '课时信息导入模板文件.xls')
+          hideFullScreenLoading()
         })
         .catch(error => {
           console.log(error)
+          hideFullScreenLoading()
         })
     },
     handleRemove() {

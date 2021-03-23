@@ -103,7 +103,14 @@
           @current-change="courseHandleCurrentChange"
         />
 
-        <el-dialog title="课程课时修改编辑" :visible.sync="courseModifyEditVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
+        <el-dialog
+          title="课程课时修改编辑"
+          :visible.sync="courseModifyEditVisible"
+          top="5vh"
+          :append-to-body="true"
+          :close-on-click-modal="false"
+          :close-on-press-escape="false"
+        >
           <el-form :model="courseHoursModifyRecord">
             <el-form-item label="课程名称" :label-width="formLabelWidth">
               <el-input v-model="courseHoursModifyRecord.courseName" autocomplete="off" :disabled="true" />
@@ -267,7 +274,7 @@
           <el-select v-model="paperSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
             <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-select v-model="value" placeholder="学期" class="selector-term">
+          <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find">查找</el-button>
@@ -276,7 +283,6 @@
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-divider />
                 <el-form-item label="学期">
                   <span>{{ props.row.semester }}</span>
                 </el-form-item>
@@ -507,6 +513,33 @@ export default {
         }).catch(error => {
           console.log(error)
         })
+    },
+    coursePrePage() {
+
+    },
+    courseNextPage() {
+
+    },
+    courseHandleCurrentChange() {
+
+    },
+    paperPrePage() {
+
+    },
+    paperNextPage() {
+
+    },
+    paperHandleCurrentChange() {
+
+    },
+    internPrePage() {
+
+    },
+    internNextPage() {
+
+    },
+    internHandleCurrentChange() {
+
     }
   }
 }

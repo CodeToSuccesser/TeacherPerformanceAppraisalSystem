@@ -45,13 +45,6 @@
 
       <el-link type="primary" class="tips">Forget Password?</el-link>
 
-      <el-form-item style="background: transparent">
-        <el-radio-group v-model="loginForm.type">
-          <el-radio label="0">Teacher</el-radio>
-          <el-radio label="1">Admin</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
       <el-button :loading="loading" type="primary" class="buttom" @click.native.prevent="handleLogin">Login</el-button>
 
     </el-form>
