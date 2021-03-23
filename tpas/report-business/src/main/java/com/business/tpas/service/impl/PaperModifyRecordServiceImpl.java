@@ -13,7 +13,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
-import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.enums.UserRoleName;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class PaperModifyRecordServiceImpl extends BaseServiceImpl<PaperModifyRec
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，审批失败");
         }
 
-        if (userMsgModel.getUserType() != UserTypeEnum.USER_TYPE_ADMIN.flag) {
+        if (userMsgModel.getUserType() != UserRoleName.USER_TYPE_ADMIN.flag) {
             throw new BusinessException(ErrorCodeEnum.PERMISSION_DENIED.code, "用户权限不足，审批失败");
         }
 

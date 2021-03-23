@@ -18,9 +18,10 @@ import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.UserMsg;
-import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.enums.UserRoleName;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.utils.UserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,10 +77,10 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     @Override
     public void modifyPaperInfo(PaperModel paperModel) {
         Paper paper = paperMapper.selectById(paperModel.getId());
-        UserMsg userMsg= userMsgMapper.selectById(paperModel.getTeacherId());
+        UserMsg userMsg = userMsgMapper.selectById(paperModel.getTeacherId());
         Major major = majorMapper.selectById(paperModel.getMajorId());
 
-        if(paper == null){
+        if (paper == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "找不到论文信息记录，修改失败");
         }
         if (userMsg == null) {
@@ -100,10 +101,12 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
 
         PaperModifyRecord record = buildModifyRecord(BeanMapper.map(paper, PaperModel.class), paperModel);
         record.setApplyId(userMsgModel.getId());
-        record.setApplyType(userMsgModel.getUserType());
+        record.setApplyType(UserRoleName.getEnumByValue(userMsgModel.getRolesName()).flag);
 
         // 管理员
-        if (userMsgModel.getUserType() == UserTypeEnum.USER_TYPE_ADMIN.flag) {
+        if (StringUtils.isNotBlank(UserUtil.getUserMsg().getRolesName()) && (
+            UserUtil.getUserMsg().getRolesName().equals(UserRoleName.USER_TYPE_ADMIN.info) || UserUtil.getUserMsg()
+                .getRolesName().equals(UserRoleName.USER_TYPE_SUPER.info))) {
             record.setAdminId(userMsgModel.getId());
             record.setCheckTime(new Date());
             record.setCheckResult(PaperModifyCheckResultEnum.PASS.getCode());
@@ -175,7 +178,7 @@ public class PaperServiceImpl extends BaseServiceImpl<PaperMapper, Paper> implem
     private void deletePaperModifyRecord(List<Long> ids) {
         List<Long> idsToDelete = new ArrayList<>();
         for (Long id : ids) {
-            if(paperModifyRecordMapper.countModifyRecordByPaperId(id) != 0){
+            if (paperModifyRecordMapper.countModifyRecordByPaperId(id) != 0) {
                 idsToDelete.add(id);
             }
         }

@@ -16,7 +16,7 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
-import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.enums.UserRoleName;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.UserUtil;
@@ -108,11 +108,12 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
         CourseHoursModifyRecord record =
             buildModifyRecord(BeanMapper.map(oldRecord, CourseHoursModel.class), courseHoursModel);
         record.setApplyId(userMsgModel.getId());
-        record.setApplyType(Integer.valueOf(userMsgModel.getRolesName()));
+        record.setApplyType(UserRoleName.getEnumByValue(userMsgModel.getRolesName()).flag);
 
         // 管理员角色
-        if (StringUtils.isNotBlank(UserUtil.getUserMsg().getRolesName())
-            && Integer.parseInt(UserUtil.getUserMsg().getRolesName()) == UserTypeEnum.USER_TYPE_ADMIN.flag) {
+        if (StringUtils.isNotBlank(UserUtil.getUserMsg().getRolesName()) && (
+            UserUtil.getUserMsg().getRolesName().equals(UserRoleName.USER_TYPE_ADMIN.info) || UserUtil.getUserMsg()
+                .getRolesName().equals(UserRoleName.USER_TYPE_SUPER.info))) {
             record.setAdminId(userMsgModel.getId());
             record.setCheckTime(new Date());
             record.setCheckResult(CourseHoursModifyCheckResultEnum.PASS.getCode());

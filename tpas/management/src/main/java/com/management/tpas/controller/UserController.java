@@ -3,7 +3,6 @@ package com.management.tpas.controller;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
-import com.management.tpas.enums.UserTypeEnum;
 import com.management.tpas.model.*;
 import com.management.tpas.service.impl.UserMsgServiceImpl;
 import com.management.tpas.utils.UserUtil;

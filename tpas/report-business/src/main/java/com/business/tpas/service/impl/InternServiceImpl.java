@@ -17,9 +17,10 @@ import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.dao.UserMsgMapper;
 import com.management.tpas.entity.UserMsg;
-import com.management.tpas.enums.UserTypeEnum;
+import com.management.tpas.enums.UserRoleName;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.utils.UserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,10 +88,12 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
 
         InternModifyRecord record = buildModifyRecord(internModel, BeanMapper.map(intern, InternModel.class));
         record.setApplyId(userMsg.getId());
-        record.setApplyType(userMsg.getUserType());
+        record.setApplyType(UserRoleName.getEnumByValue(userMsg.getRolesName()).flag);
 
         // 管理员
-        if (userMsg.getUserType() == UserTypeEnum.USER_TYPE_ADMIN.flag) {
+        if (StringUtils.isNotBlank(UserUtil.getUserMsg().getRolesName()) && (
+            UserUtil.getUserMsg().getRolesName().equals(UserRoleName.USER_TYPE_ADMIN.info) || UserUtil.getUserMsg()
+                .getRolesName().equals(UserRoleName.USER_TYPE_SUPER.info))) {
             // 设置修改审核记录为通过
             record.setCheckTime(new Date());
             record.setCheckResult(InternModifyCheckResultEnum.PASS.getCode());
@@ -166,7 +169,7 @@ public class InternServiceImpl extends BaseServiceImpl<InternMapper, Intern> imp
     private void deleteInternModifyRecord(List<Long> ids) {
         List<Long> idsToDelete = new ArrayList<>();
         for (Long id : ids) {
-            if(internModifyRecordMapper.countModifyRecordByInternId(id) != 0){
+            if (internModifyRecordMapper.countModifyRecordByInternId(id) != 0) {
                 idsToDelete.add(id);
             }
         }
