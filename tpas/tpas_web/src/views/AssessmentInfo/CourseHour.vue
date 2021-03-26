@@ -41,7 +41,7 @@
       <el-table-column :resizable="false" label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="showDetail(scope)">查看详情</el-button>
-          <el-button type="text" size="small" @click="courseDetailEdit">修改</el-button>
+          <el-button type="text" size="small" @click="courseDetailEdit(scope)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,28 +61,36 @@
     <el-dialog title="课时详情" :visible.sync="courseDetailVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="courseDetailForm">
         <el-form-item label="课程名称" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.courseName" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.courseName" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="课程容量" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.totalCapacity" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.totalCapacity" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="已选学生人数" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.selectedStudent" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="学生学院" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.studentsInstitute" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.studentsInstitute" autocomplete="off" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="教学班组成" :label-width="formLabelWidth">
+          <el-input v-model="courseDetailForm.classed" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.primarySecondary" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.primarySecondary" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="周学时" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.weekHours" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.weekHours" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.semester" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.semester" autocomplete="off" :disabled="true">
+            <span>{{ Number(courseDetailForm.semester) === 0 ? '1' : '2' }}</span>
+          </el-input>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.schoolYear" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.schoolYear" autocomplete="off" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="起止周" :label-width="formLabelWidth">
+          <el-input v-model="courseDetailForm.peroid" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="讲课学时" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.teachingHours" autocomplete="off" :disabled="courseDetailEditDisable" />
@@ -94,16 +102,16 @@
           <el-input v-model="courseDetailForm.experimentHours" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="实验次数" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.expNumber" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.expNumber" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="每次实验人数" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.expPerNumber" autocomplete="off" :disabled="courseDetailEditDisable" />
+          <el-input v-model="courseDetailForm.expPerNumber" autocomplete="off" :disabled="true" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="courseDetailEditDisable = false">修 改</el-button>
-        <el-button type="primary" @click="courseDetailEditEnsureOrCancel">确 定</el-button>
-        <el-button @click="courseDetailEditEnsureOrCancel">取 消</el-button>
+        <el-button v-if="courseDetailEditDisable" type="primary" @click="courseDetailEditDisable = false">修 改</el-button>
+        <el-button type="primary" @click="courseDetailEditEnsure">确 定</el-button>
+        <el-button @click="courseDetailEditCancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -191,7 +199,7 @@
 import {
   getCourseHours,
   downCourseHoursTemplate,
-  exportCourseFile, importCourseHoursFile
+  exportCourseFile, importCourseHoursFile, modifyCourseHours
 } from '@/api/course'
 
 import { downloadExcel } from '@/utils/file'
@@ -256,13 +264,43 @@ export default {
     this.getCourseHours(param)
   },
   methods: {
-    courseDetailEditEnsureOrCancel: function() {
-      this.courseDetailEditDisable = true
+    courseDetailEditEnsure: function() {
       this.courseDetailVisible = false
+      this.courseDetailEditDisable = true
+      showFullScreenLoading('修改中')
+
+      const data = {
+        id: this.courseDetailForm.id,
+        courseName: this.courseDetailForm.courseName,
+        selectedStudent: this.courseDetailForm.selectedStudent,
+        teachingHours: this.courseDetailForm.teachingHours,
+        computerHours: this.courseDetailForm.computerHours,
+        experimentHours: this.courseDetailForm.experimentHours,
+        peroid: this.courseDetailForm.peroid,
+        classed: this.courseDetailForm.classed,
+        teacherCode: this.courseDetailForm.teacherCode,
+        courseCode: this.courseDetailForm.courseCode,
+        semester: this.courseDetailForm.semester,
+        schoolYear: this.courseDetailForm.schoolYear
+      }
+      modifyCourseHours(data, this.courseDetailForm.id)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('修改成功')
+        })
+        .catch(error => {
+          hideFullScreenLoading()
+          console.log(error)
+        })
     },
-    courseDetailEdit: function() {
+    courseDetailEditCancel: function() {
+      this.courseDetailVisible = false
+      this.courseDetailEditDisable = true
+    },
+    courseDetailEdit: function(scope) {
       this.courseDetailEditDisable = false
       this.courseDetailVisible = true
+      this.courseDetailForm = this.courseHourInfo[scope.$index]
     },
     getCourseHours: function(body) {
       if (!this.isAdmin) {

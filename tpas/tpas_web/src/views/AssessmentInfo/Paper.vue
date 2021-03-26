@@ -69,8 +69,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="paperEditEnsureOrCancel">确 定</el-button>
-        <el-button @click="paperEditEnsureOrCancel">取 消</el-button>
+        <el-button type="primary" @click="paperEditEnsure">确 定</el-button>
+        <el-button @click="paperEditCancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -144,7 +144,7 @@
 
 <script>
 
-import { downloadPaperTemplate, getPaperInfo, exportPaperInfo, importPaperInfo } from '@/api/paper'
+import { downloadPaperTemplate, getPaperInfo, exportPaperInfo, importPaperInfo, modifyPaperInfo } from '@/api/paper'
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
 
@@ -214,9 +214,34 @@ export default {
       this.paperDialogVisible = true
       this.paperForm = this.paperInfo[scope.$index]
     },
-    paperEditEnsureOrCancel: function() {
+    paperEditCancel: function() {
       this.paperDialogVisible = false
       this.paperEditDisable = true
+    },
+    paperEditEnsure: function() {
+      this.paperDialogVisible = false
+      this.paperEditDisable = true
+
+      const data = {
+        id: this.paperForm.id,
+        majorId: this.paperForm.majorId,
+        majorCode: this.paperForm.majorCode,
+        teacherCode: this.paperForm.teacherCode,
+        studentNumber: this.paperForm.studentNumber,
+        semester: this.paperForm.semester,
+        schoolYear: this.paperForm.schoolYear,
+        teacherId: this.paperForm.teacherId
+      }
+      showFullScreenLoading()
+      modifyPaperInfo(data, this.paperForm.id)
+        .then(response => {
+          this.$message.success('修改成功')
+          hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
     },
     getPaperInfo: function(body) {
       if (!this.isAdmin) {

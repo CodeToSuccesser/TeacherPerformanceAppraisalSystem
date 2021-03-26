@@ -72,8 +72,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="internEditEnsureOrCancel">确 定</el-button>
-        <el-button @click="internEditEnsureOrCancel">取 消</el-button>
+        <el-button type="primary" @click="internEditEnsure">确 定</el-button>
+        <el-button @click="internEditCancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -149,10 +149,9 @@
 
 <script>
 
-import { downInternInfoTemplate, getInternInfo, exportInternFile, importInternInfoFile } from '@/api/intern'
+import { downInternInfoTemplate, getInternInfo, exportInternFile, importInternInfoFile, modifyInternInfo } from '@/api/intern'
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
-
 
 export default {
   name: 'Intern',
@@ -218,7 +217,31 @@ export default {
       this.internDialogVisible = true
       this.internForm = this.internInfo[scope.$index]
     },
-    internEditEnsureOrCancel: function() {
+    internEditEnsure: function() {
+      this.internDialogVisible = false
+      this.internEditDisable = true
+      const data = {
+        id: this.internForm.id,
+        teacherCode: this.internForm.teacherCode,
+        teacherId: this.internForm.teacherId,
+        nonNormalPractice: this.internForm.nonNormalPractice,
+        normalPractice: this.internForm.normalPractice,
+        schoolPractice: this.internForm.schoolPractice,
+        semester: this.internForm.semester,
+        schoolYear: this.internForm.schoolYear
+      }
+      showFullScreenLoading()
+      modifyInternInfo(data, this.internForm.id)
+        .then(response => {
+          this.$message.success('修改成功')
+          hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
+    },
+    internEditCancel: function() {
       this.internDialogVisible = false
       this.internEditDisable = true
     },
