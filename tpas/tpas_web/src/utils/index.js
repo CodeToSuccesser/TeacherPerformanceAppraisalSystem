@@ -159,3 +159,25 @@ export function groupToMenuTree(list, parentValue) {
   })
   return menuList
 }
+
+// array 去重
+export function unique(list) {
+  const res = []
+  const json = {}
+  for (let i = 0; i < list.length; i++) {
+    if (!json[list[i]]) {
+      res.push(list[i])
+      json[list[i]] = 1
+    }
+  }
+  return res
+}
+
+// list 中根据 值移除元素
+export function removeObject(list, val) {
+  const index = list.indexOf(val)
+  if (index > -1) {
+    list.splice(index, 1)
+  }
+  return list
+}

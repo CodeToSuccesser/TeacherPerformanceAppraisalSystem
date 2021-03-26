@@ -15,3 +15,19 @@ export function querySystemMenus() {
     data: {}
   })
 }
+
+export function editRole(data) {
+  return request({
+    url: 'permission/editRole',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteRole(data) {
+  return request({
+    url: 'permission/deleteRole',
+    method: 'post',
+    data
+  })
+}

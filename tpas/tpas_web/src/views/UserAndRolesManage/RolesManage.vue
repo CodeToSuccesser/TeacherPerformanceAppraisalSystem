@@ -12,14 +12,24 @@
     <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editRole(null)">新增</el-button>
 
     <el-table :data="roleList" stripe style="width: 100% " :border="true" fit>
-      <el-table-column :resizable="false" prop="id" sortable label="序号" width="100px">
+      <el-table-column :resizable="false" prop="id" sortable label="序号" align="center">
         <template slot-scope="scope">
           <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column :resizable="false" prop="name" sortable label="角色名称" align="center"/>
-      <el-table-column :resizable="false" prop="menusValue" sortable label="菜单权限" align="center"/>
-      <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center"/>
+      <el-table-column :resizable="false" prop="name" label="角色名称" align="center"/>
+      <el-table-column :resizable="false" label="菜单权限" align="center">
+        <template slot-scope="props">
+          <el-tree
+            ref="tree"
+            :data="getRowMenuTree(props.row.menusValue)"
+            :accordion="true"
+            :check-strictly="true"
+            node-key="id"
+            :props="defaultProps"/>
+        </template>
+      </el-table-column>
+      <el-table-column :resizable="false" prop="remark" label="备注" align="center"/>
       <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center"/>
       <el-table-column :resizable="false" label="操作" align="center">
         <template slot-scope="scope">
@@ -52,12 +62,12 @@
         <el-form-item label="菜单权限" :label-width="formLabelWidth">
           <el-tree
             ref="tree"
-            checkable
             :data="menuTree"
             default-expand-all
             show-checkbox
             :check-strictly="true"
-            node-key="value"
+            node-key="id"
+            :default-checked-keys="getCheckMenusIds(roleForm.menusValue)"
             :props="defaultProps"
             @check-change="handleCheckChange"/>
         </el-form-item>
@@ -76,9 +86,9 @@
 </template>
 
 <script>
-import { querySystemRoles } from '@/api/systemRole'
+  import { querySystemRoles, editRole, deleteRole } from '@/api/systemRole'
 import { mapGetters } from 'vuex'
-import { groupToMenuTree } from '@/utils'
+import { groupToMenuTree, removeObject, string2List } from '@/utils'
 
 export default {
   computed: {
@@ -114,6 +124,9 @@ export default {
     this.skipPage(0)
   },
   methods: {
+    /**
+     * 分页查询
+     **/
     skipPage: function(addPage) {
       const param = {
         pageNum: this.curPageNum + addPage,
@@ -130,6 +143,10 @@ export default {
       this.searchList(param)
       this.curPageNum = val
     },
+    /**
+     * 查询列表
+     * @param param
+     */
     searchList: function(param) {
       this.loadingVisible = true
       const searchModel = param
@@ -147,29 +164,84 @@ export default {
       })
     },
     deleteRole: function(data) {
-
+      this.$confirm('确定删除该角色？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loadingVisible = true
+        const param = {
+          name: data.row.name
+        }
+        deleteRole(param).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadingVisible = false
+          this.skipPage(0)
+        }).catch(error => {
+          console.log(error)
+          this.loadingVisible = false
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     },
+    /**
+     * 新增编辑角色
+     * **/
     editRole: function(data) {
       if (data) {
-        this.roleForm = data
+        this.roleForm = {
+          id: data.row.id,
+          name: data.row.name,
+          menusValue: data.row.menusValue,
+          permission: undefined,
+          remark: data.row.remark
+        }
       } else {
         this.roleForm = this.getDefaultForm()
       }
+      console.log(this.roleForm)
+      const that = this
+      this.$refs.tree.setCheckedNodes(that.getCheckMenusIds(this.roleForm.menusValue))
       this.editDialogVisible = true
     },
+    /**
+     * 提交编辑或取消
+     * **/
     editEnsureOrCancel: function(isCancel) {
       if (isCancel) {
         this.editDialogVisible = false
         return
       }
-      console.log('edit')
-    },
-    JsonToTree: function(list) {
-      if (list) {
-        const sortList = list.sort((a, b) => { return a.id - b.id })
-        return groupToMenuTree(sortList, '')
+      if (this.roleForm.name !== '' && this.roleForm.menusValue !== '') {
+        this.loadingVisible = true
+        const menuList = string2List(this.roleForm.menusValue)
+        const systemMenuList = this.$store.getters.systemMenus
+        this.roleForm.menusValue = systemMenuList.filter(it => menuList.includes(it.label)).map(it => it.value).join(',')
+        editRole(this.roleForm).then(() => {
+          this.$message({
+            type: 'success',
+            message: '编辑成功!'
+          })
+          this.loadingVisible = false
+          this.editDialogVisible = false
+          this.skipPage(0)
+        }).catch(error => {
+          console.log(error)
+          this.loadingVisible = false
+          this.editDialogVisible = false
+        })
       } else {
-        return {}
+        this.$message({
+          type: 'info',
+          message: '请输入角色名称并选择权限!'
+        })
       }
     },
     getDefaultForm: function() {
@@ -181,7 +253,59 @@ export default {
         remark: ''
       }
     },
+    /**
+     * 复选操作监听
+     * **/
     handleCheckChange: function(data, checked, indeterminate) {
+      var menuList = string2List(this.roleForm.menusValue)
+      if (checked) {
+        menuList.push(data.label)
+      } else {
+        menuList = removeObject(menuList, data.label)
+      }
+      this.roleForm.menusValue = menuList.join(',')
+    },
+    /**
+     * 查询目录id
+     * @param menusValue
+     * @returns {*[]|*}
+     */
+    getCheckMenusIds: function(menusValue) {
+      if (menusValue) {
+        const menuList = string2List(menusValue)
+        const systemMenus = this.$store.getters.systemMenus
+        return systemMenus.filter(it => menuList.includes(it.label)).map(it => it.id)
+      } else {
+        return []
+      }
+    },
+    /**
+     * 由目录获取目录树
+     * @param list
+     * @returns {{}|[]}
+     * @constructor
+     */
+    JsonToTree: function(list) {
+      if (list) {
+        const sortList = list.sort((a, b) => { return a.id - b.id })
+        return groupToMenuTree(sortList, '')
+      } else {
+        return {}
+      }
+    },
+    /**
+     * 获取单条数据目录树, menusValue: string
+     * @param menuValue
+     */
+    getRowMenuTree: function(data) {
+      if (data) {
+        const menuList = string2List(data)
+        const systemMenus = this.$store.getters.systemMenus
+        const treeData = systemMenus.filter(it => menuList.includes(it.label))
+        return this.JsonToTree(treeData)
+      } else {
+        return []
+      }
     }
   }
 }

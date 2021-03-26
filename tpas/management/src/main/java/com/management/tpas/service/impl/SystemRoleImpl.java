@@ -91,7 +91,7 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
         // 检验菜单是否存在
         if (!StringUtils.isBlank(roleModel.getMenusValue())) {
             List<String> menusValueList = CommonUtil.parseStringList(roleModel.getMenusValue(), ",");
-            if (!menusValueList.isEmpty() && systemMenuMapper.countMenusByValue(menusValueList) != menusValueList.size()) {
+            if (menusValueList.isEmpty() || systemMenuMapper.countMenusByValue(menusValueList) != menusValueList.size()) {
                 throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
             }
         }
