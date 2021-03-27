@@ -30,24 +30,22 @@ import java.util.List;
  * @author peihua.wu
  * @since 2020-08-01
  */
-@Service
-public class PaperModifyRecordServiceImpl extends BaseServiceImpl<PaperModifyRecordMapper, PaperModifyRecord> implements PaperModifyRecordService {
+@Service public class PaperModifyRecordServiceImpl extends BaseServiceImpl<PaperModifyRecordMapper, PaperModifyRecord>
+    implements PaperModifyRecordService {
 
-    @Autowired
-    private PaperModifyRecordMapper paperModifyRecordMapper;
+    @Autowired private PaperModifyRecordMapper paperModifyRecordMapper;
 
-    @Autowired
-    private PaperMapper paperMapper;
+    @Autowired private PaperMapper paperMapper;
 
-    @Override
-    public void auditPaperModify(Long id, Boolean result) {
+    @Override public void auditPaperModify(Long id, Boolean result) {
         //  校验是否为管理员身份
         UserMsgModel userMsgModel = UserUtil.getUserMsg();
         if (userMsgModel == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，审批失败");
         }
 
-        if (userMsgModel.getUserType() != UserRoleName.USER_TYPE_ADMIN.flag) {
+        if (!userMsgModel.getUserType().equals(UserRoleName.USER_TYPE_ADMIN.flag) && userMsgModel.getUserType()
+            .equals(UserRoleName.USER_TYPE_SUPER.flag)) {
             throw new BusinessException(ErrorCodeEnum.PERMISSION_DENIED.code, "用户权限不足，审批失败");
         }
 
@@ -76,8 +74,7 @@ public class PaperModifyRecordServiceImpl extends BaseServiceImpl<PaperModifyRec
         paperModifyRecordMapper.updateById(paperModifyRecord);
     }
 
-    @Override
-    public PageInfo<PaperModifyRecordModel> getModifyRecord(PaperModifyRecordSearchModel searchModel) {
+    @Override public PageInfo<PaperModifyRecordModel> getModifyRecord(PaperModifyRecordSearchModel searchModel) {
         PageHelper.startPage(searchModel.getPageNum(), searchModel.getPageSize());
         List<PaperModifyRecordModel> recordModelList = paperModifyRecordMapper.selectModifyRecords(searchModel);
         return new PageInfo<>(recordModelList);

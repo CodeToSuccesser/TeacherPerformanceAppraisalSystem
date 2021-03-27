@@ -394,9 +394,10 @@
 </template>
 
 <script>
-import { getCourseHoursModifyRecord } from '@/api/course'
-import { getPaperModifyRecord } from '@/api/paper'
-import { getInternModifyRecord } from '@/api/intern'
+import { getCourseHoursModifyRecord, auditCourseHoursModify } from '@/api/course'
+import { getPaperModifyRecord, auditPaperModify } from '@/api/paper'
+import { getInternModifyRecord, auditInternModify } from '@/api/intern'
+import { hideFullScreenLoading, showFullScreenLoading } from '@/utils/loading'
 
 export default {
   name: 'AuditRecord',
@@ -488,18 +489,51 @@ export default {
     modifyDelete: function(index, id) {
 
     },
-    editEnsureOrCancel: function(index, flag) {
+    editEnsureOrCancel: function(index, result) {
       switch (index) {
         case 0: {
           this.courseModifyEditVisible = false
+          showFullScreenLoading('审批中')
+          auditCourseHoursModify(this.courseDetailForm.id, result)
+            .then(response => {
+              hideFullScreenLoading()
+              this.$message.success('审批成功')
+              location.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              hideFullScreenLoading()
+            })
           break
         }
         case 1: {
           this.paperModifyEditVisible = false
+          showFullScreenLoading('审批中')
+          auditPaperModify(this.paperDetailForm.id, result)
+            .then(response => {
+              hideFullScreenLoading()
+              this.$message.success('审批成功')
+              location.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              hideFullScreenLoading()
+            })
           break
         }
         case 2: {
           this.internModifyEditVisible = false
+          showFullScreenLoading('审批中')
+          auditInternModify(this.internDetailForm.id, result)
+            .then(response => {
+              hideFullScreenLoading()
+              this.$message.success('审批成功')
+              location.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              hideFullScreenLoading()
+            })
           break
         }
       }

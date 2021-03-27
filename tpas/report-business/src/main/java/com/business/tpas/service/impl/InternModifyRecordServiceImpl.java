@@ -30,23 +30,20 @@ import java.util.List;
  * @author peihua.wu
  * @since 2020-08-01
  */
-@Service
-public class InternModifyRecordServiceImpl
+@Service public class InternModifyRecordServiceImpl
     extends BaseServiceImpl<InternModifyRecordMapper, InternModifyRecord> implements InternModifyRecordService {
 
-    @Autowired
-    private InternModifyRecordMapper internModifyRecordMapper;
+    @Autowired private InternModifyRecordMapper internModifyRecordMapper;
 
-    @Autowired
-    private InternMapper internMapper;
+    @Autowired private InternMapper internMapper;
 
-    @Override
-    public void auditInternModify(Long id, Boolean result) {
+    @Override public void auditInternModify(Long id, Boolean result) {
         UserMsgModel userMsgModel = UserUtil.getUserMsg();
         if (userMsgModel == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，审核失败");
         }
-        if (userMsgModel.getUserType() != UserRoleName.USER_TYPE_ADMIN.flag) {
+        if (!userMsgModel.getUserType().equals(UserRoleName.USER_TYPE_ADMIN.flag) && userMsgModel.getUserType()
+            .equals(UserRoleName.USER_TYPE_SUPER.flag)) {
             throw new BusinessException(ErrorCodeEnum.PERMISSION_DENIED.code, "用户权限不足，审核失败");
         }
         InternModifyRecord record = internModifyRecordMapper.selectById(id);
@@ -74,8 +71,7 @@ public class InternModifyRecordServiceImpl
         internModifyRecordMapper.updateById(record);
     }
 
-    @Override
-    public PageInfo<InternModifyRecordModel> getModifyRecord(InternModifyRecordSearchModel searchModel) {
+    @Override public PageInfo<InternModifyRecordModel> getModifyRecord(InternModifyRecordSearchModel searchModel) {
         PageHelper.startPage(searchModel.getPageNum(), searchModel.getPageSize());
         List<InternModifyRecordModel> recordModelList = internModifyRecordMapper.selectModifyRecords(searchModel);
         return new PageInfo<>(recordModelList);

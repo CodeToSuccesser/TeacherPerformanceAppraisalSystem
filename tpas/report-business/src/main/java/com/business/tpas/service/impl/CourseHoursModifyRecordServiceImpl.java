@@ -31,28 +31,24 @@ import java.util.List;
  * @author peihua.wu
  * @since 2020-08-01
  */
-@Service
-public class CourseHoursModifyRecordServiceImpl extends BaseServiceImpl<CourseHoursModifyRecordMapper, CourseHoursModifyRecord>
-    implements
-    CourseHoursModifyRecordService {
+@Service public class CourseHoursModifyRecordServiceImpl
+    extends BaseServiceImpl<CourseHoursModifyRecordMapper, CourseHoursModifyRecord>
+    implements CourseHoursModifyRecordService {
 
-    @Autowired
-    private CourseHoursService courseHoursService;
+    @Autowired private CourseHoursService courseHoursService;
 
-    @Autowired
-    private CourseHoursMapper courseHoursMapper;
+    @Autowired private CourseHoursMapper courseHoursMapper;
 
-    @Autowired
-    private CourseHoursModifyRecordMapper courseHoursModifyRecordMapper;
+    @Autowired private CourseHoursModifyRecordMapper courseHoursModifyRecordMapper;
 
-    @Override
-    public void auditCourseHoursModify(Long id, Boolean result) {
+    @Override public void auditCourseHoursModify(Long id, Boolean result) {
         // 校验是否为管理员身份
         UserMsgModel userMsgModel = UserUtil.getUserMsg();
         if (userMsgModel == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "请求用户信息缺失，审批课时信息记录失败");
         }
-        if (userMsgModel.getUserType() != UserRoleName.USER_TYPE_ADMIN.flag) {
+        if (!userMsgModel.getUserType().equals(UserRoleName.USER_TYPE_ADMIN.flag) && userMsgModel.getUserType()
+            .equals(UserRoleName.USER_TYPE_SUPER.flag)) {
             throw new BusinessException(ErrorCodeEnum.PERMISSION_DENIED);
         }
 
@@ -86,6 +82,7 @@ public class CourseHoursModifyRecordServiceImpl extends BaseServiceImpl<CourseHo
 
     /**
      * 校验课时修改记录参数是否正确
+     *
      * @param record
      */
     void validateRecord(CourseHoursModifyRecord record) {
@@ -99,6 +96,7 @@ public class CourseHoursModifyRecordServiceImpl extends BaseServiceImpl<CourseHo
 
     /**
      * 修改课时记录
+     *
      * @param oldRecord
      * @param record
      */
