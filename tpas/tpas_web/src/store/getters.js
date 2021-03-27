@@ -16,6 +16,7 @@ const getters = {
   paramValueType: state => state.sysParam.paramValueType,
   paramColumnName: state => state.sysParam.paramColumnName,
   paramCNumList: state => state.sysParam.paramCNumList,
-  systemMenus: state => state.systemRole.systemMenus
+  systemMenus: state => state.systemRole.systemMenus,
+  systemPermission: state => state.systemRole.systemPermission
 }
 export default getters

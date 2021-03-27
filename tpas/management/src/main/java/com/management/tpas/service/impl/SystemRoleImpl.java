@@ -53,9 +53,6 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
     @Override
     @Transactional(readOnly = true)
     public PageInfo<SystemRoleModel> queryRoles(RoleSearchModel searchModel) {
-        SystemMenusPermissionModel systemModel = systemMenuService.getMenuAndPermission();
-        Map<String, String> systemNameMap = systemModel.getMenuModelList().stream()
-                .collect(Collectors.toMap(SystemMenuModel::getValue, SystemMenuModel::getLabel));
         PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
         List<SystemRoleModel> list = systemRoleMapper.getRoles(searchModel);
         if (list.isEmpty()) {
@@ -66,16 +63,8 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
                 list.stream().map(SystemRoleModel::getName).collect(Collectors.toList()));
         Map<String, List<SystemRolePermissionRef>> refMap = refList.stream()
                 .collect(Collectors.groupingBy(SystemRolePermissionRef::getRoleName));
-        // 解析目录名称
+        // 解析权限名称
         for (SystemRoleModel role : list) {
-            List<String> menus = CommonUtil.parseStringList(role.getMenusValue(), ",");
-            if (!menus.isEmpty()) {
-                List<String> menusLabel = new ArrayList<>();
-                menus.forEach(it-> {
-                    menusLabel.add(systemNameMap.getOrDefault(it, it));
-                });
-                role.setMenusValue(StringUtils.join(menusLabel, ","));
-            }
             List<SystemRolePermissionRef> refData = refMap.getOrDefault(role.getName(), Collections.emptyList());
             if (!refData.isEmpty()) {
                 List<String> refKeys = refData.stream().map(SystemRolePermissionRef::getPermissionKey).collect(Collectors.toList());

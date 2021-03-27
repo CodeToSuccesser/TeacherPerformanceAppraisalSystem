@@ -2,7 +2,8 @@ import { querySystemMenus } from '@/api/systemRole'
 
 const getDefaultState = () => {
   return {
-    systemMenus: []
+    systemMenus: [],
+    systemPermission: []
   }
 }
 
@@ -14,6 +15,9 @@ const mutations = {
   },
   SET_SYSTEM_MENUS: (state, list) => {
     state.systemMenus = list
+  },
+  SET_SYSTEM_PERMISSION: (state, list) => {
+    state.systemPermission = list
   }
 }
 
@@ -23,8 +27,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       querySystemMenus().then(response => {
         const { data } = response
-        console.log('querySystemMenus: ', data)
-        commit('SET_SYSTEM_MENUS', data)
+        const { menuModelList, permissionModelList } = data
+        commit('SET_SYSTEM_MENUS', menuModelList)
+        commit('SET_SYSTEM_PERMISSION', permissionModelList)
         resolve()
       }).catch(error => {
         reject(error)

@@ -143,9 +143,10 @@ export function groupBy(array, f) {
   })
 }
 
-export function groupToMenuTree(list, parentValue) {
+export function groupToMenuTree(list, allPermission, parentValue) {
   const menuList = []
   const childList = list.filter(menu => menu.parentValue === parentValue)
+  const permission = allPermission.filter(permission => permission.value === parentValue)
   childList.forEach(item => {
     const data = {
       id: item.id,
@@ -153,10 +154,23 @@ export function groupToMenuTree(list, parentValue) {
       parentValue: item.parentValue,
       level: item.level,
       value: item.value,
-      children: groupToMenuTree(list, item.value)
+      children: groupToMenuTree(list, allPermission, item.value),
+      type: 'M'
     }
     menuList.push(data)
   })
+  if (permission) {
+    permission.forEach(item => {
+      const data = {
+        id: item.id,
+        label: item.permissionName,
+        parentValue: item.value,
+        value: item.permissionKey,
+        type: 'P'
+      }
+      menuList.push(data)
+    })
+  }
   return menuList
 }
 

@@ -55,7 +55,7 @@ public class UserMsgModel implements Serializable {
     private String token = "";
 
     @ApiModelProperty(value = "权限菜单")
-    private List<RouterMenus> routerMenuModels;
+    private List<RouterMenus> routerMenus;
 
     @ApiModelProperty(value = "权限列表")
     private List<SystemPermissionModel> permissionList;
@@ -140,12 +140,12 @@ public class UserMsgModel implements Serializable {
         this.rolesName = rolesName;
     }
 
-    public List<RouterMenus> getRouterMenuModels() {
-        return routerMenuModels;
+    public List<RouterMenus> getRouterMenus() {
+        return routerMenus;
     }
 
-    public void setRouterMenuModels(List<RouterMenus> routerMenuModels) {
-        this.routerMenuModels = routerMenuModels;
+    public void setRouterMenuModels(List<RouterMenus> routerMenus) {
+        this.routerMenus = routerMenus;
     }
 
     public List<SystemPermissionModel> getPermissionList() {
@@ -169,7 +169,7 @@ public class UserMsgModel implements Serializable {
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +
                 ", token='" + token + '\'' +
-                ", routerMenuModels=" + routerMenuModels +
+                ", routerMenus=" + routerMenus +
                 ", permissionList=" + permissionList +
                 '}';
     }

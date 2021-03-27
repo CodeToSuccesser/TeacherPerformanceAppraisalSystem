@@ -50,6 +50,7 @@ export function generaMenu(routes, routeMenu, parent) {
         // hidden: true,
         children: [],
         name: item.name,
+        permissionList: item.permissionList,
         meta: { title: item.meta.title, icon: item.meta.icon, roles: item.meta.roles }
       }
       if (item.children) {

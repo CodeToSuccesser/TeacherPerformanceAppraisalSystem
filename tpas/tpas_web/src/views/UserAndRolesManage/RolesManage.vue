@@ -22,10 +22,10 @@
         <template slot-scope="props">
           <el-tree
             ref="tree"
-            :data="getRowMenuTree(props.row.menusValue)"
-            :accordion="true"
+            default-expand-all
+            :data="getRowMenuTree(props.row.menusValue, props.row.permissionKeys)"
             :check-strictly="true"
-            node-key="id"
+            node-key="value"
             :props="defaultProps"/>
         </template>
       </el-table-column>
@@ -66,8 +66,8 @@
             default-expand-all
             show-checkbox
             :check-strictly="true"
-            node-key="id"
-            :default-checked-keys="getCheckMenusIds(roleForm.menusValue)"
+            node-key="value"
+            :default-checked-keys="getCheckMenusIds(roleForm.menusValue, roleForm.permissionKeys)"
             :props="defaultProps"
             @check-change="handleCheckChange"/>
         </el-form-item>
@@ -86,14 +86,15 @@
 </template>
 
 <script>
-  import { querySystemRoles, editRole, deleteRole } from '@/api/systemRole'
+import { querySystemRoles, editRole, deleteRole } from '@/api/systemRole'
 import { mapGetters } from 'vuex'
 import { groupToMenuTree, removeObject, string2List } from '@/utils'
 
 export default {
   computed: {
     ...mapGetters([
-      'systemMenus'
+      'systemMenus',
+      'systemPermission'
     ])
   },
   data() {
@@ -120,7 +121,7 @@ export default {
     if (this.$store.getters.systemMenus === undefined || this.$store.getters.systemMenus.length === 0) {
       this.$store.dispatch('systemRole/querySystemMenus')
     }
-    this.menuTree = this.JsonToTree(this.$store.getters.systemMenus)
+    this.menuTree = this.JsonToTree(this.$store.getters.systemMenus, this.$store.getters.systemPermission)
     this.skipPage(0)
   },
   methods: {
@@ -200,15 +201,14 @@ export default {
           id: data.row.id,
           name: data.row.name,
           menusValue: data.row.menusValue,
-          permission: undefined,
+          permissionKeys: data.row.permissionKeys,
           remark: data.row.remark
         }
       } else {
         this.roleForm = this.getDefaultForm()
       }
-      console.log(this.roleForm)
       const that = this
-      this.$refs.tree.setCheckedNodes(that.getCheckMenusIds(this.roleForm.menusValue))
+      this.$refs.tree.setCheckedNodes(that.getCheckMenusIds(this.roleForm.menusValue, this.roleForm.permissionKeys))
       this.editDialogVisible = true
     },
     /**
@@ -221,9 +221,6 @@ export default {
       }
       if (this.roleForm.name !== '' && this.roleForm.menusValue !== '') {
         this.loadingVisible = true
-        const menuList = string2List(this.roleForm.menusValue)
-        const systemMenuList = this.$store.getters.systemMenus
-        this.roleForm.menusValue = systemMenuList.filter(it => menuList.includes(it.label)).map(it => it.value).join(',')
         editRole(this.roleForm).then(() => {
           this.$message({
             type: 'success',
@@ -249,7 +246,7 @@ export default {
         id: undefined,
         name: '',
         menusValue: '',
-        permission: undefined,
+        permissionKeys: '',
         remark: ''
       }
     },
@@ -257,27 +254,40 @@ export default {
      * 复选操作监听
      * **/
     handleCheckChange: function(data, checked, indeterminate) {
-      var menuList = string2List(this.roleForm.menusValue)
-      if (checked) {
-        menuList.push(data.label)
-      } else {
-        menuList = removeObject(menuList, data.label)
+      if (data.type === 'M') {
+        var menuList = string2List(this.roleForm.menusValue)
+        if (checked) {
+          menuList.push(data.value)
+        } else {
+          menuList = removeObject(menuList, data.value)
+        }
+        this.roleForm.menusValue = menuList.join(',')
+      } else if (data.type === 'P') {
+        var permissionList = string2List(this.roleForm.permissionKeys)
+        if (checked) {
+          permissionList.push(data.value)
+        } else {
+          permissionList = removeObject(permissionList, data.value)
+        }
+        this.roleForm.permissionKeys = permissionList.join(',')
       }
-      this.roleForm.menusValue = menuList.join(',')
     },
     /**
      * 查询目录id
      * @param menusValue
      * @returns {*[]|*}
      */
-    getCheckMenusIds: function(menusValue) {
+    getCheckMenusIds: function(menusValue, permissionKeys) {
+      const target = []
       if (menusValue) {
         const menuList = string2List(menusValue)
-        const systemMenus = this.$store.getters.systemMenus
-        return systemMenus.filter(it => menuList.includes(it.label)).map(it => it.id)
-      } else {
-        return []
+        menuList.forEach(it => target.push(it))
       }
+      if (permissionKeys) {
+        const permissionList = string2List(permissionKeys)
+        permissionList.forEach(it => target.push(it))
+      }
+      return target
     },
     /**
      * 由目录获取目录树
@@ -285,10 +295,10 @@ export default {
      * @returns {{}|[]}
      * @constructor
      */
-    JsonToTree: function(list) {
-      if (list) {
-        const sortList = list.sort((a, b) => { return a.id - b.id })
-        return groupToMenuTree(sortList, '')
+    JsonToTree: function(menus, permissions) {
+      if (menus || permissions) {
+        const sortList = menus.sort((a, b) => { return a.id - b.id })
+        return groupToMenuTree(sortList, permissions, '')
       } else {
         return {}
       }
@@ -297,12 +307,15 @@ export default {
      * 获取单条数据目录树, menusValue: string
      * @param menuValue
      */
-    getRowMenuTree: function(data) {
-      if (data) {
-        const menuList = string2List(data)
+    getRowMenuTree: function(menuValueStr, permissionKeysStr) {
+      if (menuValueStr || permissionKeysStr) {
+        const menuList = string2List(menuValueStr)
         const systemMenus = this.$store.getters.systemMenus
-        const treeData = systemMenus.filter(it => menuList.includes(it.label))
-        return this.JsonToTree(treeData)
+        const treeData = systemMenus.filter(it => menuList.includes(it.value))
+        const permissionList = string2List(permissionKeysStr)
+        const systemPermission = this.$store.getters.systemPermission
+        const treePermission = systemPermission.filter(it => permissionList.includes(it.permissionKey))
+        return this.JsonToTree(treeData, treePermission)
       } else {
         return []
       }
