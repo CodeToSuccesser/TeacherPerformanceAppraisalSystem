@@ -105,6 +105,7 @@
             </if>
             and chmr.is_deleted = 0
         </where>
+        order by chmr.create_time DESC
     </select>
 
     <select id="countModifyRecordByHoursId" resultType="java.lang.Integer">

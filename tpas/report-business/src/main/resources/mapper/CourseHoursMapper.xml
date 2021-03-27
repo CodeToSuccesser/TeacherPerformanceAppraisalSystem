@@ -87,6 +87,7 @@
             </if>
             and ch.is_deleted = 0
         </where>
+        order by ch.create_time DESC
     </select>
 
     <insert id="saveBatch" parameterType="java.util.List">

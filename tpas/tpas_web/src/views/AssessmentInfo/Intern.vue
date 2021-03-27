@@ -11,7 +11,7 @@
 
       <el-button type="primary" size="small" class="button-find">查找</el-button>
 
-      <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">申请新增</el-button>
+      <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">新增</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importIntern">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportIntern">导出</el-button>
@@ -77,8 +77,11 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="实习带队信息申请" :visible.sync="applyInternDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog title="新增实习带队信息" :visible.sync="applyInternDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="applyInternForm">
+        <el-form-item label="教师编号" :label-width="formLabelWidth">
+          <el-input v-model="applyInternForm.teacherCode" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="师范实习带队人数" :label-width="formLabelWidth">
           <el-input v-model="applyInternForm.normalPractice" autocomplete="off" />
         </el-form-item>
@@ -99,7 +102,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary">申 请</el-button>
+        <el-button type="primary" @click="applyIntern">申 请</el-button>
         <el-button @click="applyInternDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -149,7 +152,7 @@
 
 <script>
 
-import { downInternInfoTemplate, getInternInfo, exportInternFile, importInternInfoFile, modifyInternInfo } from '@/api/intern'
+import { downInternInfoTemplate, getInternInfo, exportInternFile, importInternInfoFile, modifyInternInfo, insertInternInfo } from '@/api/intern'
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
 
@@ -354,6 +357,28 @@ export default {
           })
           this.importDialogVisible = false
           hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
+    },
+    applyIntern() {
+      const data = {
+        nonNormalPractice: this.applyInternForm.nonNormalPractice,
+        normalPractice: this.applyInternForm.normalPractice,
+        remark: this.applyInternForm.remark,
+        schoolPractice: this.applyInternForm.schoolPractice,
+        schoolYear: this.applyInternForm.schoolYear,
+        semester: this.applyInternForm.semester,
+        teacherCode: this.applyInternForm.teacherCode
+      }
+      showFullScreenLoading()
+      insertInternInfo(data)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('新增成功')
+          location.reload();
         })
         .catch(error => {
           console.log(error)

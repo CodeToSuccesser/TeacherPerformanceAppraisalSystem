@@ -186,7 +186,7 @@ public class CourseHoursController {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "课程编号为空");
         }
         if (StringUtils.isBlank(courseHoursModel.getCourseName())) {
-            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "选课编号为空");
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "课程名为空");
         }
         if (courseHoursModel.getSemester() == null) {
             throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "学期参数为空");

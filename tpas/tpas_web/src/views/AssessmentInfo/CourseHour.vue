@@ -17,7 +17,12 @@
 
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
-      <el-button type="primary" size="small" class="button-add" @click="applyCourseHoursVisible = true">申请新增</el-button>
+      <el-button
+        type="primary"
+        size="small"
+        class="button-add"
+        @click="applyCourseHoursVisible = true"
+      >新增</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
 
     </el-form>
@@ -115,10 +120,16 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="申请新增课时记录" :visible.sync="applyCourseHoursVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog title="新增课时记录" :visible.sync="applyCourseHoursVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="applyCourseHourForm">
         <el-form-item label="课程名称" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.courseName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="课程编号" :label-width="formLabelWidth">
+          <el-input v-model="applyCourseHourForm.courseCode" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="教师编号" :label-width="formLabelWidth">
+          <el-input v-model="applyCourseHourForm.teacherCode" autocomplete="off" />
         </el-form-item>
         <el-form-item label="课程容量" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.totalCapacity" autocomplete="off" />
@@ -130,7 +141,7 @@
           <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
         </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
-          <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
+          <el-input v-model="applyCourseHourForm.primarySecondary" autocomplete="off" />
         </el-form-item>
         <el-form-item label="周学时" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.weekHours" autocomplete="off" />
@@ -156,9 +167,12 @@
         <el-form-item label="每次实验人数" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.expPerNumber" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="教学班组成" :label-width="formLabelWidth">
+          <el-input v-model="applyCourseHourForm.classed" autocomplete="off" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary">申 请</el-button>
+        <el-button type="primary" @click="applyCourseHours">申 请</el-button>
         <el-button @click="applyCourseHoursVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -199,7 +213,7 @@
 import {
   getCourseHours,
   downCourseHoursTemplate,
-  exportCourseFile, importCourseHoursFile, modifyCourseHours
+  exportCourseFile, importCourseHoursFile, modifyCourseHours, insertCourseHours
 } from '@/api/course'
 
 import { downloadExcel } from '@/utils/file'
@@ -437,6 +451,40 @@ export default {
           })
           this.importDialogVisible = false
           hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
+    },
+    applyCourseHours() {
+      const data = {
+        courseName: this.applyCourseHourForm.courseName,
+        courseCode: this.applyCourseHourForm.courseCode,
+        teacherCode: this.applyCourseHourForm.teacherCode,
+        semester: this.applyCourseHourForm.semester,
+        schoolYear: this.applyCourseHourForm.schoolYear,
+        classed: this.applyCourseHourForm.classed,
+        computerHours: this.applyCourseHourForm.computerHours,
+        experimentHours: this.applyCourseHourForm.experimentHours,
+        teachingHours: this.applyCourseHourForm.teachingHours,
+        expPerNumber: this.applyCourseHourForm.expPerNumber,
+        peroid: this.applyCourseHourForm.peroid,
+        primarySecondary: this.applyCourseHourForm.primarySecondary,
+        remark: this.applyCourseHourForm.remark,
+        selectedStudent: this.applyCourseHourForm.selectedStudent,
+        studentNumber: this.applyCourseHourForm.studentNumber,
+        studentsInstitute: this.applyCourseHourForm.studentsInstitute,
+        totalCapacity: this.applyCourseHourForm.totalCapacity,
+        selectionNumber: this.applyCourseHourForm.courseCode
+      }
+      showFullScreenLoading()
+      insertCourseHours(data)
+        .then(response => {
+          hideFullScreenLoading()
+          this.applyCourseHoursVisible = false
+          this.$message.success('新增成功')
+          location.reload();
         })
         .catch(error => {
           console.log(error)

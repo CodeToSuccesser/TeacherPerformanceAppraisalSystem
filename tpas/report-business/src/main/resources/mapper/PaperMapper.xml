@@ -60,6 +60,7 @@
             </if>
             and p.is_deleted = 0
         </where>
+        order by p.create_time DESC
     </select>
 
     <insert id="saveBatch" parameterType="java.util.List">

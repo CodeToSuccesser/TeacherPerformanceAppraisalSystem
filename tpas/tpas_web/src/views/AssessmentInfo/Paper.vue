@@ -13,7 +13,7 @@
 
       <el-button type="primary" size="small" class="button-find">查找</el-button>
 
-      <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">申请新增</el-button>
+      <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">新增</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
@@ -76,6 +76,12 @@
 
     <el-dialog title="论文指导信息申请" :visible.sync="applyPaperDialogVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="applyPaperForm">
+        <el-form-item label="教师编号" :label-width="formLabelWidth">
+          <el-input v-model="applyPaperForm.teacherCode" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="专业编码" :label-width="formLabelWidth">
+          <el-input v-model="applyPaperForm.majorCode" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="专业名称" :label-width="formLabelWidth">
           <el-input v-model="applyPaperForm.majorName" autocomplete="off" />
         </el-form-item>
@@ -93,7 +99,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary">申 请</el-button>
+        <el-button type="primary" @click="applyPaper">申 请</el-button>
         <el-button @click="applyPaperDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -144,7 +150,7 @@
 
 <script>
 
-import { downloadPaperTemplate, getPaperInfo, exportPaperInfo, importPaperInfo, modifyPaperInfo } from '@/api/paper'
+import { downloadPaperTemplate, getPaperInfo, exportPaperInfo, importPaperInfo, modifyPaperInfo, insertPaperInfo } from '@/api/paper'
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
 
@@ -346,6 +352,28 @@ export default {
           })
           this.importDialogVisible = false
           hideFullScreenLoading()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
+    },
+    applyPaper() {
+      const data = {
+        majorCode: this.applyPaperForm.majorCode,
+        majorName: this.applyPaperForm.majorName,
+        remark: this.applyPaperForm.remark,
+        schoolYear: this.applyPaperForm.schoolYear,
+        semester: this.applyPaperForm.semester,
+        studentNumber: this.applyPaperForm.studentNumber,
+        teacherCode: this.applyPaperForm.teacherCode
+      }
+      showFullScreenLoading()
+      insertPaperInfo(data)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('新增成功')
+          location.reload()
         })
         .catch(error => {
           console.log(error)

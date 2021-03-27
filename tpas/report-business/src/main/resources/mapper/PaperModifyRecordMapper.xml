@@ -80,6 +80,7 @@
             </if>
             and pmr.is_deleted = 0
         </where>
+        order by pmr.create_time DESC
     </select>
 
     <select id="countModifyRecordByPaperId" resultType="java.lang.Integer">

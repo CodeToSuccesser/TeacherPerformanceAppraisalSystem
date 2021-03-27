@@ -23,6 +23,7 @@
         from major
         where major_code = #{majorCode}
         and is_deleted = 0
+        order by create_time DESC
     </select>
 
 

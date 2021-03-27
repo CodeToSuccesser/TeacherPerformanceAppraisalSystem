@@ -83,6 +83,7 @@
             </if>
             and imr.is_deleted = 0
         </where>
+        order by imr.create_time DESC
     </select>
 
     <select id="countModifyRecordByInternId" resultType="java.lang.Integer">
