@@ -39,10 +39,9 @@ public class SystemMenu implements Serializable {
     @ApiModelProperty(value = "父级菜单值")
     private String parentValue;
 
-    @ApiModelProperty(value = "父级菜单值")
+    @ApiModelProperty(value = "菜单全值，从顶级菜单到本身，竖线'|'分割")
     private String fullValue;
 
-    @ApiModelProperty(value = "菜单全值，从顶级菜单到本身，竖线'|'分割")
     private Date createTime;
 
     private Integer isDeleted;

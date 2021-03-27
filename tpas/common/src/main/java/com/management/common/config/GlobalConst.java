@@ -35,6 +35,16 @@ public class GlobalConst {
     public static final Long REDIS_TIME_OUT = 3600L;
 
     /**
+     * 系统目录redis key
+     **/
+    public static final String SYSTEM_MENUS_KEY = "TPAS::SYSTEM_MENU_LIST";
+
+    /**
+     *  系统权限redis key
+     **/
+    public static final String SYSTEM_PERMISSIONS_KEY = "TPAS::SYSTEM_PERMISSION_LIST";
+
+    /**
      * 文件传输请求content-type
      *
      * @author dude

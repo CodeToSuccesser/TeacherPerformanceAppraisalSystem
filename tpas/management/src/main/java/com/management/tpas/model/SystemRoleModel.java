@@ -27,6 +27,9 @@ public class SystemRoleModel implements Serializable {
     @ApiModelProperty(value = "角色对于菜单目录权限，用逗号拼接，如：memuA,menuB1")
     private String menusValue;
 
+    @ApiModelProperty(value = "角色权限，用逗号拼接，如：permissionKey1,permissionKey2")
+    private String permissionKeys;
+
     @ApiModelProperty(value = "备注")
     private String remark;
 
@@ -73,12 +76,21 @@ public class SystemRoleModel implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getPermissionKeys() {
+        return permissionKeys;
+    }
+
+    public void setPermissionKeys(String permissionKeys) {
+        this.permissionKeys = permissionKeys;
+    }
+
     @Override
     public String toString() {
         return "SystemRoleModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", menusValue='" + menusValue + '\'' +
+                ", permissionKeys='" + permissionKeys + '\'' +
                 ", remark='" + remark + '\'' +
                 ", createTime=" + createTime +
                 '}';

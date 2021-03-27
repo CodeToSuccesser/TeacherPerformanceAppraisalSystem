@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.tpas.dao.SystemPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.management.tpas.entity.SystemPermission">
+        <id column="id" property="id" />
+        <result column="permission_name" property="permissionName" />
+        <result column="permission_key" property="permissionKey" />
+        <result column="value" property="value" />
+        <result column="url_path" property="urlPath" />
+        <result column="control_type" property="controlType" />
+        <result column="filed_name" property="filedName" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.management.tpas.model.SystemPermissionModel">
+        <id column="id" property="id" />
+        <result column="permission_name" property="permissionName" />
+        <result column="permission_key" property="permissionKey" />
+        <result column="value" property="value" />
+        <result column="url_path" property="urlPath" />
+        <result column="control_type" property="controlType" />
+        <result column="filed_name" property="filedName" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, permission_name, permission_key, `value`, url_path, control_type, filed_name,
+        remark, update_time, create_time, is_deleted
+    </sql>
+
+    <select id="getSystemPermission" resultMap="ModelResultMap">
+        SELECT id, permission_name, permission_key, `value`
+        , url_path, control_type, filed_name, remark
+        FROM system_permission
+        WHERE is_deleted = 0
+    </select>
+
+    <select id="getSystemPermissionByRoleName" resultMap="ModelResultMap">
+        SELECT p.id, p.permission_name, p.permission_key, p.`value`
+        , p.url_path, p.control_type, p.filed_name, p.remark
+        FROM system_role_permission_ref r LEFT JOIN system_permission p
+        ON r.permission_key = p.permission_key
+        WHERE r.role_name IN
+        <foreach collection="data" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

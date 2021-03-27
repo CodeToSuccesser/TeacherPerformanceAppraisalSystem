@@ -2,7 +2,7 @@ package com.management.tpas.service;
 
 import com.management.common.base.BaseService;
 import com.management.tpas.entity.SystemMenu;
-import com.management.tpas.model.SystemMenuModel;
+import com.management.tpas.model.SystemMenusPermissionModel;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ import java.util.List;
  **/
 public interface SystemMenuService extends BaseService<SystemMenu> {
 
-    List<SystemMenuModel> queryMenus();
+    SystemMenusPermissionModel getMenuAndPermission();
 }

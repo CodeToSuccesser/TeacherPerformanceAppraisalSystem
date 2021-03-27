@@ -5,6 +5,7 @@ import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
 import com.management.tpas.model.RoleSearchModel;
 import com.management.tpas.model.SystemMenuModel;
+import com.management.tpas.model.SystemMenusPermissionModel;
 import com.management.tpas.model.SystemRoleModel;
 import com.management.tpas.service.SystemMenuService;
 import com.management.tpas.service.SystemRoleService;
@@ -78,12 +79,11 @@ public class SystemPermissionController {
 
     @PostMapping("/queryMenus")
     @ApiOperation(value = "查询菜单")
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = SystemMenusPermissionModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> queryMenus() {
-        // TODO: 引入缓存
-        List<SystemMenuModel> list = menuService.queryMenus();
-        return new BaseResponse<>(list);
+        SystemMenusPermissionModel model = menuService.getMenuAndPermission();
+        return new BaseResponse<>(model);
     }
 
 }

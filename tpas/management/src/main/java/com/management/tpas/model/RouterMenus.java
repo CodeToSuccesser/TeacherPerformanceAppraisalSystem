@@ -36,6 +36,9 @@ public class RouterMenus {
     @ApiModelProperty(value = "子菜单")
     private List<RouterMenus> children;
 
+    @ApiModelProperty(value = "权限")
+    private List<SystemPermissionModel> permissionList;
+
     public String getPath() {
         return path;
     }
@@ -94,5 +97,13 @@ public class RouterMenus {
 
     public void setParentValue(String parentValue) {
         this.parentValue = parentValue;
+    }
+
+    public List<SystemPermissionModel> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<SystemPermissionModel> permissionList) {
+        this.permissionList = permissionList;
     }
 }
