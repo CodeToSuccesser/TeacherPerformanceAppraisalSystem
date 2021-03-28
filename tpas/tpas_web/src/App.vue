@@ -15,6 +15,7 @@ export default {
       const data = JSON.parse(json)
       data.user.routerMenus = JSON.parse(data.user.routerMenus)
       data.user.rolesName = JSON.parse(data.user.rolesName)
+      data.user.permissionMap = JSON.parse(data.user.permissionMap)
       this.$store.replaceState(Object.assign({}, state, data))
     }
     // 在页面刷新时将vuex里的信息保存到sessionStorage里
@@ -23,6 +24,7 @@ export default {
       const state = that.$store.state
       state.user.routerMenus = JSON.stringify(state.user.routerMenus)
       state.user.rolesName = JSON.stringify(state.user.rolesName)
+      state.user.permissionMap = JSON.stringify(state.user.permissionMap)
       console.log('beforeunload: ', state)
       sessionStorage.setItem('stateStore', JSON.stringify(state))
     })

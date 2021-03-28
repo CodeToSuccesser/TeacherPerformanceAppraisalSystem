@@ -11,7 +11,8 @@ const getDefaultState = () => {
     portrait: '',
     contact: '',
     rolesName: [],
-    routerMenus: []
+    routerMenus: [],
+    permissionMap: {}
   }
 }
 
@@ -44,6 +45,33 @@ const mutations = {
   },
   SET_ID: (state, id) => {
     state.id = id
+  },
+  SET_PERMISSION_MAP: (state, list) => {
+    const allPermission = {}
+    // 遍历系统下的权限并进行分层
+    for (let j = 0; j < list.length; j++) {
+      const item = list[j]
+      const menu = item.value
+      // 初始化权限表
+      if (allPermission[menu] === undefined) {
+        allPermission[menu] = {}
+      }
+      const key = item.permissionKey
+      const type = item.controlType
+      if (type === 1 || type === 3) {
+        // fieldName 为空字符串, 是显示的权限
+        allPermission[menu][key] = true
+      } else if (type === 2 || type === 4) {
+        // 有 fieldName, 是搜索的权限
+        // 判断是否是对象, 因为有多个权限得用对象存储
+        if (allPermission[menu][key] === undefined) {
+          allPermission[menu][key] = {}
+        }
+        const name = item.filedName
+        allPermission[menu][key][name] = true
+      }
+    }
+    state.permissionMap = allPermission
   }
 }
 
@@ -62,6 +90,7 @@ const actions = {
         commit('SET_CONTACT', data.contact)
         commit('SET_ROLES_NAME', data.rolesName)
         commit('SET_ROUTER_MENUS', data.routerMenus)
+        commit('SET_PERMISSION_MAP', data.permissionList)
         setToken(data.token)
         resolve()
       }).catch(error => {

@@ -15,15 +15,15 @@
 
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
 
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+      <el-button v-if="permissionMap && permissionMap['importCourseHour-Button']" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
+      <el-button v-if="permissionMap && permissionMap['exportCourseHour-Button']" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
       <el-button
         type="primary"
         size="small"
         class="button-add"
         @click="applyCourseHoursVisible = true"
       >新增</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
+      <el-button v-if="permissionMap && permissionMap['downloadCourseHourTemplate-Button']" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
 
     </el-form>
 
@@ -275,6 +275,8 @@ export default {
     }
     var roleName = this.$store.getters.rolesName === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName : this.$store.getters.rolesName
     this.isAdmin = roleName === '管理员角色' || roleName === '全菜单'
+    // this.$store.getters.permissionMap[数据库system_permission表的value]，这里value对应system_menu表的value
+    this.permissionMap = this.$store.getters.permissionMap['AssessmentInfo-CourseHour']
     this.getCourseHours(param)
   },
   methods: {
@@ -317,7 +319,12 @@ export default {
       this.courseDetailForm = this.courseHourInfo[scope.$index]
     },
     getCourseHours: function(body) {
-      if (!this.isAdmin) {
+      // if (!this.isAdmin) {
+      //   body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
+      // }
+      // 用法，数据库配置teacherId权限的用户，该接口参数必传teacherId
+      // this.permissionMap[数据库system_permission表的permissionKey][数据库system_permission表的filed]
+      if (this.permissionMap && this.permissionMap['getCourseHoursSearch-teacherId']['teacherId']) {
         body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
       }
       showFullScreenLoading('加载中')
@@ -484,7 +491,7 @@ export default {
           hideFullScreenLoading()
           this.applyCourseHoursVisible = false
           this.$message.success('新增成功')
-          location.reload();
+          location.reload()
         })
         .catch(error => {
           console.log(error)
