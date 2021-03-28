@@ -324,7 +324,7 @@ export default {
       // }
       // 用法，数据库配置teacherId权限的用户，该接口参数必传teacherId
       // this.permissionMap[数据库system_permission表的permissionKey][数据库system_permission表的filed]
-      if (this.permissionMap && this.permissionMap['getCourseHoursSearch-teacherId']['teacherId']) {
+      if (this.permissionMap && this.permissionMap['getCourseHoursSearch-teacherId'] && this.permissionMap['getCourseHoursSearch-teacherId']['teacherId']) {
         body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
       }
       showFullScreenLoading('加载中')
