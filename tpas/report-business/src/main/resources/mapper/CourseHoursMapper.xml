@@ -85,6 +85,9 @@
             <if test="data.schoolYear != null and data.schoolYear != ''">
                 and ch.school_year = #{data.schoolYear}
             </if>
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                and um.log_name = #{data.teacherCode}
+            </if>
             and ch.is_deleted = 0
         </where>
         order by ch.create_time DESC

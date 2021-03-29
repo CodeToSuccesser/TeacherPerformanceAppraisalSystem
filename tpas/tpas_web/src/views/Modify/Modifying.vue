@@ -9,7 +9,7 @@
           <el-select v-model="courseSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-button type="primary" size="small" class="button-find" @click="searchCourseHourModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="courseHoursModifyRecord" style="width: 100% " :border="true">
           <el-table-column type="expand" align="center">
@@ -80,10 +80,18 @@
           </el-table-column>
           <el-table-column label="课程名称" prop="courseName" align="center" />
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(courseHoursModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
           <el-table-column label="审核时间" prop="checkTime" align="center" />
-          <el-table-column label="审核结果" prop="checkResult" align="center" />
+          <el-table-column label="审核结果" prop="checkResult" align="center">
+            <template slot-scope="scope">
+              {{ Number(courseHoursModifyRecord[scope.$index].checkResult) === 0 ? '待处理' : '异常状态' }}
+            </template>
+          </el-table-column>
           <el-table-column :resizable="false" label="操作" align="center">
             <template>
               <el-button type="text" size="small" @click="modifyDelete(0, props.id)">删除</el-button>
@@ -173,7 +181,7 @@
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-button type="primary" size="small" class="button-find" @click="searchPaperModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="paperModifyRecord" stripe style="width: 100% " :border="true" fit>
           <el-table-column type="expand" align="center">
@@ -187,10 +195,10 @@
                 </el-form-item>
                 <el-divider />
                 <el-form-item label="学期">
-                  <span>{{ props.row.semester }}</span>
+                  <span>{{ Number(props.row.semester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学期修改">
-                  <span>{{ props.row.modifySemester }}</span>
+                  <span>{{ Number(props.row.modifySemester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学年">
                   <span>{{ props.row.schoolYear }}</span>
@@ -221,9 +229,17 @@
           <el-table-column label="专业代码号" prop="majorCode" align="center" />
           <el-table-column label="专业名称" prop="majorName" align="center" />
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(paperModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
-          <el-table-column label="审核结果" prop="checkResult" align="center" />
+          <el-table-column label="审核结果" prop="checkResult" align="center">
+            <template slot-scope="scope">
+              {{ Number(paperModifyRecord[scope.$index].checkResult) === 0 ? '待处理' : '异常状态' }}
+            </template>
+          </el-table-column>
           <el-table-column label="审核时间" prop="checkTime" align="center" />
           <el-table-column :resizable="false" label="操作" align="center">
             <template>
@@ -277,17 +293,17 @@
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-button type="primary" size="small" class="button-find" @click="searchInternModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="internModifyRecord" stripe style="width: 100% " :border="true" fit>
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="学期">
-                  <span>{{ props.row.semester }}</span>
+                  <span>{{ Number(props.row.semester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学期修改">
-                  <span>{{ props.row.modifySemester }}</span>
+                  <span>{{ Number(props.row.modifySemester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学年">
                   <span>{{ props.row.schoolYear }}</span>
@@ -322,9 +338,17 @@
             </template>
           </el-table-column>
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(internModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
-          <el-table-column label="审核结果" prop="checkResult" align="center" />
+          <el-table-column label="审核结果" prop="checkResult" align="center">
+            <template slot-scope="scope">
+              {{ Number(internModifyRecord[scope.$index].checkResult) === 0 ? '待处理' : '异常状态' }}
+            </template>
+          </el-table-column>
           <el-table-column label="审核时间" prop="checkTime" align="center" />
           <el-table-column :resizable="false" label="操作" align="center">
             <template>
@@ -457,7 +481,15 @@ export default {
       }
     },
     modifyDelete: function(index, id) {
+      switch (index) {
+        case 0:
 
+          break
+        case 1 :
+          break
+        case 2:
+          break
+      }
     },
     editEnsureOrCancel: function(index, flag) {
       switch (index) {

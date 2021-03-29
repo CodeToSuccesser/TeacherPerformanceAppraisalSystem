@@ -3,14 +3,14 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="课程课时操作" name="courseHour">
         <el-form ref="form" :model="courseSearchForm">
-          <el-select v-model="courseSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
+          <el-select v-model="courseSearchForm.selectedSchoolYear" clearable placeholder="学年" class="selector-year">
             <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-select v-model="courseSearchForm.selectedSemester" placeholder="学期" class="selector-term">
+          <el-select v-model="courseSearchForm.selectedSemester" clearable placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-input v-model="courseSearchForm.userName" placeholder="教师姓名" class="input-name" />
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-input v-model="courseSearchForm.selectedTeacherCode" clearable placeholder="教师编码" class="input-name" />
+          <el-button type="primary" size="small" class="button-find" @click="searchCourseHourModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="courseHoursModifyRecord" style="width: 100% " :border="true">
           <el-table-column type="expand" align="center">
@@ -81,7 +81,11 @@
           </el-table-column>
           <el-table-column label="课程名称" prop="courseName" align="center" />
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(courseHoursModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
           <el-table-column label="审核时间" prop="checkTime" align="center" />
           <el-table-column label="操作" align="center">
@@ -118,7 +122,7 @@
         >
           <div class="dialog-content-item">
             <span class="span-title">操作类型:</span>
-            <span class="span-content">{{ applyType[courseDetailForm.applyType] }} - {{ modifyType[0] }}</span>
+            <span class="span-content"> {{ modifyType[0] }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">日期:</span>
@@ -126,7 +130,7 @@
           </div>
           <div class="dialog-content-item">
             <span class="span-title">申请人:</span>
-            <span class="span-content">{{ courseDetailForm.applyName }}</span>
+            <span class="span-content">{{ courseDetailForm.teacherCode }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">处理人:</span>
@@ -155,8 +159,8 @@
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-input v-model="paperSearchForm.userName" placeholder="教师姓名" class="input-name" />
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-input v-model="paperSearchForm.teacherCode" placeholder="教师编码" class="input-name" />
+          <el-button type="primary" size="small" class="button-find" @click="searchPaperModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="paperModifyRecord" stripe style="width: 100% " :border="true" fit>
           <el-table-column type="expand" align="center">
@@ -170,7 +174,7 @@
                 </el-form-item>
                 <el-divider />
                 <el-form-item label="学期">
-                  <span>{{ props.row.semester }}</span>
+                  <span>{{ Number(props.row.semester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学期修改">
                   <span>{{ props.row.modifySemester }}</span>
@@ -204,7 +208,11 @@
           <el-table-column label="专业代码号" prop="majorCode" align="center" />
           <el-table-column label="专业名称" prop="majorName" align="center" />
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(paperModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
           <el-table-column label="审核时间" prop="checkTime" align="center" />
           <el-table-column label="操作" align="center">
@@ -241,7 +249,7 @@
         >
           <div class="dialog-content-item">
             <span class="span-title">操作类型:</span>
-            <span class="span-content">{{ applyType[paperDetailForm.applyType] }} - {{ modifyType[0] }}</span>
+            <span class="span-content">{{ modifyType[0] }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">日期:</span>
@@ -249,7 +257,7 @@
           </div>
           <div class="dialog-content-item">
             <span class="span-title">申请人:</span>
-            <span class="span-content">{{ paperDetailForm.applyName }}</span>
+            <span class="span-content">{{ paperDetailForm.teacherCode }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">处理人:</span>
@@ -278,15 +286,15 @@
           <el-select v-model="internSearchForm.selectedSemester" placeholder="学期" class="selector-term">
             <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
           </el-select>
-          <el-input v-model="internSearchForm.userName" placeholder="教师姓名" class="input-name" />
-          <el-button type="primary" size="small" class="button-find">查找</el-button>
+          <el-input v-model="internSearchForm.teacherCode" placeholder="教师编码" class="input-name" />
+          <el-button type="primary" size="small" class="button-find" @click="searchInternModifyRecord">查找</el-button>
         </el-form>
         <el-table :data="internModifyRecord" stripe style="width: 100% " :border="true" fit>
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="学期">
-                  <span>{{ props.row.semester }}</span>
+                  <span>{{ Number(props.row.semester) === 0 ? '第一学期' : '第二学期' }}</span>
                 </el-form-item>
                 <el-form-item label="学期修改">
                   <span>{{ props.row.modifySemester }}</span>
@@ -324,7 +332,11 @@
             </template>
           </el-table-column>
           <el-table-column label="学年" prop="schoolYear" align="center" />
-          <el-table-column label="学期" prop="semester" align="center" />
+          <el-table-column label="学期" prop="semester" align="center">
+            <template slot-scope="scope">
+              {{ Number(internModifyRecord[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+            </template>
+          </el-table-column>
           <el-table-column label="申请时间" prop="createTime" align="center" />
           <el-table-column label="审核时间" prop="checkTime" align="center" />
           <el-table-column label="操作" align="center">
@@ -361,7 +373,7 @@
         >
           <div class="dialog-content-item">
             <span class="span-title">操作类型:</span>
-            <span class="span-content">{{ applyType[internDetailForm.applyType] }} - {{ modifyType[0] }}</span>
+            <span class="span-content">{{ modifyType[0] }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">日期:</span>
@@ -369,7 +381,7 @@
           </div>
           <div class="dialog-content-item">
             <span class="span-title">申请人:</span>
-            <span class="span-content">{{ internDetailForm.applyName }}</span>
+            <span class="span-content">{{ internDetailForm.teacherCode }}</span>
           </div>
           <div class="dialog-content-item">
             <span class="span-title">处理人:</span>
@@ -406,17 +418,17 @@ export default {
       courseSearchForm: {
         selectedSchoolYear: '',
         selectedSemester: '',
-        userName: ''
+        selectedTeacherCode: ''
       },
       internSearchForm: {
         selectedSchoolYear: '',
         selectedSemester: '',
-        userName: ''
+        selectedTeacherCode: ''
       },
       paperSearchForm: {
         selectedSchoolYear: '',
         selectedSemester: '',
-        userName: ''
+        selectedTeacherCode: ''
       },
       schoolYearOptions: {},
       semesterOptions: [
@@ -462,9 +474,9 @@ export default {
     }
   },
   created() {
-    this.getCourseHoursModifyRecord()
-    this.getInternModifyRecord()
-    this.getPaperModifyRecord()
+    this.getCourseHoursModifyRecord({})
+    this.getInternModifyRecord({})
+    this.getPaperModifyRecord({})
   },
   methods: {
     modifyEdit: function(type, index) {
@@ -538,10 +550,8 @@ export default {
         }
       }
     },
-    getCourseHoursModifyRecord() {
-      const body = {
-        checkResult: [0]
-      }
+    getCourseHoursModifyRecord(body) {
+      body.checkResult = [0]
       getCourseHoursModifyRecord(body)
         .then(response => {
           const { data } = response
@@ -551,10 +561,8 @@ export default {
           console.log(error)
         })
     },
-    getPaperModifyRecord() {
-      const body = {
-        checkResult: [0]
-      }
+    getPaperModifyRecord(body) {
+      body.checkResult = [0]
       getPaperModifyRecord(body)
         .then(response => {
           const { data } = response
@@ -564,10 +572,8 @@ export default {
           console.log(error)
         })
     },
-    getInternModifyRecord() {
-      const body = {
-        checkResult: [0]
-      }
+    getInternModifyRecord(body) {
+      body.checkResult = [0]
       getInternModifyRecord(body)
         .then(response => {
           const { data } = response
@@ -603,6 +609,54 @@ export default {
     },
     internHandleCurrentChange() {
 
+    },
+    searchCourseHourModifyRecord() {
+      const param = {
+        pageNum: this.courseCurPageNum,
+        pageSize: this.coursePageSize
+      }
+      if (this.courseSearchForm.selectedSemester !== undefined && this.courseSearchForm.selectedSemester !== '') {
+        param.semester = this.courseSearchForm.selectedSemester
+      }
+      if (this.courseSearchForm.selectedSchoolYear !== undefined && this.courseSearchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.courseSearchForm.selectedSchoolYear
+      }
+      if (this.courseSearchForm.selectedTeacherCode !== undefined && this.courseSearchForm.selectedTeacherCode !== '') {
+        param.applyName = this.courseSearchForm.selectedTeacherCode
+      }
+      this.getCourseHoursModifyRecord(param)
+    },
+    searchPaperModifyRecord() {
+      const param = {
+        pageNum: this.paperCurPageNum,
+        pageSize: this.paperPageSize
+      }
+      if (this.paperSearchForm.selectedSemester !== undefined && this.paperSearchForm.selectedSemester !== '') {
+        param.semester = this.paperSearchForm.selectedSemester
+      }
+      if (this.paperSearchForm.selectedSchoolYear !== undefined && this.paperSearchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.paperSearchForm.selectedSchoolYear
+      }
+      if (this.paperSearchForm.selectedTeacherCode !== undefined && this.paperSearchForm.selectedTeacherCode !== '') {
+        param.applyName = this.paperSearchForm.selectedTeacherCode
+      }
+      this.getPaperModifyRecord(param)
+    },
+    searchInternModifyRecord() {
+      const param = {
+        pageNum: this.internCurPageNum,
+        pageSize: this.internPageSize
+      }
+      if (this.internSearchForm.selectedSemester !== undefined && this.internSearchForm.selectedSemester !== '') {
+        param.semester = this.internSearchForm.selectedSemester
+      }
+      if (this.internSearchForm.selectedSchoolYear !== undefined && this.internSearchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.internSearchForm.selectedSchoolYear
+      }
+      if (this.internSearchForm.selectedTeacherCode !== undefined && this.internSearchForm.selectedTeacherCode !== '') {
+        param.applyName = this.internSearchForm.selectedTeacherCode
+      }
+      this.getInternModifyRecord(param)
     }
   }
 }

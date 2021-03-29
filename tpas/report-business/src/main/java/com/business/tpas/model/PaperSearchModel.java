@@ -17,10 +17,19 @@ public class PaperSearchModel extends PageModel {
     private Long teacherId;
 
     /**
+     * 教师编码
+     */
+    @ApiModelProperty(value = "教师编码")
+    private Long teacherCode;
+
+    /**
      * 专业id
      */
     @ApiModelProperty(value = "专业id")
     private Long majorId;
+
+    @ApiModelProperty(value = "专业名称")
+    private Long majorName;
 
     /**
      * 学期
@@ -64,6 +73,22 @@ public class PaperSearchModel extends PageModel {
 
     public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
+    }
+
+    public Long getTeacherCode() {
+        return teacherCode;
+    }
+
+    public void setTeacherCode(Long teacherCode) {
+        this.teacherCode = teacherCode;
+    }
+
+    public Long getMajorName() {
+        return majorName;
+    }
+
+    public void setMajorName(Long majorName) {
+        this.majorName = majorName;
     }
 
     @Override

@@ -101,6 +101,12 @@ public class InternModifyRecordModel {
     @ApiModelProperty(value = "提出修改用户编码, teachar_id或者admin_id")
     private Long applyId;
 
+    @ApiModelProperty(value = "提出修改用户编码")
+    private Long teacherCode;
+
+    @ApiModelProperty(value = "提出修改用户名")
+    private Long applyName;
+
     /**
      * 处理的管理员编码
      */
@@ -300,6 +306,22 @@ public class InternModifyRecordModel {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getTeacherCode() {
+        return teacherCode;
+    }
+
+    public void setTeacherCode(Long teacherCode) {
+        this.teacherCode = teacherCode;
+    }
+
+    public Long getApplyName() {
+        return applyName;
+    }
+
+    public void setApplyName(Long applyName) {
+        this.applyName = applyName;
     }
 
     @Override

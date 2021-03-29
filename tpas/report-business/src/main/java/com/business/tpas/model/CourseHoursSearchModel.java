@@ -13,6 +13,9 @@ public class CourseHoursSearchModel extends PageModel {
     @ApiModelProperty(value = "教师id")
     private Long teacherId;
 
+    @ApiModelProperty(value = "教师编码")
+    private Long teacherCode;
+
     @ApiModelProperty(value = "课程名称")
     private String courseName;
 
@@ -52,6 +55,14 @@ public class CourseHoursSearchModel extends PageModel {
 
     public void setTeacherId(Long teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public Long getTeacherCode() {
+        return teacherCode;
+    }
+
+    public void setTeacherCode(Long teacherCode) {
+        this.teacherCode = teacherCode;
     }
 
     @Override

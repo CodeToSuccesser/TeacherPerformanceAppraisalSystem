@@ -58,6 +58,12 @@
             <if test="data.schoolYear != null and data.schoolYear != ''">
                 and p.school_year = #{data.schoolYear}
             </if>
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                and um.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.majorName != null and data.majorName != ''">
+                and m.major_name= "%"#{data.majorName}"%"
+            </if>
             and p.is_deleted = 0
         </where>
         order by p.create_time DESC

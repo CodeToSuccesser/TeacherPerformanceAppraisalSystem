@@ -25,6 +25,12 @@ public class CourseHoursModifyRecordSearchModel extends PageModel {
     @ApiModelProperty("申请状态")
     private List<Integer> checkResult;
 
+    @ApiModelProperty("学期")
+    private Integer semester;
+
+    @ApiModelProperty("学年")
+    private String schoolYear;
+
     public String getApplyName() {
         return applyName;
     }
@@ -56,4 +62,21 @@ public class CourseHoursModifyRecordSearchModel extends PageModel {
     public void setCheckResult(List<Integer> checkResult) {
         this.checkResult = checkResult;
     }
+
+    public Integer getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Integer semester) {
+        this.semester = semester;
+    }
+
+    public String getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+        this.schoolYear = schoolYear;
+    }
+
 }
