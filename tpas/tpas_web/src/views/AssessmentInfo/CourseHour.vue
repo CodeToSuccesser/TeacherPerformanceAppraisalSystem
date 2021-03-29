@@ -13,6 +13,8 @@
 
       <el-input v-model="searchForm.selectedStudentInstitute" placeholder="学生学院" clearable class="selector" style="width: 120px" />
 
+      <el-input v-model="searchForm.selectedTeacherCode" placeholder="教师编码" clearable class="selector" style="width: 120px" />
+
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
 
       <el-button v-if="permissionMap && permissionMap['importCourseHour-Button']" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
@@ -38,10 +40,14 @@
       <el-table-column :resizable="false" prop="studentsInstitute" sortable label="学生学院" align="center" />
       <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
       <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center">
-        {{ Number(courseHourInfo.semester) === 0 ? 1 : 2 }}
+        <template slot-scope="scope">
+          {{ Number(courseHourInfo[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+        </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="primarySecondary" sortable label="是否主讲" align="center">
-        {{ Number(courseHourInfo.primarySecondary) === 0 ? '主讲' : '辅讲' }}
+        <template slot-scope="scope">
+          {{ Number(courseHourInfo[scope.$index].primarySecondary) === 0 ? '主讲' : '辅讲' }}
+        </template>
       </el-table-column>
       <el-table-column :resizable="false" label="操作" align="center">
         <template slot-scope="scope">
@@ -65,6 +71,12 @@
 
     <el-dialog title="课时详情" :visible.sync="courseDetailVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="courseDetailForm">
+        <el-form-item label="教师编码" :label-width="formLabelWidth">
+          <el-input v-model="courseDetailForm.teacherCode" autocomplete="off" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="教师名称" :label-width="formLabelWidth">
+          <el-input v-model="courseDetailForm.teacherName" autocomplete="off" :disabled="true" />
+        </el-form-item>
         <el-form-item label="课程名称" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.courseName" autocomplete="off" :disabled="true" />
         </el-form-item>
@@ -81,15 +93,19 @@
           <el-input v-model="courseDetailForm.classed" autocomplete="off" :disabled="courseDetailEditDisable" />
         </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.primarySecondary" autocomplete="off" :disabled="true" />
+          <el-select v-model="courseDetailForm.primarySecondary" placeholder="是否主讲" :disabled="true">
+            <el-option label="是" value="0" />
+            <el-option label="否" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="周学时" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.weekHours" autocomplete="off" :disabled="true" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="courseDetailForm.semester" autocomplete="off" :disabled="true">
-            <span>{{ Number(courseDetailForm.semester) === 0 ? '1' : '2' }}</span>
-          </el-input>
+          <el-select v-model="courseDetailForm.semester" placeholder="学期" :disabled="true">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="courseDetailForm.schoolYear" autocomplete="off" :disabled="true" />
@@ -141,13 +157,19 @@
           <el-input v-model="applyCourseHourForm.studentInstitute" autocomplete="off" />
         </el-form-item>
         <el-form-item label="是否主讲" :label-width="formLabelWidth">
-          <el-input v-model="applyCourseHourForm.primarySecondary" autocomplete="off" />
+          <el-select v-model="applyCourseHourForm.primarySecondary" placeholder="是否主讲">
+            <el-option label="是" value="0" />
+            <el-option label="否" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="周学时" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.weekHours" autocomplete="off" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="applyCourseHourForm.semester" autocomplete="off" />
+          <el-select v-model="applyCourseHourForm.semester" placeholder="学期">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="applyCourseHourForm.schoolYear" autocomplete="off" />
@@ -229,7 +251,8 @@ export default {
         selectedSchoolYear: '',
         selectedSemester: '',
         selectedCourseName: '',
-        selectedStudentInstitute: ''
+        selectedStudentInstitute: '',
+        selectedTeacherCode: ''
       },
       courseHourInfo: [],
       schoolYearOptions: {},
@@ -316,7 +339,9 @@ export default {
     courseDetailEdit: function(scope) {
       this.courseDetailEditDisable = false
       this.courseDetailVisible = true
-      this.courseDetailForm = this.courseHourInfo[scope.$index]
+      this.courseDetailForm = JSON.parse(JSON.stringify(this.courseHourInfo[scope.$index]))
+      this.courseDetailForm.primarySecondary = String(this.courseDetailForm.primarySecondary)
+      this.courseDetailForm.semester = String(this.courseDetailForm.semester)
     },
     getCourseHours: function(body) {
       // if (!this.isAdmin) {
@@ -365,9 +390,10 @@ export default {
         })
     },
     showDetail: function(scope) {
-      this.courseDetailForm = this.courseHourInfo[scope.$index]
+      // 数组元素深拷贝
+      this.courseDetailForm = JSON.parse(JSON.stringify(this.courseHourInfo[scope.$index]))
       // 转换显示
-      this.courseDetailForm.semester = Number(this.courseDetailForm.semester) === 0 ? 1 : 2
+      this.courseDetailForm.semester = String(this.courseDetailForm.semester)
       this.courseDetailForm.primarySecondary = Number(this.courseDetailForm.primarySecondary) === 0 ? '主讲' : '辅讲'
       this.courseDetailVisible = true
     },
@@ -401,14 +427,20 @@ export default {
         pageNum: this.curPageNum,
         pageSize: this.pageSize
       }
-      if (this.searchForm.selectedCourseName && this.searchForm.selectedCourseName !== '') {
+      if (this.searchForm.selectedCourseName !== undefined && this.searchForm.selectedCourseName !== '') {
         param.courseName = this.searchForm.selectedCourseName
       }
-      if (this.searchForm.selectedStudentInstitute && this.searchForm.selectedStudentInstitute !== '') {
+      if (this.searchForm.selectedStudentInstitute !== undefined && this.searchForm.selectedStudentInstitute !== '') {
         param.studentInstitute = this.searchForm.selectedStudentInstitute
       }
-      if (this.searchForm.selectedSemester && this.searchForm.selectedSemester !== '') {
+      if (this.searchForm.selectedSemester !== undefined && this.searchForm.selectedSemester !== '') {
         param.semester = this.searchForm.selectedSemester
+      }
+      if (this.searchForm.selectedSchoolYear !== undefined && this.searchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.searchForm.selectedSchoolYear
+      }
+      if (this.searchForm.selectedTeacherCode !== undefined && this.searchForm.selectedTeacherCode !== '') {
+        param.teacherCode = this.searchForm.selectedTeacherCode
       }
       this.getCourseHours(param)
     },
@@ -516,11 +548,13 @@ export default {
 
   .selector-first {
     margin-bottom: 20px;
+    width: 120px;
   }
 
   .selector {
     margin-left: 10px;
     margin-bottom: 20px;
+    width: 120px;
   }
 
   .button-find {

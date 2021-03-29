@@ -1,15 +1,17 @@
 <template>
   <div class="dashboard-container">
     <el-form ref="form" :model="searchForm">
-      <el-select v-model="searchForm.selectedSchoolYear" placeholder="年度" class="selector-first">
+      <el-select v-model="searchForm.selectedSchoolYear" placeholder="年度" clearable class="selector-first">
         <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
       </el-select>
 
-      <el-select v-model="searchForm.selectedSemester" placeholder="学期" class="selector">
+      <el-select v-model="searchForm.selectedSemester" placeholder="学期" clearable class="selector">
         <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
       </el-select>
 
-      <el-button type="primary" size="small" class="button-find">查找</el-button>
+      <el-input v-model="searchForm.selectedTeacherCode" placeholder="教师编码" clearable class="selector" style="width: 120px" />
+
+      <el-button type="primary" size="small" class="button-find" @click="searchIntern">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">新增</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
@@ -24,10 +26,15 @@
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="teacherName" sortable label="教师姓名" align="center" />
+      <el-table-column :resizable="false" prop="teacherCode" sortable label="教师编码" align="center" />
       <el-table-column :resizable="false" prop="normalPractice" sortable label="师范实习带队人数" align="center" />
       <el-table-column :resizable="false" prop="nonNormalPractice" sortable label="非师范实习带队人数" align="center" />
       <el-table-column :resizable="false" prop="schoolPractice" sortable label="校内实习带队人数" align="center" />
-      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center" />
+      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center">
+        <template slot-scope="scope">
+          {{ Number(internInfo[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+        </template>
+      </el-table-column>
       <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
       <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center" />
       <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center" />
@@ -62,7 +69,10 @@
           <el-input v-model="internForm.schoolPractice" autocomplete="off" :disabled="internEditDisable" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="internForm.semester" autocomplete="off" :disabled="internEditDisable" />
+          <el-select v-model="internForm.semester" placeholder="学期" :disabled="internEditDisable">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="internForm.schoolYear" autocomplete="off" :disabled="internEditDisable" />
@@ -92,7 +102,10 @@
           <el-input v-model="applyInternForm.schoolPractice" autocomplete="off" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="applyInternForm.semester" autocomplete="off" />
+          <el-select v-model="applyInternForm.semester" placeholder="学期">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="applyInternForm.schoolYear" autocomplete="off" />
@@ -167,7 +180,8 @@ export default {
       importInternForm: {},
       searchForm: {
         selectedSchoolYear: '',
-        selectedSemester: ''
+        selectedSemester: '',
+        selectedTeacherCode: ''
       },
       schoolYearOptions: '',
       semesterOptions: [
@@ -218,7 +232,9 @@ export default {
     internEdit: function(scope) {
       this.internEditDisable = false
       this.internDialogVisible = true
-      this.internForm = this.internInfo[scope.$index]
+      this.internForm = JSON.parse(JSON.stringify(this.internInfo[scope.$index]))
+      // 转换显示
+      this.internForm.semester = String(this.internForm.semester)
     },
     internEditEnsure: function() {
       this.internDialogVisible = false
@@ -378,12 +394,28 @@ export default {
         .then(response => {
           hideFullScreenLoading()
           this.$message.success('新增成功')
-          location.reload();
+          location.reload()
         })
         .catch(error => {
           console.log(error)
           hideFullScreenLoading()
         })
+    },
+    searchIntern() {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
+      if (this.searchForm.selectedSemester !== undefined && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      if (this.searchForm.selectedSchoolYear !== undefined && this.searchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.searchForm.selectedSchoolYear
+      }
+      if (this.searchForm.selectedTeacherCode !== undefined && this.searchForm.selectedTeacherCode !== '') {
+        param.teacherCode = this.searchForm.selectedTeacherCode
+      }
+      this.getInternInfo(param)
     }
   }
 }

@@ -1,17 +1,19 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="searchForm">
-      <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" class="selector-first">
+      <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" clearable class="selector-first">
         <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
-      <el-select v-model="searchForm.selectedSemester" placeholder="学期" class="selector">
+      <el-select v-model="searchForm.selectedSemester" placeholder="学期" clearable class="selector">
         <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
       </el-select>
 
       <el-input v-model="searchForm.selectedMajorName" placeholder="专业名称" clearable class="selector" style="width: 120px" />
 
-      <el-button type="primary" size="small" class="button-find">查找</el-button>
+      <el-input v-model="searchForm.selectedTeacherCode" placeholder="教师编码" clearable class="selector" style="width: 120px" />
+
+      <el-button type="primary" size="small" class="button-find" @click="searchPaper">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">新增</el-button>
       <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
@@ -25,10 +27,16 @@
           <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
+      <el-table-column :resizable="false" prop="teacherName" sortable label="教师姓名" align="center" />
+      <el-table-column :resizable="false" prop="teacherCode" sortable label="教师编码" align="center" />
       <el-table-column :resizable="false" prop="majorName" sortable label="专业名称" align="center" />
       <el-table-column :resizable="false" prop="studentNumber" sortable label="学生人数" align="center" />
       <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
-      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center" />
+      <el-table-column :resizable="false" prop="semester" sortable label="学期" align="center">
+        <template slot-scope="scope">
+          {{ Number(paperInfo[scope.$index].semester) === 0 ? '第一学期' : '第二学期' }}
+        </template>
+      </el-table-column>
       <el-table-column :resizable="false" prop="remark" sortable label="备注" align="center" />
       <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" align="center" />
       <el-table-column :resizable="false" label="操作" align="center">
@@ -59,7 +67,10 @@
           <el-input v-model="paperForm.studentNumber" autocomplete="off" :disabled="paperEditDisable" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="paperForm.semester" autocomplete="off" :disabled="paperEditDisable" />
+          <el-select v-model="paperForm.semester" placeholder="学期" :disabled="paperEditDisable">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="paperForm.schoolYear" autocomplete="off" :disabled="paperEditDisable" />
@@ -89,8 +100,10 @@
           <el-input v-model="applyPaperForm.studentNumber" autocomplete="off" />
         </el-form-item>
         <el-form-item label="学期" :label-width="formLabelWidth">
-          <el-input v-model="applyPaperForm.semester" autocomplete="off" />
-        </el-form-item>
+          <el-select v-model="applyPaperForm.semester" placeholder="学期">
+            <el-option label="第一学期" value="0" />
+            <el-option label="第二学期" value="1" />
+          </el-select>        </el-form-item>
         <el-form-item label="学年" :label-width="formLabelWidth">
           <el-input v-model="applyPaperForm.schoolYear" autocomplete="off" />
         </el-form-item>
@@ -165,7 +178,8 @@ export default {
       searchForm: {
         selectedSemester: '',
         selectedSchoolYear: '',
-        selectedMajorName: ''
+        selectedMajorName: '',
+        selectedTeacherCode: ''
       },
       schoolYearOptions: {},
       semesterOptions: [
@@ -218,7 +232,8 @@ export default {
     paperEdit: function(scope) {
       this.paperEditDisable = false
       this.paperDialogVisible = true
-      this.paperForm = this.paperInfo[scope.$index]
+      this.paperForm = JSON.parse(JSON.stringify(this.paperInfo[scope.$index]))
+      this.paperForm.semester = String(this.paperForm.semester)
     },
     paperEditCancel: function() {
       this.paperDialogVisible = false
@@ -379,6 +394,25 @@ export default {
           console.log(error)
           hideFullScreenLoading()
         })
+    },
+    searchPaper() {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
+      if (this.searchForm.selectedSemester !== undefined && this.searchForm.selectedSemester !== '') {
+        param.semester = this.searchForm.selectedSemester
+      }
+      if (this.searchForm.selectedSchoolYear !== undefined && this.searchForm.selectedSchoolYear !== '') {
+        param.schoolYear = this.searchForm.selectedSchoolYear
+      }
+      if (this.searchForm.selectedTeacherCode !== undefined && this.searchForm.selectedTeacherCode !== '') {
+        param.teacherCode = this.searchForm.selectedTeacherCode
+      }
+      if (this.searchForm.selectedMajorName !== undefined && this.searchForm.selectedMajorName !== '') {
+        param.majorName = this.searchForm.selectedMajorName
+      }
+      this.getPaperInfo(param)
     }
   }
 }
