@@ -67,7 +67,7 @@ upload:
     # 模板文件
     sample: ./sample
     # 图片，如头像
-    image: ./image
+    image: /image
 
 #默认支持文件上传。
 spring.http.multipart.enabled: true

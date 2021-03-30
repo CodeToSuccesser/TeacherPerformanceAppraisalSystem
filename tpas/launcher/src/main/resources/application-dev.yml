@@ -67,6 +67,6 @@ upload:
     # 模板文件
     sample: ./sample
     # 图片，如头像
-    image: ./image
+    image: /image
 
 # 时间格式配置

@@ -74,11 +74,12 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
             registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         }
         // 图片访问
-        File filePath = new File(System.getProperty("user.dir"), fileConfig.baseFilePath);
+        File filePath = new File(System.getProperty("user.dir"), fileConfig.baseFilePath.concat(fileConfig.imageFileMenu));
         if (filePath.exists() && filePath.isDirectory()) {
-            String pathPatterns = fileConfig.baseFilePath.concat(File.separator).concat("**");
+            String pathPatterns = fileConfig.baseFilePath.concat(fileConfig.imageFileMenu).concat(File.separator).concat("**");
             String localPath = "file://".concat(System.getProperty("user.dir"))
                     .concat(fileConfig.baseFilePath)
+                    .concat(fileConfig.imageFileMenu)
                     .concat(File.separator);
             registry.addResourceHandler(pathPatterns)
                     .addResourceLocations(localPath);

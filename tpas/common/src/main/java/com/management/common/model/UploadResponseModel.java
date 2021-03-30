@@ -1,4 +1,4 @@
-package com.business.tpas.model;
+package com.management.common.model;
 
 import io.swagger.annotations.ApiModel;
 

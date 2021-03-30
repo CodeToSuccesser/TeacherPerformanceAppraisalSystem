@@ -27,7 +27,7 @@ public interface SystemRoleMapper extends BaseMapper<SystemRole> {
 
     void updateModel(@Param("data") SystemRoleModel model);
 
-    int countMenusByName(@Param("data") List<String> nameList);
+    int countRolesByName(@Param("data") List<String> nameList);
 
     List<SystemRoleModel> getRoleByNameList(@Param("data") List<String> nameList);
 

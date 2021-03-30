@@ -11,14 +11,26 @@
         <result column="contact" property="contact" />
         <result column="portrait" property="portrait" />
         <result column="roles_name" property="rolesName" />
+        <result column="admin_id" property="adminId" />
         <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.management.tpas.model.UserMsgModel">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName" />
+        <result column="log_name" property="logName" />
+        <result column="contact" property="contact" />
+        <result column="portrait" property="portrait" />
+        <result column="roles_name" property="rolesName" />
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_name, log_name, log_password, contact, portrait, roles_name, is_deleted, update_time, create_time
+        id, user_name, log_name, log_password, contact, portrait, roles_name, admin_id, is_deleted, update_time, create_time
     </sql>
 
     <select id="selectByLogName" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -40,6 +52,9 @@
             <if test="data.portrait != null and data.portrait != ''">
                 , portrait = #{data.portrait}
             </if>
+            <if test="adminId != null">
+                , admin_id = #{adminId}
+            </if>
         </set>
         where log_name = #{data.logName} and is_deleted = 0
     </update>
@@ -50,4 +65,59 @@
         WHERE is_deleted = 0
     </select>
 
+    <select id="queryUserInfo" resultMap="ModelResultMap">
+        SELECT id, user_name, log_name, contact, portrait, roles_name, update_time, create_time
+        FROM user_msg
+        <where>
+            <if test="data.id != null">
+                AND id = #{data.id}
+            </if>
+            <if test="data.userName != null and data.userName != ''">
+                AND user_name = #{data.userName}
+            </if>
+            <if test="data.logName != null and data.logName != ''">
+                AND log_name = #{data.logName}
+            </if>
+            <if test="1==1">
+                AND is_deleted = 0
+            </if>
+        </where>
+    </select>
+
+    <update id="deleteUser">
+        UPDATE user_msg
+        SET is_deleted = 1
+        , admin_id = #{adminId}
+        <where>
+            log_name IN
+            <foreach collection="data" separator="," open="(" close=")" index="index" item="item">
+                #{item}
+            </foreach>
+            AND is_deleted = 0
+        </where>
+    </update>
+
+    <update id="resetUserPassword">
+        UPDATE user_msg
+        SET log_password = #{password}
+        , admin_id = #{adminId}
+        <where>
+            log_name IN
+            <foreach collection="data" separator="," open="(" close=")" index="index" item="item">
+                #{item}
+            </foreach>
+            AND is_deleted = 0
+        </where>
+    </update>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        INSERT INTO user_msg(user_name, log_name, contact, roles_name, admin_id)VALUES
+        <foreach collection="data" item="item" index="index" separator=",">
+            (#{item.userName}, #{item.logName}, #{item.contact}, #{item.rolesName}, #{adminId})
+        </foreach>
+        ON DUPLICATE KEY UPDATE user_name = VALUES(user_name)
+        , roles_name = VALUES(roles_name)
+        , contact = VALUES(contact)
+        , is_deleted = 0
+    </insert>
 </mapper>

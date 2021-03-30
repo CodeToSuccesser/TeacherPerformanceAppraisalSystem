@@ -25,7 +25,7 @@ public class UserMsg implements Serializable {
     @JsonSerialize(using = com.fasterxml.jackson.databind.ser.std.ToStringSerializer.class)
     private Long id = 0L;
 
-    @ApiModelProperty(value = "管理员姓名")
+    @ApiModelProperty(value = "用户姓名")
     private String userName = "";
 
     @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
@@ -42,6 +42,9 @@ public class UserMsg implements Serializable {
 
     @ApiModelProperty(value = "用户角色，用逗号拼接，如：role1,role2")
     private String rolesName = "";
+
+    @ApiModelProperty(value = "管理员id")
+    private Long adminId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "数据最新操作时间")

@@ -16,11 +16,15 @@ import com.management.tpas.service.SystemPermissionService;
 import com.management.tpas.service.SystemRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.management.common.config.GlobalConst.SYSTEM_ROLE_KEY;
 
 /**
  * @author dude
@@ -47,8 +51,8 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
     @Autowired
     private SystemPermissionService systemPermissionService;
 
-    @Autowired
-    private SystemMenuService systemMenuService;
+    @Resource
+    private RedisTemplate<String, List<SystemRoleModel>> redisTemplate;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,7 +81,14 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
     @Override
     @Transactional(readOnly = true)
     public List<SystemRoleModel> getRoles() {
-        return systemRoleMapper.getRoles(new RoleSearchModel());
+        List<SystemRoleModel> data;
+        if (redisTemplate.hasKey(SYSTEM_ROLE_KEY) == Boolean.TRUE) {
+            data = redisTemplate.opsForValue().get(SYSTEM_ROLE_KEY);
+        } else {
+            data = systemRoleMapper.getRoles(new RoleSearchModel());
+            redisTemplate.opsForValue().set(SYSTEM_ROLE_KEY, data);
+        }
+        return data;
     }
 
     @Override
@@ -144,6 +155,9 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
             }
             systemRoleMapper.updateModel(roleModel);
         }
+        if (redisTemplate.hasKey(SYSTEM_ROLE_KEY) == Boolean.TRUE) {
+            redisTemplate.delete(SYSTEM_ROLE_KEY);
+        }
     }
 
     @Override
@@ -167,6 +181,9 @@ public class SystemRoleImpl extends BaseServiceImpl<SystemRoleMapper, SystemRole
         } while (userMsgs.size()>0);
         refMapper.deleteByKeysAndRoleName(null, roleModel.getName());
         systemRoleMapper.deletedModel(roleModel);
+        if (redisTemplate.hasKey(SYSTEM_ROLE_KEY) == Boolean.TRUE) {
+            redisTemplate.delete(SYSTEM_ROLE_KEY);
+        }
     }
 
 

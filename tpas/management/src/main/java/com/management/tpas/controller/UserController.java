@@ -1,10 +1,19 @@
 package com.management.tpas.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.github.pagehelper.PageInfo;
+import com.management.common.config.FileConfig;
+import com.management.common.constant.Constant;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
+import com.management.common.model.UploadResponseModel;
+import com.management.common.utils.FileUtil;
+import com.management.tpas.listener.UserMsgUploadListener;
 import com.management.tpas.model.*;
-import com.management.tpas.service.impl.UserMsgServiceImpl;
+import com.management.tpas.service.SystemRoleService;
+import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.UserUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,11 +23,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author dude
@@ -35,7 +48,16 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private UserMsgServiceImpl userMsgService;
+    private UserMsgService userMsgService;
+
+    @Autowired
+    private SystemRoleService roleService;
+
+    private static final String fileName = "用户管理模板文件.xlsx";
+
+
+    @Autowired
+    private FileConfig fileConfig;
 
     /**
      * @param loginMsgModel 登录信息
@@ -58,24 +80,23 @@ public class UserController {
     }
 
     /**
-     * @param registerMsgModel:用户姓名、登录名、密码、用户类型
-     * @Description 插入一条用户
+     * @param model: 用户姓名、登录名、密码、用户类型
+     * @Description 新增/编辑一条用户
      * @Return BaseResponse<?>
      * @Author peihua.wu
      * @Date 2020/8/16
      **/
-    @PostMapping("/insertUser")
-    @ApiOperation("插入一条用户")
+    @PostMapping("/editUserInfo")
+    @ApiOperation("新增/编辑一条用户")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
-    public BaseResponse<?> insertUser(@RequestBody RegisterMsgModel registerMsgModel) {
-        // 插入新数据
-        UserMsgModel userMsgModel = userMsgService.insertUserMsg(registerMsgModel);
-        if(userMsgModel == null) {
-            logger.warn("用户登录名未存在，插入后查询失败异常");
-            throw new BusinessException(ErrorCodeEnum.SYSTEM_BUSING);
+    public BaseResponse<?> editUserInfo(@RequestBody UserMsgModel model) {
+        if (model == null || StringUtils.isBlank(model.getLogName()) || StringUtils.isBlank(model.getUserName())) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
         }
-        return new BaseResponse<>(userMsgModel);
+        // 插入新数据
+        userMsgService.editUserInfo(model);
+        return new BaseResponse<>();
     }
 
     @PostMapping("/modifyUserInfo")
@@ -98,4 +119,98 @@ public class UserController {
         return new BaseResponse<>(userMsgService.updateUserMsg(model, file));
     }
 
+    @PostMapping("/queryUserInfo")
+    @ApiOperation(value = "查询用户列表", notes = "用户管理列表")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> queryUserInfo(@RequestBody UserInfoSearchModel searchModel) {
+        if (searchModel == null) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        PageInfo<UserMsgModel> data = userMsgService.queryUserInfo(searchModel);
+        return new BaseResponse<>(data);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    @PostMapping("/deleteUser")
+    @ApiOperation("删除用户")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> deleteUser(@RequestBody List<String> logNameList) {
+        if (logNameList == null || logNameList.isEmpty()) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        return new BaseResponse<>(userMsgService.deleteUser(logNameList));
+    }
+
+    @PostMapping("/resetPassword")
+    @ApiOperation("重设密码，重设为123456")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> resetPassword(@RequestBody List<String> logNameList) {
+        if (logNameList == null || logNameList.isEmpty()) {
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        return new BaseResponse<>(userMsgService.resetUserPassword(logNameList));
+    }
+
+    @PostMapping("/import")
+    @ApiOperation("导入用户信息文件")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> uploadUserInfo(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            logger.error("upload file is empty");
+            throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY.code, "上传文件为空");
+        }
+        final UserMsgUploadListener userMsgUploadListener =
+                new UserMsgUploadListener(userMsgService, roleService);
+        try {
+            EasyExcel.read(file.getInputStream(), RegisterMsgModel.class, userMsgUploadListener).sheet().doRead();
+        } catch (IOException e) {
+            logger.error("fail to upload course hours file");
+            throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg, e);
+        }
+
+        Integer successCount = userMsgUploadListener.getSuccessCount();
+        List<RegisterMsgModel> rejectList = userMsgUploadListener.getRejectInsertList();
+        Integer failCount = rejectList.size();
+
+        return new BaseResponse<>(new UploadResponseModel<>(rejectList, successCount, failCount,
+                successCount + failCount));
+    }
+
+    @ApiOperation(value = "下载用户信息模板", notes = "下载用户信息模板")
+    @GetMapping("/download/template")
+    public void downloadTemplate(HttpServletResponse response) {
+        try {
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("Content-Disposition",
+                    "attachment;filename=" + URLEncoder.encode(fileName, Constant.EASYEXCEL_ENCODING));
+            FileUtil.downloadFileByPath(response, fileConfig.SampleFileMenu + "/" + fileName,
+                    Constant.EASYEXCEL_CONTENT_TYPE, headerMap);
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCodeEnum.EXCEPTION.code, ErrorCodeEnum.EXCEPTION.msg, e);
+        }
+    }
+
+    @ApiOperation(value = "导出用户信息文件", notes = "导出用户信息文件")
+    @PostMapping("/export")
+    public void exportCourseInfo(HttpServletResponse response, @RequestBody UserInfoSearchModel searchModel)
+            throws IOException {
+        List<UserMsgModel> userModelList = userMsgService.getUserModelList(searchModel);
+
+        response.setContentType(Constant.EASYEXCEL_CONTENT_TYPE);
+        response.setCharacterEncoding(Constant.EASYEXCEL_ENCODING);
+        String fileName = URLEncoder.encode("用户信息导出文件", Constant.EASYEXCEL_ENCODING);
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), UserMsgModel.class).sheet("课时信息")
+                // 设置字段宽度为自动调整
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).doWrite(userModelList);
+    }
 }

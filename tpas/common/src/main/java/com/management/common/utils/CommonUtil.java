@@ -31,8 +31,7 @@ public class CommonUtil {
         if (StringUtils.isBlank(data)) {
             return Collections.emptyList();
         }
-        return Arrays.stream(data.replaceAll(" ", "")
-                .split(regex))
+        return Arrays.stream(data.split(regex))
                 .map(String::trim)
                 .filter(it -> !StringUtils.isBlank(it))
                 .distinct()

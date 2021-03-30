@@ -45,6 +45,11 @@ public class GlobalConst {
     public static final String SYSTEM_PERMISSIONS_KEY = "TPAS::SYSTEM_PERMISSION_LIST";
 
     /**
+     *  系统角色redis key
+     **/
+    public static final String SYSTEM_ROLE_KEY = "TPAS::SYSTEM_ROLE_LIST";
+
+    /**
      * 文件传输请求content-type
      *
      * @author dude
@@ -68,4 +73,11 @@ public class GlobalConst {
      **/
     public static final Pattern PASSWORD_FORMAT = Pattern.compile("(?=.*([a-zA-Z].*))(?=.*[0-9].*)[a-zA-Z0-9-*/+.~!@#$%^&*()]{6,20}$");
 
+    /**
+     * 默认密码
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    public static final String DEFAULT_PASSWORD = "123456";
 }

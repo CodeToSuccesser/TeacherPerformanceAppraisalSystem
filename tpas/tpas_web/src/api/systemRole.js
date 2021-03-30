@@ -31,3 +31,11 @@ export function deleteRole(data) {
     data
   })
 }
+
+export function getAllRole() {
+  return request({
+    url: 'permission/getAllRoles',
+    method: 'post',
+    data: {}
+  })
+}

@@ -75,7 +75,7 @@
         WHERE id = #{data.id}
     </update>
 
-    <select id="countMenusByName" resultType="java.lang.Integer">
+    <select id="countRolesByName" resultType="java.lang.Integer">
         SELECT count(*)
         FROM system_role
         WHERE `name` IN

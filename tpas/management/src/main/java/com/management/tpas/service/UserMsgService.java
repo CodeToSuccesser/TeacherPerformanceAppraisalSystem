@@ -1,11 +1,16 @@
 package com.management.tpas.service;
 
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
+import com.management.common.model.UploadResponseModel;
 import com.management.tpas.entity.UserMsg;
 import com.management.tpas.model.LoginMsgModel;
 import com.management.tpas.model.RegisterMsgModel;
+import com.management.tpas.model.UserInfoSearchModel;
 import com.management.tpas.model.UserMsgModel;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author dude
@@ -35,13 +40,11 @@ public interface UserMsgService extends BaseService<UserMsg> {
 
     /**
      * @description 插入一条教师信息
-     * @param registerMsgModel 注册信息
-     * @return com.management.tpas.model.UserMsgModel
      *
      * @author dude
      * @date 2021/2/10
      **/
-    UserMsgModel insertUserMsg(RegisterMsgModel registerMsgModel);
+    void editUserInfo(UserMsgModel model);
 
     /**
      * @param model 修改信息
@@ -52,4 +55,46 @@ public interface UserMsgService extends BaseService<UserMsg> {
      * @date 2021/2/9
      **/
     UserMsgModel updateUserMsg(RegisterMsgModel model, MultipartFile file);
+
+    /**
+     * 获取用户列表
+     * @param searchModel 查询参数
+     * @return com.github.pagehelper.PageInfo<com.management.tpas.model.UserMsgModel>
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    PageInfo<UserMsgModel> queryUserInfo(UserInfoSearchModel searchModel);
+
+    /**
+     * 删除用户信息
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    UploadResponseModel<String> deleteUser(List<String> logNameList);
+
+    /**
+     * 重设密码为123qwe
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    UploadResponseModel<String> resetUserPassword(List<String> logNameList);
+
+    /**
+     * 插入用户数据
+     *
+     * @author dude
+     * @date 2021/3/29
+     **/
+    void insertBatchUserMsg(List<UserMsg> userMsgList);
+
+    /**
+     * 查询用户信息，用于数据导出
+     *
+     * @author dude
+     * @date 2021/3/30
+     **/
+    List<UserMsgModel> getUserModelList(UserInfoSearchModel searchModel);
 }

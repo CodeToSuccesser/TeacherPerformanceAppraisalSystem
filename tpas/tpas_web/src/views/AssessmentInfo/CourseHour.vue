@@ -288,7 +288,8 @@ export default {
       },
       formLabelWidth: '120px',
       isAdmin: false,
-      fileList: []
+      fileList: [],
+      permissionMap: {}
     }
   },
   created() {

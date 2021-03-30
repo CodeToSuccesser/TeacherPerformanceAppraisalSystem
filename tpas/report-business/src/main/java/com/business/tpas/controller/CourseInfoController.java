@@ -2,7 +2,7 @@ package com.business.tpas.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.business.tpas.constant.Constant;
+import com.management.common.constant.Constant;
 import com.business.tpas.enums.CourseCharacterEnum;
 import com.business.tpas.enums.CourseTypeEnum;
 import com.business.tpas.enums.IsBilingualEnum;
@@ -10,7 +10,7 @@ import com.business.tpas.enums.StudentTypeEnum;
 import com.business.tpas.listener.CourseBaseUploadListener;
 import com.business.tpas.model.CourseBaseModel;
 import com.business.tpas.model.CourseInfoSearchModel;
-import com.business.tpas.model.UploadResponseModel;
+import com.management.common.model.UploadResponseModel;
 import com.business.tpas.service.CourseBaseService;
 import com.github.pagehelper.PageInfo;
 import com.management.common.config.FileConfig;

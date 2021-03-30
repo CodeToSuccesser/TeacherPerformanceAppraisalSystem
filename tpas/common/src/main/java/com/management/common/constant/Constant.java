@@ -1,4 +1,4 @@
-package com.business.tpas.constant;
+package com.management.common.constant;
 
 /**
  * @classname Constant

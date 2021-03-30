@@ -2,7 +2,7 @@ package com.business.tpas.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.business.tpas.constant.Constant;
+import com.management.common.constant.Constant;
 import com.business.tpas.enums.SemesterEnum;
 import com.business.tpas.listener.InternUploadListener;
 import com.business.tpas.model.*;
@@ -13,6 +13,7 @@ import com.management.common.config.FileConfig;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.model.BaseResponse;
+import com.management.common.model.UploadResponseModel;
 import com.management.common.utils.FileUtil;
 import com.management.tpas.service.UserMsgService;
 import io.swagger.annotations.Api;

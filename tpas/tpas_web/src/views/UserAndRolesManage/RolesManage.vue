@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-input
       v-model="searchData.name"
-      placeholder="输入用户名"
+      placeholder="输入角色名"
       clearable
       class="input-username"
     />
@@ -12,11 +12,7 @@
     <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editRole(null)">新增</el-button>
 
     <el-table :data="roleList" stripe style="width: 100% " :border="true" fit>
-      <el-table-column :resizable="false" prop="id" sortable label="序号" align="center">
-        <template slot-scope="scope">
-          <span>{{ (pageSize - 1) * (curPageNum - 1) + scope.$index + 1 }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column :resizable="false" prop="id" sortable label="编码" align="center"/>
       <el-table-column :resizable="false" prop="name" label="角色名称" align="center"/>
       <el-table-column :resizable="false" label="菜单权限" align="center">
         <template slot-scope="props">
@@ -26,7 +22,7 @@
             :data="getRowMenuTree(props.row.menusValue, props.row.permissionKeys)"
             :check-strictly="true"
             node-key="value"
-            :props="defaultProps"/>
+            :props="defaultProps" />
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="remark" label="备注" align="center"/>

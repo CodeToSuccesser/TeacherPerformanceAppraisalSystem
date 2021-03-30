@@ -1,10 +1,13 @@
 package com.management.tpas.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.config.FileConfig;
 import com.management.common.config.GlobalConst;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
+import com.management.common.model.UploadResponseModel;
 import com.management.common.utils.BeanMapper;
 import com.management.common.utils.CommonUtil;
 import com.management.common.utils.FileUtil;
@@ -15,6 +18,7 @@ import com.management.tpas.entity.*;
 import com.management.tpas.model.*;
 import com.management.tpas.service.UserMsgService;
 import com.management.tpas.utils.JwtUtil;
+import com.management.tpas.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,6 +31,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.management.common.config.GlobalConst.DEFAULT_PASSWORD;
 import static com.management.common.config.GlobalConst.PASSWORD_FORMAT;
 
 /**
@@ -101,28 +106,24 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserMsgModel insertUserMsg(RegisterMsgModel registerMsgModel) {
+    public void editUserInfo(UserMsgModel model) {
         //插入前先检查是否存在相同的登录名
-        if (userMsgMapper.selectByLogName(registerMsgModel.getLogName()) != null) {
+        UserMsg userMsg = userMsgMapper.selectByLogName(model.getLogName());
+        // 校验登录名是否占用
+        if ((userMsg != null && model.getId() == null)
+                || (userMsg != null && !model.getId().equals(userMsg.getId()))) {
             throw new BusinessException(ErrorCodeEnum.DUPLICATE_OBJECT_EXIST);
         }
         // 校验role
-        List<String> roleNames = CommonUtil.parseStringList(registerMsgModel.getRolesName(), ",");
+        List<String> roleNames = CommonUtil.parseStringList(model.getRolesName(), ",");
         if (!roleNames.isEmpty()) {
-            int count = roleMapper.countMenusByName(roleNames);
+            int count = roleMapper.countRolesByName(roleNames);
             if(count != roleNames.size()) {
                 throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
             }
         }
-        UserMsg userMsg = BeanMapper.map(registerMsgModel, UserMsg.class);
-        userMsg.setUserName(registerMsgModel.getRegisterName());
-        userMsg.setRolesName(registerMsgModel.getRolesName());
-        userMsg.setLogPassword(registerMsgModel.getPassword());
-        userMsgMapper.insert(userMsg);
-        UserMsgModel userMsgModel = BeanMapper.map(userMsgMapper.selectByLogName(registerMsgModel.getLogName()), UserMsgModel.class);
-
-        //userMsgModel.setUserType(Integer.parseInt(userMsgModel.getRolesName().split(",")[0]));
-        return userMsgModel;
+        UserMsg editMsg = BeanMapper.map(model, UserMsg.class);
+        userMsgMapper.saveBatch(Collections.singletonList(editMsg), UserUtil.getUserId());
     }
 
     @Override
@@ -135,7 +136,9 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
         // 上传新头像
         if (file != null) {
             String newFileName = model.getLogName() + "_" + (new Date().getTime());
-            model.setPortrait(new FileUtil().UploadPortrait(file, fileConfig.baseFilePath, newFileName, fileConfig.imageWeight, fileConfig.imageHeight));
+            model.setPortrait(new FileUtil().UploadPortrait(file,
+                    fileConfig.baseFilePath.concat(fileConfig.imageFileMenu),
+                    newFileName, fileConfig.imageWeight, fileConfig.imageHeight));
         }
         // 校验密码格式
         if (StringUtils.isNotBlank(model.getPassword())) {
@@ -143,7 +146,7 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
                 throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
             }
         }
-        userMsgMapper.updateByLogName(model);
+        userMsgMapper.updateByLogName(model, UserUtil.getUserId());
         UserMsgModel userMsgModel = BeanMapper.map(userMsgMapper.selectByLogName(model.getLogName()), UserMsgModel.class);
         return userMsgModel;
     }
@@ -219,5 +222,48 @@ public class UserMsgServiceImpl extends BaseServiceImpl<UserMsgMapper, UserMsg> 
             childrenMenu.add(childMenu);
         }
         return childrenMenu;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageInfo<UserMsgModel> queryUserInfo(UserInfoSearchModel searchModel) {
+        PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
+        List<UserMsgModel> data = userMsgMapper.queryUserInfo(searchModel);
+        return new PageInfo<>(data);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UploadResponseModel<String> deleteUser(List<String> logNameList) {
+        Integer effectCount = userMsgMapper.deleteUser(logNameList, UserUtil.getUserId());
+        return new UploadResponseModel<>(null,
+                effectCount,
+                logNameList.size() - effectCount,
+                logNameList.size());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UploadResponseModel<String> resetUserPassword(List<String> logNameList) {
+        Integer effectCount = userMsgMapper.resetUserPassword(logNameList, DEFAULT_PASSWORD, UserUtil.getUserId());
+        return new UploadResponseModel<>(null,
+                effectCount,
+                logNameList.size() - effectCount,
+                logNameList.size());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void insertBatchUserMsg(List<UserMsg> userMsgList) {
+        if (userMsgList == null || userMsgList.isEmpty()){
+            return;
+        }
+        userMsgMapper.saveBatch(userMsgList, UserUtil.getUserId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserMsgModel> getUserModelList(UserInfoSearchModel searchModel) {
+        return userMsgMapper.queryUserInfo(searchModel);
     }
 }

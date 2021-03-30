@@ -1,12 +1,13 @@
 package com.business.tpas.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.business.tpas.constant.Constant;
+import com.management.common.constant.Constant;
 import com.business.tpas.entity.Paper;
 import com.business.tpas.model.MajorModel;
 import com.business.tpas.model.PaperModel;
 import com.business.tpas.service.MajorService;
 import com.business.tpas.service.PaperService;
+import com.management.common.listener.EasyExcelUploadListener;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.UserMsgService;

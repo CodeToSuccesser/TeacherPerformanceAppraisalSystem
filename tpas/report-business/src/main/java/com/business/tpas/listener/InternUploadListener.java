@@ -1,10 +1,11 @@
 package com.business.tpas.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.business.tpas.constant.Constant;
+import com.management.common.constant.Constant;
 import com.business.tpas.entity.Intern;
 import com.business.tpas.model.InternModel;
 import com.business.tpas.service.InternService;
+import com.management.common.listener.EasyExcelUploadListener;
 import com.management.common.utils.BeanMapper;
 import com.management.tpas.model.UserMsgModel;
 import com.management.tpas.service.UserMsgService;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @description 实习带队信息文件导入读取类
  **/
-public class InternUploadListener extends EasyExcelUploadListener<InternModel, Intern>{
+public class InternUploadListener extends EasyExcelUploadListener<InternModel, Intern> {
 
     private static final Logger logger = LoggerFactory.getLogger(InternUploadListener.class);
 

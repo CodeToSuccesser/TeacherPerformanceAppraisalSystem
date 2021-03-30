@@ -41,6 +41,14 @@ public class SystemPermissionController {
     @Autowired
     private SystemRoleService roleService;
 
+    @PostMapping("/getAllRoles")
+    @ApiOperation(value = "获取全部角色列表", notes = "用户管理页角色配置")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = SystemRoleModel.class),
+            @ApiResponse(code = 1, message = "-1 服务器内部异常")})
+    public BaseResponse<?> getAllRoles() {
+        return new BaseResponse<>(roleService.getRoles());
+    }
+
     @PostMapping("/queryRoles")
     @ApiOperation("获取角色列表")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = SystemRoleModel.class),

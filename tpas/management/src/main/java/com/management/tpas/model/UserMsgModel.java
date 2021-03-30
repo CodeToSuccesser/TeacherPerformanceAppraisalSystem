@@ -1,5 +1,7 @@
 package com.management.tpas.model;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
@@ -24,39 +26,52 @@ public class UserMsgModel implements Serializable {
     /**
      * 主键
      */
+    @ExcelIgnore
     @JsonSerialize(using = com.fasterxml.jackson.databind.ser.std.ToStringSerializer.class)
     private Long id = 0L;
 
-    @ApiModelProperty(value = "管理员姓名")
+    @ExcelProperty(value = "用户姓名")
+    @ApiModelProperty(value = "用户姓名")
     private String userName = "";
 
+    @ExcelProperty(value = "登录名/工号")
     @ApiModelProperty(value = "唯一登录名, 默认教务员工号")
     private String logName = "";
 
+    @ExcelProperty(value = "联系方式")
     @ApiModelProperty(value = "联系方式, 手机号/邮箱, 可为空")
     private String contact = "";
 
+    @ExcelIgnore
     @ApiModelProperty(value = "头像图片url, 可为空")
     private String portrait = "";
 
+    @ExcelIgnore
     @ApiModelProperty(value = "用户类型，0 教师， 1 管理员")
     private Integer userType = -1;
 
+
+    @ExcelProperty(value = "角色权限")
     @ApiModelProperty(value = "用户角色，用逗号拼接，如：role1,role2")
     private String rolesName = "";
 
+    @ExcelProperty(value = "最新操作时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "数据最新操作时间")
     private Date updateTime;
 
+    @ExcelIgnore
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @ExcelIgnore
     private String token = "";
 
+    @ExcelIgnore
     @ApiModelProperty(value = "权限菜单")
     private List<RouterMenus> routerMenus;
 
+    @ExcelIgnore
     @ApiModelProperty(value = "权限列表")
     private List<SystemPermissionModel> permissionList;
 
