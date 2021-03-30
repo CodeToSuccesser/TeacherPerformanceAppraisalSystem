@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.OtherPerformanceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.OtherPerformance">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="score" property="score" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.OtherPerformanceModel">
+        <id column="id" property="id" />
+        <result column="teacher_code" property="teacherCode"/>
+        <result column="admin_code" property="adminCode"/>
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="score" property="score" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, title, content, score, semester, school_year, admin_id, remark, is_deleted, update_time, create_time
+    </sql>
+
+    <select id="selectOtherPerformance" resultMap="ModelResultMap">
+        select op.id, um.log_name as teacher_code, op.title, op.content, op.score, op.semester, op.school_year, op.remark,
+        op.is_deleted, op.update_time, op.create_time
+        from other_performance op inner join user_msg um on op.user_id = um.id
+        <where>
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                and um.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.semester != null">
+                and op.semester = #{data.semester}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                and op.school_year = #{data.schoolYear}
+            </if>
+            and op.is_deleted = 0
+        </where>
+        order by op.create_time DESC
+    </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="data" separator=";">
+            insert into other_performance
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                user_id,title,content,semester,school_year,admin_id,remark
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{data.userId},#{data.title},#{data.content},#{data.semester},#{data.schoolYear},
+                   #{data.adminId},#{data.remark}
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="insertOtherPerformance" >
+        insert into other_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_id,title,content,semester,school_year,admin_id,remark
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{data.userId},#{data.title},#{data.content},#{data.semester},#{data.schoolYear},
+            #{data.adminId},#{data.remark}
+        </trim>
+    </insert>
+
+    <update id="deleteOtherPerformanceByIds" parameterType="java.util.List">
+        update other_performance
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>
