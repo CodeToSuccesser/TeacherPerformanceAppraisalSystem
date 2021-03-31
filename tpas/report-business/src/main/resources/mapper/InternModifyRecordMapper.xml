@@ -49,6 +49,8 @@
         <result column="remark" property="remark" />
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
+        <result column="apply_name" property="applyName"/>
+        <result column="teacher_code" property="teacherCode"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -62,7 +64,7 @@
         select imr.id, imr.intern_id, imr.normal_practice, imr.non_normal_practice, imr.school_practice, imr.semester,
         imr.school_year,imr.is_deleted,imr.modify_normal_practice, imr.modify_non_normal_practice,imr.modify_school_practice,
         imr.modify_semester,imr.modify_school_year,imr.apply_type,imr.apply_id, imr.admin_id,imr.check_time,
-        imr.check_result, imr.remark,imr.update_time,imr.create_time, um.user_name as applyName, um.log_name as teacherCode
+        imr.check_result, imr.remark,imr.update_time,imr.create_time, um.user_name as apply_name, um.log_name as teacher_code
         from intern_modify_record imr inner join user_msg um on imr.apply_id = um.id
         <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
         <where>

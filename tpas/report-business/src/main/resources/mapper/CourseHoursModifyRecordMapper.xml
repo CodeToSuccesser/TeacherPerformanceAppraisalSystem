@@ -67,6 +67,8 @@
         <result column="institute" property="institute"/>
         <result column="semester" property="semester"/>
         <result column="school_year" property="schoolYear"/>
+        <result column="apply_name" property="applyName"/>
+        <result column="apply_teacher_code" property="applyTeacherCode"/>
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -82,7 +84,7 @@
         chmr.total_hours, chmr.peroid,chmr.classed, chmr.modify_selected_student,chmr.modify_course_cridet, chmr.modify_total_hours,
         chmr.modify_peroid, chmr.modify_classed, chmr.admin_id, chmr.check_time, chmr.check_result, chmr.remark,
         chmr.update_time, chmr.create_time,chmr.is_deleted,res.course_id, res.semester,res.school_year,res.course_code,res.course_name,res.institute,
-        um.user_name as applyName, um.log_name as applyTeacherCode
+        um.user_name as apply_name, um.log_name as apply_teacher_code
         from course_hours_modify_record chmr inner join
         (select ch.id,ch.semester, ch.school_year,cb.institute,cb.course_name,cb.course_code,cb.id as course_id
          from course_hours ch inner join course_base cb on ch.course_id = cb.id) as res
