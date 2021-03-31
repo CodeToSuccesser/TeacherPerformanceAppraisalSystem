@@ -42,10 +42,10 @@ public class PaperModifyRecordModel {
     private Long applyId;
 
     @ApiModelProperty(value = "提出修改用户编码")
-    private Long teacherCode;
+    private String teacherCode;
 
     @ApiModelProperty(value = "提出修改用户名")
-    private Long applyName;
+    private String applyName;
 
     /**
      * 专业信息编码
@@ -316,19 +316,19 @@ public class PaperModifyRecordModel {
         this.majorName = majorName;
     }
 
-    public Long getTeacherCode() {
+    public String getTeacherCode() {
         return teacherCode;
     }
 
-    public void setTeacherCode(Long teacherCode) {
+    public void setTeacherCode(String teacherCode) {
         this.teacherCode = teacherCode;
     }
 
-    public Long getApplyName() {
+    public String getApplyName() {
         return applyName;
     }
 
-    public void setApplyName(Long applyName) {
+    public void setApplyName(String applyName) {
         this.applyName = applyName;
     }
 }

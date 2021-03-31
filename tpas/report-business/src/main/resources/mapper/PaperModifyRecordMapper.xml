@@ -64,7 +64,7 @@
         pmr.check_time,pmr.modify_remark, pmr.check_result,pmr.admin_id, pmr.update_time, pmr.create_time, m.major_code, m.major_name,
         um.log_name as teacher_code, um.user_name as apply_name
         from paper_modify_record pmr inner join major m on pmr.major_id = m.id
-        inner join user_msgum on um.id = pmr.apply_id
+        inner join user_msg um on um.id = pmr.apply_id
         <if test="data.applyName != null and data.applyName != ''">, user_msg um</if>
         <where>
             <if test="data.applyName != null and data.applyName != ''">

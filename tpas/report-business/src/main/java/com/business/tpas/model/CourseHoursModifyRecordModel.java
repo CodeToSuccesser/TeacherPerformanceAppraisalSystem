@@ -55,10 +55,10 @@ public class CourseHoursModifyRecordModel {
     private Long applyId;
 
     @ApiModelProperty(value = "提出修改用户名")
-    private Long applyName;
+    private String applyName;
 
     @ApiModelProperty(value = "提出修改用户编码")
-    private Long applyTeacherCode;
+    private String applyTeacherCode;
 
     /**
      * 已选学生人数, 非空
@@ -456,19 +456,19 @@ public class CourseHoursModifyRecordModel {
         this.institute = institute;
     }
 
-    public Long getApplyName() {
+    public String getApplyName() {
         return applyName;
     }
 
-    public void setApplyName(Long applyName) {
+    public void setApplyName(String applyName) {
         this.applyName = applyName;
     }
 
-    public Long getApplyTeacherCode() {
+    public String getApplyTeacherCode() {
         return applyTeacherCode;
     }
 
-    public void setApplyTeacherCode(Long applyTeacherCode) {
+    public void setApplyTeacherCode(String applyTeacherCode) {
         this.applyTeacherCode = applyTeacherCode;
     }
 }
