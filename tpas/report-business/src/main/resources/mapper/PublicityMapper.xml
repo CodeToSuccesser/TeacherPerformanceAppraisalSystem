@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.PublicityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.Publicity">
+        <id column="id" property="id" />
+        <result column="publisher_id" property="publisherId" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="picture_url" property="pictureUrl" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.PublicityModel">
+        <id column="id" property="id" />
+        <result column="publisher_code" property="publisherCode" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="picture_url" property="pictureUrl" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, publisher_id, title, content, picture_url, is_deleted, update_time, create_time
+    </sql>
+
+    <select id="selectPublicity" resultMap="ModelResultMap">
+        select p.id, um.log_name as publisher_code, p.title, p.content, p.picture_url, p.is_deleted,
+               p.update_time, p.create_time
+        from publicity p inner join user_msg um on p.publisher_id = um.id
+        <where>
+            <if test="data.publisherCode != null and data.publisherCode != ''">
+                and um.log_name = #{data.publisherCode}
+            </if>
+            <if test="data.title != null and data.title != ''">
+                and p.title like "%"#{data.title}"%"
+            </if>
+            and p.is_deleted = 0
+        </where>
+        order by p.create_time DESC
+    </select>
+
+    <update id="deletePublicityByIds" parameterType="java.util.List">
+        update publicity
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+</mapper>

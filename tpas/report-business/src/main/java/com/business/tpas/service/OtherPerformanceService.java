@@ -1,10 +1,10 @@
 package com.business.tpas.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.business.tpas.entity.OtherPerformance;
 import com.business.tpas.model.OtherPerformanceModel;
 import com.business.tpas.model.OtherPerformanceSearchModel;
 import com.github.pagehelper.PageInfo;
+import com.management.common.base.BaseService;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @since 2021-03-30
  */
-public interface OtherPerformanceService extends IService<OtherPerformance> {
+public interface OtherPerformanceService extends BaseService<OtherPerformance> {
 
     /**
      * 批量插入其他教务工作内容
