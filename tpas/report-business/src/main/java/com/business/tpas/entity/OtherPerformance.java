@@ -2,8 +2,9 @@ package com.business.tpas.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -71,9 +72,9 @@ public class OtherPerformance implements Serializable {
     /**
      * 数据最新操作时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
-    private LocalDateTime createTime;
+    private Date createTime;
 
 
     public Long getId() {
@@ -156,19 +157,19 @@ public class OtherPerformance implements Serializable {
         this.isDeleted = isDeleted;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

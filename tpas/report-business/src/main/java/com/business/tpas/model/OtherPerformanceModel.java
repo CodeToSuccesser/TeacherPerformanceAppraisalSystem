@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @description 其他教务工作信息模型层
@@ -71,10 +71,10 @@ public class OtherPerformanceModel {
      * 数据最新操作时间
      */
     @ApiModelProperty(value = "数据最新操作时间")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @ApiModelProperty(value = "创建日期")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     public Long getId() {
         return id;
@@ -156,19 +156,19 @@ public class OtherPerformanceModel {
         this.isDeleted = isDeleted;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 }
