@@ -14,6 +14,12 @@ import com.management.common.base.BaseService;
  */
 public interface AssessmentService extends BaseService<Assessment> {
 
+    /**
+     * 计算绩效
+     *
+     * @author dude
+     * @date 2021/4/1
+     **/
     void calculateAssessment(AssessCalculateSearchModel model);
 
 }

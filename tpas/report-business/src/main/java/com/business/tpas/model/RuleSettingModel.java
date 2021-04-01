@@ -18,6 +18,9 @@ public class RuleSettingModel {
 
     private Long id;
 
+    @ApiModelProperty(value = "规则名称")
+    private String ruleName;
+
     @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文")
     private Integer cType;
 
@@ -44,6 +47,7 @@ public class RuleSettingModel {
     public String toString() {
         return "RuleSettingModel{" +
                 "id=" + id +
+                ", ruleName='" + ruleName + '\'' +
                 ", cType=" + cType +
                 ", valueName='" + valueName + '\'' +
                 ", ruleType=" + ruleType +
@@ -125,5 +129,13 @@ public class RuleSettingModel {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 }

@@ -1,6 +1,7 @@
 package com.business.tpas.dao;
 
 import com.business.tpas.entity.RuleSetting;
+import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.model.RuleSettingModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
@@ -52,4 +53,20 @@ public interface RuleSettingMapper extends BaseDao<RuleSetting> {
      * @date 2021/3/3
      **/
     void deleteModelById(@Param("data") RuleSettingModel model);
+
+    /**
+     * 分页查询
+     *
+     * @author dude
+     * @date 2021/4/1
+     **/
+    List<RuleSettingModel> queryRuleList(@Param("data")ParamSearchModel searchModel);
+
+    /**
+     * 查询所有
+     *
+     * @author dude
+     * @date 2021/4/1
+     **/
+    List<RuleSettingModel> getRuleMsgList();
 }

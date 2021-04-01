@@ -7,8 +7,11 @@ import com.business.tpas.entity.AssessRule;
 import com.business.tpas.entity.ParamsRulesSetting;
 import com.business.tpas.entity.RuleSetting;
 import com.business.tpas.model.AssessRuleModel;
+import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.service.AssessRuleService;
 import com.business.tpas.utils.AssessRuleUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
@@ -70,7 +73,7 @@ public class AssessRuleImpl extends BaseServiceImpl<AssessRuleMapper, AssessRule
                     .collect(Collectors.toList());
             if (!ruleIdList.isEmpty()) {
                 List<RuleSetting> ruleSettingList = ruleSettingMapper.queryByIdList(ruleIdList);
-                if (ruleSettingList.size() != CNumList.size()) {
+                if (ruleSettingList.size() != ruleIdList.size()) {
                     throw new BusinessException(ErrorCodeEnum.PARAM_IS_WRONG);
                 }
             }
@@ -83,5 +86,13 @@ public class AssessRuleImpl extends BaseServiceImpl<AssessRuleMapper, AssessRule
         } else {
             assessRuleMapper.insert(BeanMapper.map(model, AssessRule.class));
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageInfo<AssessRuleModel> queryAssessList(ParamSearchModel searchModel) {
+        PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
+        List<AssessRuleModel> list = assessRuleMapper.queryAssessList(searchModel);
+        return new PageInfo<>(list);
     }
 }

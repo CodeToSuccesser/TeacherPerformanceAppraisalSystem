@@ -164,3 +164,12 @@ ALTER TABLE teacher_performance.assessment modify column school_year VARCHAR(32)
 ALTER TABLE teacher_performance.assessment ADD UNIQUE TEACHER_TIME(`teacher_id`, `semester`, `school_year`);
 
 -- ----------------------系统管理重构--------------------------
+
+-- ---------------------绩效表修复0401--------------------------------
+
+ALTER TABLE rule_setting ADD rule_name VARCHAR(100) COMMENT '规则名称';
+UPDATE rule_setting r SET rule_name = r.remark;
+ALTER TABLE rule_setting MODIFY rule_name VARCHAR(100) NOT NULL DEFAULT '';
+
+
+-- ---------------------绩效表修复--------------------------------

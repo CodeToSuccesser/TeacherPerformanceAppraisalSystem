@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.business.tpas.entity.ParamsRulesSetting">
         <id column="id" property="id" />
+        <result column="c_type" property="cType" />
         <result column="c_num" property="cNum" />
         <result column="c_option" property="cOption" />
         <result column="rules_setting_ids" property="rulesSettingIds" />
@@ -19,6 +20,7 @@
 
     <resultMap id="ModelResultMap" type="com.business.tpas.model.ParamsRulesSettingModel">
         <id column="id" property="id" />
+        <result column="c_type" property="cType" />
         <result column="c_num" property="cNum" />
         <result column="c_option" property="cOption" />
         <result column="rules_setting_ids" property="rulesSettingIds" />
@@ -31,7 +33,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
+        id, c_type, c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
         , remark, is_deleted, update_time, create_time, c_type
     </sql>
 
@@ -57,6 +59,9 @@
         FROM params_rules_setting
         <where>
             is_deleted = 0
+            <if test="data.cType != null">
+                AND c_type = #{data.cType}
+            </if>
             <if test="data.id != null">
                 AND id = #{data.id}
             </if>
@@ -70,9 +75,9 @@
     </select>
 
     <insert id="insertModel" parameterType="com.business.tpas.model.ParamsRulesSettingModel">
-        INSERT INTO params_rules_setting(c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
+        INSERT INTO params_rules_setting(c_type, c_num, c_option, rules_setting_ids, value_type, `column_name`, param_value
         , remark) VALUE
-        (#{data.cNum}, #{data.cOption}
+        (#{data.cType}, #{data.cNum}, #{data.cOption}
         <choose>
             <when test="data.rulesSettingIds == null"> , ''</when>
             <otherwise>, #{data.rulesSettingIds}</otherwise>
@@ -92,6 +97,9 @@
     <update id="updateModel">
         UPDATE params_rules_setting
         <set>
+            <if test="data.cType != null">
+                , c_type = #{data.cType}
+            </if>
             <if test="data.cNum != null">
                 , c_num = #{data.cNum}
             </if>

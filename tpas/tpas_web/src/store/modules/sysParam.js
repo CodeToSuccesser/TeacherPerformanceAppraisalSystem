@@ -2,21 +2,39 @@ import { queryCNumIndex } from '@/api/sysParam'
 
 const getDefaultState = () => {
   return {
-    paramCNumList: new Map([
-      [undefined, '全部']
-    ]),
-    paramType: new Map([
-      [undefined, '全部'],
-      [1, '授课'],
-      [2, '论文指导'],
-      [3, '实习指导'],
-      [4, '其他']
-    ]), // 权值类型
-    paramValueType: new Map([
-      [undefined, '全部'],
-      [1, '参数值'],
-      [2, '定值']
-    ]),
+    paramCNumList: [],
+    paramType: [
+      {
+        value: '',
+        label: '全部'
+      },
+      {
+        value: 1,
+        label: '授课'
+      },
+      {
+        value: 2,
+        label: '论文指导'
+      },
+      {
+        value: 3,
+        label: '实习指导'
+      },
+      {
+        value: 4,
+        label: '其他'
+      }
+    ],
+    paramValueType: [
+      {
+        value: 1,
+        label: '参数值'
+      },
+      {
+        value: 2,
+        label: '定值'
+      }
+    ],
     paramColumnName: [
       {
         paramType: 1,
@@ -83,21 +101,31 @@ const getDefaultState = () => {
         columnName: 'expPerNumber',
         text: '实验每批次人数'
       }, {
-        paramType: 1,
+        paramType: 2,
         columnName: 'studentNumber',
         text: '指导学生人数'
       }, {
-        paramType: 1,
+        paramType: 3,
         columnName: 'normalPractice',
         text: '师范实习带队人数'
       }, {
-        paramType: 1,
+        paramType: 3,
         columnName: 'nonNormalPractice',
         text: '非师范实习带队人数'
       }, {
-        paramType: 1,
+        paramType: 3,
         columnName: 'schoolPractice',
         text: '校内实习带队人数'
+      }
+    ],
+    ruleCompareType: [
+      {
+        value: 1,
+        label: '等值比较'
+      },
+      {
+        value: 2,
+        label: '区间比较'
       }
     ]
   }
@@ -110,11 +138,21 @@ const mutations = {
     Object.assign(state, getDefaultState())
   },
   SET_C_NUM_LIST: (state, list) => {
-    const aMap = state.paramCNumList
+    const data = [
+      {
+        label: '全部',
+        value: ''
+      }
+    ]
     list.forEach(row => {
-      aMap.set(row, row)
+      data.push(
+        {
+          label: row,
+          value: row
+        }
+      )
     })
-    state.paramCNumList = aMap
+    state.paramCNumList = data
   }
 }
 
@@ -124,7 +162,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       queryCNumIndex({}).then(response => {
         const { data } = response
-        console.log('queryCNumIndex data: ', data)
         commit('SET_C_NUM_LIST', data)
         resolve()
       }).catch(error => {

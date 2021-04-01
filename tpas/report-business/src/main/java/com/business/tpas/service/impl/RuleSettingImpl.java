@@ -8,6 +8,7 @@ import com.business.tpas.model.ParamsRulesSettingModel;
 import com.business.tpas.model.RuleSettingModel;
 import com.business.tpas.service.RuleSettingService;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
@@ -75,5 +76,18 @@ public class RuleSettingImpl extends BaseServiceImpl<RuleSettingMapper, RuleSett
             pageNum++;
         } while (allParamRules.size()>0);
         mapper.deleteModelById(model);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageInfo<RuleSettingModel> queryRuleList(ParamSearchModel searchModel) {
+        PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
+        List<RuleSettingModel> list = mapper.queryRuleList(searchModel);
+        return new PageInfo<>(list);
+    }
+
+    @Override
+    public List<RuleSettingModel> getRuleList() {
+        return mapper.getRuleMsgList();
     }
 }

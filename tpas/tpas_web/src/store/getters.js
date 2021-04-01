@@ -17,6 +17,7 @@ const getters = {
   paramValueType: state => state.sysParam.paramValueType,
   paramColumnName: state => state.sysParam.paramColumnName,
   paramCNumList: state => state.sysParam.paramCNumList,
+  ruleCompareType: state => state.sysParam.ruleCompareType,
   systemMenus: state => state.systemRole.systemMenus,
   systemPermission: state => state.systemRole.systemPermission
 }

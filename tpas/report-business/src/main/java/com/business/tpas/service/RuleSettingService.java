@@ -1,8 +1,12 @@
 package com.business.tpas.service;
 
 import com.business.tpas.entity.RuleSetting;
+import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.model.RuleSettingModel;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
+
+import java.util.List;
 
 /**
  * @author dude
@@ -28,4 +32,14 @@ public interface RuleSettingService extends BaseService<RuleSetting> {
      * @date 2021/3/2
      **/
     void deleteModelById(RuleSettingModel model);
+
+    /**
+     * 分页查询列表
+     *
+     * @author dude
+     * @date 2021/4/1
+     **/
+    PageInfo<RuleSettingModel> queryRuleList(ParamSearchModel searchModel);
+
+    List<RuleSettingModel> getRuleList();
 }

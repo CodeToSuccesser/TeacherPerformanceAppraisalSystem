@@ -4,38 +4,55 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="权值参数" name="paramSetting">
         <el-select v-model="searchSelect[0].paramType" placeholder="权值类型" class="selector-year">
-          <el-option v-for="item in paramType.keys()" :key="item" :label="paramType.get(item)" :value="item" />
+          <el-option v-for="item in paramType" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
 
         <el-select v-model="searchSelect[0].paramCNum" placeholder="权值元素" class="selector-term">
-          <el-option v-for="item in paramCNumList.keys()" :key="item" :label="paramCNumList.get(item)" :value="item" />
+          <el-option v-for="item in paramCNumList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
 
-        <el-button :v-loading="loadingVisible[0]" type="primary" size="small" class="button-find" @click="skipPage(0, 0)">查找</el-button>
+        <el-button :v-loading="loadingVisible[0]" type="primary" size="small" class="button-find" @click="handleCurrentChange(0, 0)">查找</el-button>
 
-        <el-button type="primary" size="small" class="button-add" @click="editComponentVisible[0] = true">新增</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="paramEdit(null)">新增</el-button>
 
         <el-table :data="paramList" stripe style="width: 100% " :border="true" fit>
-          <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px" >
+          <el-table-column :resizable="false" prop="id" sortable label="序号" width="60px" align="center" />
+          <el-table-column :resizable="false" prop="cType" sortable label="权值类型"  align="center" >
             <template slot-scope="scope">
-              <span>{{ (pageInfo[0].pageSize - 1) * (pageInfo[0].curPageNum - 1) + scope.$index + 1 }}</span>
+              {{ paramType.filter(item => item.value === scope.row.cType)[0].label }}
             </template>
           </el-table-column>
-          <el-table-column :resizable="false" prop="cType" sortable label="权值类型" >
-            {{ paramType[paramList.cType] }}
+          <el-table-column :resizable="false" prop="cNum" sortable label="权值元素" width="60px" align="center" />
+          <el-table-column :resizable="false" prop="cOption" sortable label="下标" width="60px" align="center" />
+          <el-table-column :resizable="false" prop="rulesSettingIds" sortable label="限制规则" width="180px">
+            <template slot-scope="scope">
+              <div v-for="item in getRuleIds(scope.row.rulesSettingIds)" :key="item">
+                {{ ruleBaseInfo.filter(it => it.id === item).length>0?ruleBaseInfo.filter(it => it.id === item)[0].ruleName:'?' }}
+              </div>
+            </template>
           </el-table-column>
-          <el-table-column :resizable="false" prop="cNum" sortable label="权值元素" />
-          <el-table-column :resizable="false" prop="cOption" sortable label="下标" />
-          <el-table-column :resizable="false" prop="rulesSettingIds" sortable label="限制规则Id" />
-          <el-table-column :resizable="false" prop="valueType" sortable label="取值方式" />
-          <el-table-column :resizable="false" prop="paramValue" sortable label="参数权值" />
-          <el-table-column :resizable="false" prop="columnName" sortable label="字段名称" />
+          <el-table-column :resizable="false" prop="valueType" sortable label="取值方式" align="center">
+            <template slot-scope="scope">
+              {{ paramValueType.filter(item => item.value === scope.row.valueType)[0].label }}
+            </template>
+          </el-table-column>
+          <el-table-column :resizable="false" sortable label="取值"  align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.valueType === 1">
+              {{ paramColumnName.filter(item => item.paramType === scope.row.cType && item.columnName === scope.row.columnName).length>0?
+              paramColumnName.filter(item => item.paramType === scope.row.cType && item.columnName === scope.row.columnName)[0].text:scope.row.columnName}}
+              </span>
+              <span v-else>
+                {{ scope.row.paramValue }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column :resizable="false" prop="remark" sortable label="备注" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
-          <el-table-column :resizable="false" label="操作">
-            <template>
-              <el-button type="text" size="small" @click="paramEdit">修改</el-button>
-              <el-button type="text" size="small" @click="paramDelete">删除</el-button>
+          <el-table-column :resizable="false" label="操作"  align="center">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="paramEdit(scope)">修改</el-button>
+              <el-button type="text" size="small" @click="paramDelete(scope)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -54,132 +71,253 @@
 
         <el-dialog title="权值信息编辑" :visible.sync="editComponentVisible[0]" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
           <el-form :model="paramForm">
-            <el-select v-model="paramForm.cType" placeholder="权值类型" class="selector-year">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
+            <el-form-item v-if="paramForm.id" label="编码" :label-width="formLabelWidth">
+              <el-input v-model="paramForm.id" :disabled="true" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="权值类型" :label-width="formLabelWidth">
+              <el-select v-model="paramForm.cType" :label-width="formLabelWidth">
+                <el-option
+                  v-for="item in paramType.filter(it => it.value !== '')"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="权值元素" :label-width="formLabelWidth">
               <el-input v-model="paramForm.cNum" autocomplete="off" />
             </el-form-item>
             <el-form-item label="下标" :label-width="formLabelWidth">
               <el-input v-model="paramForm.cOption" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="限制规则" label-width="">
-              <el-form-item v-model="paramForm.rulesSettingIds" autocomplete="off" />
+            <el-form-item label="限制规则" :label-width="formLabelWidth">
+              <el-checkbox-group v-model="checkRuleIdList" @change="handleCheckedParamRuleIds(0)">
+                <el-checkbox
+                  v-for="item in ruleBaseInfo.filter(it => it.cType === paramForm.cType)"
+                  :key="item.id"
+                  :label="item.id"
+                  border
+                >{{ item.ruleName }}</el-checkbox>
+              </el-checkbox-group>
             </el-form-item>
-            <el-select v-model="paramForm.valueType" placeholder="取值类型" class="selector-year">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-            <el-form-item label="参数权值/字段名称" :label-width="formLabelWidth">
-              <el-input v-if="paramForm.valueType===1" v-model="paramForm.paramValue" autocomplete="off" />
-              <el-input v-else v-model="paramForm.columnName" autocomplete="off" />
+            <el-form-item label="取值类型" :label-width="formLabelWidth">
+              <el-select v-model="paramForm.valueType" class="selector-year">
+                <el-option v-for="item in paramValueType" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="paramForm.valueType===1" label="字段名称" :label-width="formLabelWidth">
+              <el-select v-model="paramForm.columnName" :label-width="formLabelWidth">
+                <el-option
+                  v-for="item in paramColumnName"
+                  :key="JSON.stringify(item)"
+                  :label="item.text"
+                  :value="item.columnName" />
+              </el-select>
+            </el-form-item>
+            <el-form-item v-else label="参数权值" :label-width="formLabelWidth">
+              <el-input v-model="paramForm.paramValue" autocomplete="off" />
             </el-form-item>
             <el-form-item label="备注" :label-width="formLabelWidth">
               <el-input v-model="paramForm.remark" autocomplete="off" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="paramEditEnsureOrCancel">确 定</el-button>
-            <el-button @click="paramEditEnsureOrCancel">取 消</el-button>
+            <el-button type="primary" @click="editEnsureOrCancel(0, false)">确 定</el-button>
+            <el-button @click="editEnsureOrCancel(0, true)">取 消</el-button>
           </div>
         </el-dialog>
       </el-tab-pane>
 
       <el-tab-pane label="参数规则" name="ruleSetting">
-        <el-select v-model="value" placeholder="权值类型" class="selector-year">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="searchSelect[1].paramType" placeholder="权值类型" class="selector-year">
+          <el-option v-for="item in paramType" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
 
-        <el-button type="primary" size="small" class="button-find">查找</el-button>
+        <el-button :v-loading="loadingVisible[1]" type="primary" size="small" class="button-find" @click="handleCurrentChange(1, 0)">查找</el-button>
 
-        <el-button type="primary" size="small" class="button-add" @click="ruleEditVisible = true">新增</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="ruleEdit(null)">新增</el-button>
 
-        <el-table :data="rules" stripe style="width: 100% " :border="true" fit>
-          <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px" />
-          <el-table-column :resizable="false" prop="cType" sortable label="权值类型" />
-          <el-table-column :resizable="false" prop="valueName" sortable label="限制字段" />
-          <el-table-column :resizable="false" prop="ruleType" sortable label="规则类型" />
-          <el-table-column :resizable="false" prop="leftValue" sortable label="区间左值/定值" />
-          <el-table-column :resizable="false" prop="rightValue" sortable label="区间右值" />
+        <el-table :data="ruleList" stripe style="width: 100% " :border="true" fit>
+          <el-table-column :resizable="false" prop="id" sortable label="序号" width="60px" align="center"/>
+          <el-table-column :resizable="false" prop="ruleName" label="规则名称" />
+          <el-table-column :resizable="false" prop="cType" sortable label="权值类型" align="center">
+            <template slot-scope="scope">
+              {{ paramType.filter(item => item.value === scope.row.cType)[0].label }}
+            </template>
+          </el-table-column>
+          <el-table-column :resizable="false" prop="valueName" sortable label="限制字段" align="center">
+            <template slot-scope="scope">
+              {{ paramColumnName.filter(item => item.paramType === scope.row.cType && item.columnName === scope.row.valueName).length>0?
+              paramColumnName.filter(item => item.paramType === scope.row.cType && item.columnName === scope.row.valueName)[0].text:scope.row.valueName}}
+            </template>
+          </el-table-column>
+          <el-table-column :resizable="false" prop="ruleType" sortable label="比较类型" align="center">
+            <template slot-scope="scope">
+              {{ ruleCompareType.filter(item => item.value === scope.row.ruleType)[0].label }}
+            </template>
+          </el-table-column>
+          <el-table-column :resizable="false" label="比较值" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.ruleType === 1">
+                {{ scope.row.leftValue }}
+              </span>
+              <span v-else>
+                [{{ scope.row.leftValue }}, {{ scope.row.rightValue?scope.row.rightValue:'-' }}]
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column :resizable="false" prop="remark" sortable label="备注" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
-          <el-table-column :resizable="false" label="操作">
-            <template>
-              <el-button type="text" size="small" @click="ruleEdit">修改</el-button>
-              <el-button type="text" size="small" @click="paramDelete">删除</el-button>
+          <el-table-column :resizable="false" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="ruleEdit(scope)">修改</el-button>
+              <el-button type="text" size="small" @click="ruleDelete(scope)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-dialog title="权值信息编辑" :visible.sync="ruleEditVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="pageInfo[1].total"
+          :page-size="pageInfo[1].pageSize"
+          :current-page="pageInfo[1].curPageNum"
+          class="pagination"
+          @prev-click="skipPage(1, -1)"
+          @next-click="skipPage(1, 1)"
+          @current-change="(val) => handleCurrentChange(1, val)"
+        />
+
+        <el-dialog title="权值信息编辑" :visible.sync="editComponentVisible[1]" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
           <el-form :model="ruleForm">
-            <el-select v-model="ruleForm.cType" placeholder="权值类型" class="selector-year">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
+            <el-form-item v-if="ruleForm.id" label="编码" :label-width="formLabelWidth">
+              <el-input v-model="ruleForm.id" :disabled="true" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="规则名称" :label-width="formLabelWidth">
+              <el-input v-model="ruleForm.ruleName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="权值类型" :label-width="formLabelWidth">
+              <el-select v-model="ruleForm.cType" :label-width="formLabelWidth">
+                <el-option
+                  v-for="item in paramType.filter(it => it.value !== '')"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="限制字段" :label-width="formLabelWidth">
-              <el-input v-model="ruleForm.valueName" autocomplete="off" />
+              <el-select v-model="ruleForm.valueName" :label-width="formLabelWidth">
+                <el-option
+                  v-for="item in paramColumnName.filter(it => it.paramType === ruleForm.cType)"
+                  :key="JSON.stringify(item)"
+                  :label="item.text"
+                  :value="item.columnName" />
+              </el-select>
             </el-form-item>
-            <el-select v-model="ruleForm.ruleType" placeholder="规则类型" class="selector-year">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-            <el-form-item label="区间左值/定值" :label-width="formLabelWidth">
+            <el-form-item label="规则类型" :label-width="formLabelWidth">
+              <el-select v-model="ruleForm.ruleType" class="selector-year">
+                <el-option v-for="item in ruleCompareType" :key="JSON.stringify(item)" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="ruleForm.ruleType === 1" label="比较值" :label-width="formLabelWidth">
               <el-input v-model="ruleForm.leftValue" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="区间右值" :label-width="formLabelWidth">
+            <el-form-item v-if="ruleForm.ruleType === 2" label="比较区间左值" :label-width="formLabelWidth">
               <el-input v-model="ruleForm.leftValue" autocomplete="off" />
+            </el-form-item>
+            <el-form-item v-if="ruleForm.ruleType === 2" label="比较区间右值" :label-width="formLabelWidth">
+              <el-input v-model="ruleForm.rightValue" autocomplete="off" />
             </el-form-item>
             <el-form-item label="备注" :label-width="formLabelWidth">
               <el-input v-model="ruleForm.remark" autocomplete="off" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="ruleEditEnsureOrCancel">确 定</el-button>
-            <el-button @click="ruleEditEnsureOrCancel">取 消</el-button>
+            <el-button type="primary" @click="editEnsureOrCancel(1, false)">确 定</el-button>
+            <el-button @click="editEnsureOrCancel(1, true)">取 消</el-button>
           </div>
         </el-dialog>
       </el-tab-pane>
 
       <el-tab-pane label="绩效规则" name="assessRule">
-        <el-select v-model="value" placeholder="权值类型" class="selector-year">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="searchSelect[2].paramType" placeholder="权值类型" class="selector-year">
+          <el-option v-for="item in paramType" :key="item.label" :label="item.label" :value="item.value" />
         </el-select>
 
-        <el-button type="primary" size="small" class="button-find">查找</el-button>
+        <el-button :v-loading="loadingVisible[2]" type="primary" size="small" class="button-find" @click="handleCurrentChange(2, 0)">查找</el-button>
 
-        <el-button type="primary" size="small" class="button-add" @click="assessEditVisible = true">新增</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="assessEdit(null)">新增</el-button>
 
-        <el-table :data="assessRule" stripe style="width: 100% " :border="true" fit>
-          <el-table-column :resizable="false" prop="id" sortable label="序号" width="120px" />
-          <el-table-column :resizable="false" prop="cType" sortable label="权值类型" />
-          <el-table-column :resizable="false" prop="assessDetail" sortable label="绩效计算公式" />
-          <el-table-column :resizable="false" prop="ruleSettingIds" sortable label="限制规则id" />
+        <el-table :data="assessList" stripe style="width: 100% " :border="true" fit>
+          <el-table-column :resizable="false" prop="id" sortable label="序号" width="60px" align="center"/>
+          <el-table-column :resizable="false" prop="cType" sortable label="权值类型" align="center">
+            <template slot-scope="scope">
+              {{ paramType.filter(item => item.value === scope.row.cType)[0].label }}
+            </template>
+          </el-table-column>
+          <el-table-column :resizable="false" prop="assessDetail" sortable label="绩效计算公式" align="center"/>
+          <el-table-column :resizable="false" prop="ruleSettingIds" sortable label="限制规则id"  width="180px">
+            <template slot-scope="scope">
+              <div v-for="item in getRuleIds(scope.row.ruleSettingIds)" :key="item">
+                {{ ruleBaseInfo.filter(it => it.id === item).length>0?ruleBaseInfo.filter(it => it.id === item)[0].ruleName:'?' }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column :resizable="false" prop="remark" sortable label="备注" />
           <el-table-column :resizable="false" prop="createTime" sortable label="创建日期" />
-          <el-table-column :resizable="false" label="操作">
-            <template>
-              <el-button type="text" size="small" @click="assessEdit">修改</el-button>
-              <el-button type="text" size="small" @click="paramDelete">删除</el-button>
+          <el-table-column :resizable="false" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="assessEdit(scope)">修改</el-button>
+              <el-button type="text" size="small" @click="assessDelete(scope)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-dialog title="权值信息编辑" :visible.sync="assessEditVisible" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="pageInfo[2].total"
+          :page-size="pageInfo[2].pageSize"
+          :current-page="pageInfo[2].curPageNum"
+          class="pagination"
+          @prev-click="skipPage(2, -1)"
+          @next-click="skipPage(2, 1)"
+          @current-change="(val) => handleCurrentChange(2, val)"
+        />
+
+        <el-dialog title="权值信息编辑" :visible.sync="editComponentVisible[2]" top="5vh" :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false">
           <el-form :model="assessForm">
+            <el-form-item v-if="assessForm.id" label="编码" :label-width="formLabelWidth">
+              <el-input v-model="assessForm.id" :disabled="true" autocomplete="off" />
+            </el-form-item>
             <el-form-item label="权值类型" :label-width="formLabelWidth">
-              <el-input v-model="assessForm.cType" autocomplete="off" />
+              <el-select v-model="assessForm.cType" placeholder="权值类型" :label-width="formLabelWidth">
+                <el-option
+                  v-for="item in paramType.filter(it => it.value !== '')"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value" />
+              </el-select>
             </el-form-item>
             <el-form-item label="绩效计算公式" :label-width="formLabelWidth">
               <el-input v-model="assessForm.assessDetail" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="限制规则id" :label-width="formLabelWidth">
-              <el-input v-model="assessForm.ruleSettingIds" autocomplete="off" />
+            <el-form-item label="限制规则" :label-width="formLabelWidth">
+              <el-checkbox-group v-model="checkRuleIdList" @change="handleCheckedParamRuleIds(2)">
+                <el-checkbox
+                  v-for="item in ruleBaseInfo.filter(it => it.cType === assessForm.cType)"
+                  :key="item.id"
+                  :label="item.id"
+                  border
+                >{{ item.ruleName }}</el-checkbox>
+              </el-checkbox-group>
             </el-form-item>
             <el-form-item label="备注" :label-width="formLabelWidth">
               <el-input v-model="paramForm.remark" autocomplete="off" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="assessEditEnsureOrCancel">确 定</el-button>
-            <el-button @click="assessEditEnsureOrCancel">取 消</el-button>
+            <el-button type="primary" @click="editEnsureOrCancel(2, false)">确 定</el-button>
+            <el-button @click="editEnsureOrCancel(2, true)">取 消</el-button>
           </div>
         </el-dialog>
       </el-tab-pane>
@@ -190,8 +328,20 @@
 </template>
 
 <script>
-import { queryParamRules } from '@/api/sysParam'
+import {
+  queryParamRules,
+  queryRuleList,
+  queryAssessList,
+  getRuleList,
+  editParamRules,
+  editRuleSetting,
+  editAssessRule,
+  deleteParamRules,
+  deleteRuleSetting,
+  deleteAssessRule
+} from '@/api/sysParam'
 import { mapGetters } from 'vuex'
+import { string2List } from '@/utils'
 
 export default {
   computed: {
@@ -199,12 +349,15 @@ export default {
       'paramCNumList',
       'paramType',
       'paramValueType',
-      'paramColumnName'
+      'paramColumnName',
+      'ruleCompareType'
     ])
   },
   data() {
     return {
       formLabelWidth: '120px',
+      checkRuleIdList: [],
+      ruleBaseInfo: [],
       pageInfo: [
         {
           total: 0,
@@ -232,110 +385,28 @@ export default {
       ],
       searchSelect: [
         {
-          paramType: '',
-          paramCNum: ''
+          paramType: undefined,
+          paramCNum: undefined
         }, {
-          paramType: '',
-          paramCNum: ''
+          paramType: undefined,
+          paramCNum: undefined
         }, {
-          paramType: '',
-          paramCNum: ''
+          paramType: undefined,
+          paramCNum: undefined
         }
       ],
       paramList: [],
-      paramForm: {
-        id: 1,
-        cType: '授课',
-        cNum: 1,
-        cOption: 1,
-        rulesSettingIds: '1,2',
-        valueType: 1,
-        paramValue: 0,
-        columnName: 'teachingHours',
-        remark: '理论课C1, 理论课学时',
-        createTime: '2021-02-23 20:58:51.0'
-      },
-      rules: [
-        {
-          id: 1,
-          cType: '授课',
-          valueName: 'computerHours',
-          ruleType: '值区分',
-          leftValue: 0,
-          rightValue: 0,
-          remark: '理论课-上机学时0',
-          createTime: '2021-02-23 20:56:28.0'
-        }, {
-          id: 2,
-          cType: '授课',
-          valueName: 'experimentHours',
-          ruleType: '值区分',
-          leftValue: 0,
-          rightValue: 0,
-          remark: '理论课-实验学时0',
-          createTime: '2021-02-23 20:56:28.0'
-        }, {
-          id: 2,
-          cType: '授课',
-          valueName: 'experimentHours',
-          ruleType: '区间区分',
-          leftValue: 0.1,
-          rightValue: '',
-          remark: '课程实验',
-          createTime: '2021-02-23 20:56:28.0'
-        }
-      ],
-      ruleForm: {
-        id: 1,
-        cType: '授课',
-        valueName: 'computerHours',
-        ruleType: '值区分',
-        leftValue: 0,
-        rightValue: 0,
-        remark: '理论课-上机学时0',
-        createTime: '2021-02-23 20:56:28.0'
-      },
-      assessRule: [
-        {
-          id: 1,
-          cType: '授课',
-          assessDetail: '{1}*{8}*(1+{2}+{3}+{4})',
-          remark: '研究生、本、专科理论课',
-          createTime: '2021-02-23 20:59:00.0',
-          ruleSettingIds: '1,2'
-        }, {
-          id: 1,
-          cType: '论文',
-          assessDetail: '{13}*{12}',
-          remark: '指导全日制本科生论文',
-          createTime: '2021-02-23 20:59:00.0',
-          ruleSettingIds: ''
-        }, {
-          id: 1,
-          cType: '实习',
-          assessDetail: '{14}*24',
-          remark: '师范实习',
-          createTime: '2021-02-23 20:59:00.0',
-          ruleSettingIds: ''
-        }
-      ],
-      assessForm: {
-        id: 1,
-        cType: '授课',
-        assessDetail: '{1}*{8}*(1+{2}+{3}+{4})',
-        remark: '研究生、本、专科理论课',
-        createTime: '2021-02-23 20:59:00.0',
-        ruleSettingIds: '1,2'
-      },
+      paramForm: {},
+      ruleList: [],
+      ruleForm: {},
+      assessList: [],
+      assessForm: {},
       activeName: 'paramSetting'
     }
   },
   created() {
-    console.log(this.$store.getters.paramCNumList.size)
-    if (this.$store.getters.paramCNumList.size <= 1) {
-      this.$store.dispatch('sysParam/queryCNumIndex')
-    }
-    console.log(this.$store.getters.paramCNumList)
+    this.$store.dispatch('sysParam/queryCNumIndex')
+    this.setRuleBaseInfo()
     this.skipPage(0, 0)
     this.skipPage(1, 0)
     this.skipPage(2, 0)
@@ -371,7 +442,6 @@ export default {
           return
         }
       }
-      console.log('val: ', val)
       this.pageInfo[index].curPageNum = val
     },
     searchList: function(index, param) {
@@ -411,30 +481,296 @@ export default {
         this.loadingVisible[0] = false
       })
     },
-    queryRules: function(data) {
+    queryRules: function(reqData) {
+      this.loadingVisible[1] = true
+      queryRuleList(reqData).then((response) => {
+        const { data } = response
+        this.ruleList = data.list
+        this.pageInfo[1].total = data.total
+        this.loadingVisible[1] = false
+      }).catch(() => {
+        this.loadingVisible[1] = false
+      })
     },
-    queryAssess: function(data) {
+    queryAssess: function(reqData) {
+      this.loadingVisible[2] = true
+      queryAssessList(reqData).then((response) => {
+        const { data } = response
+        this.assessList = data.list
+        this.pageInfo[2].total = data.total
+        this.loadingVisible[2] = false
+      }).catch(() => {
+        this.loadingVisible[2] = false
+      })
     },
-    paramEdit: function() {
-      this.paramEditVisible = true
+    paramEdit: function(data) {
+      if (data) {
+        this.paramForm = {
+          id: data.row.id,
+          ruleName: data.row.ruleName,
+          cType: data.row.cType,
+          cNum: data.row.cNum,
+          cOption: data.row.cOption,
+          rulesSettingIds: data.row.rulesSettingIds,
+          valueType: data.row.valueType,
+          paramValue: data.row.paramValue,
+          columnName: data.row.columnName,
+          remark: data.row.remark
+        }
+      } else {
+        this.paramForm = this.getDefaultParamForm()
+      }
+      this.checkRuleIdList = this.getRuleIds(this.paramForm.rulesSettingIds)
+      this.editComponentVisible[0] = true
     },
-    paramDelete: function() {
-
+    paramDelete: function(data) {
+      this.$confirm('确定删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loadingVisible[0] = true
+        const param = { id: data.row.id }
+        deleteParamRules(param).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadingVisible[0] = false
+          this.handleCurrentChange(0, 0)
+        }).catch(error => {
+          console.log(error)
+          this.loadingVisible[0] = false
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     },
-    paramEditEnsureOrCancel: function() {
-      this.paramEditVisible = false
+    editEnsureOrCancel: function(index, isCancel) {
+      if (isCancel) {
+        this.editComponentVisible[index] = false
+        return
+      }
+      switch (index) {
+        case 0: {
+          const param = this.paramForm
+          if (param.cType && param.cOption && param.valueType) {
+            editParamRules(param).then((res) => {
+              this.$message({
+                type: 'success',
+                message: '编辑成功!'
+              })
+              this.editComponentVisible[index] = false
+              this.$store.dispatch('sysParam/queryCNumIndex')
+              this.handleCurrentChange(index, 0)
+            }).catch(err => {
+              console.log(err)
+              this.loadingVisible[index] = false
+            })
+          } else {
+            this.$message({
+              type: 'warn',
+              message: '数据不完整!'
+            })
+          }
+          break
+        }
+        case 1: {
+          const param = this.ruleForm
+          if (param.cType && param.valueName && param.ruleType) {
+            editRuleSetting(param).then((res) => {
+              this.$message({
+                type: 'success',
+                message: '编辑成功!'
+              })
+              this.loadingVisible[index] = false
+              this.editComponentVisible[index] = false
+              this.setRuleBaseInfo()
+              this.handleCurrentChange(index, 0)
+            }).catch(err => {
+              console.log(err)
+              this.loadingVisible[index] = false
+            })
+          } else {
+            this.$message({
+              type: 'warn',
+              message: '数据不完整!'
+            })
+          }
+          break
+        }
+        case 2: {
+          const param = this.assessForm
+          if (param.cType && param.assessDetail) {
+            editAssessRule(param).then((res) => {
+              this.$message({
+                type: 'success',
+                message: '编辑成功!'
+              })
+              this.loadingVisible[index] = false
+              this.editComponentVisible[index] = false
+              this.handleCurrentChange(index, 0)
+            }).catch(err => {
+              console.log(err)
+              this.loadingVisible[index] = false
+            })
+          } else {
+            this.$message({
+              type: 'warn',
+              message: '数据不完整!'
+            })
+          }
+          break
+        }
+        default: {
+          this.editComponentVisible[index] = false
+        }
+      }
     },
-    ruleEditEnsureOrCancel: function() {
-      this.ruleEditVisible = false
+    ruleEdit: function(data) {
+      if (data) {
+        this.ruleForm = {
+          id: data.row.id,
+          ruleName: data.row.ruleName,
+          cType: data.row.cType,
+          valueName: data.row.valueName,
+          ruleType: data.row.ruleType,
+          leftValue: data.row.leftValue,
+          rightValue: data.row.rightValue,
+          remark: data.row.remark
+        }
+      } else {
+        this.ruleForm = this.getDefaultRuleForm()
+      }
+      this.editComponentVisible[1] = true
     },
-    ruleEdit: function() {
-      this.ruleEditVisible = true
+    ruleDelete: function(data) {
+      this.$confirm('确定删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loadingVisible[1] = true
+        const param = { id: data.row.id }
+        deleteRuleSetting(param).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadingVisible[1] = false
+          this.setRuleBaseInfo()
+          this.handleCurrentChange(1, 0)
+        }).catch(error => {
+          console.log(error)
+          this.loadingVisible[1] = false
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     },
-    assessEditEnsureOrCancel: function() {
-      this.assessEditVisible = false
+    assessEdit: function(data) {
+      if (data) {
+        this.assessForm = {
+          id: data.row.id,
+          cType: data.row.cType,
+          assessDetail: data.row.assessDetail,
+          remark: data.row.remark,
+          ruleSettingIds: data.row.ruleSettingIds
+        }
+      } else {
+        this.assessForm = this.getDefaultAssessForm()
+      }
+      this.checkRuleIdList = this.getRuleIds(this.assessForm.ruleSettingIds)
+      this.editComponentVisible[2] = true
     },
-    assessEdit: function() {
-      this.assessEditVisible = true
+    assessDelete: function(data) {
+      this.$confirm('确定删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loadingVisible[2] = true
+        const param = { id: data.row.id }
+        deleteAssessRule(param).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadingVisible[2] = false
+          this.handleCurrentChange(2, 0)
+        }).catch(error => {
+          console.log(error)
+          this.loadingVisible[2] = false
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    getDefaultParamForm: function() {
+      return {
+        id: undefined,
+        cType: undefined,
+        cNum: undefined,
+        cOption: '',
+        rulesSettingIds: '',
+        valueType: undefined,
+        paramValue: 0,
+        columnName: '',
+        remark: ''
+      }
+    },
+    getDefaultRuleForm: function() {
+      return {
+        id: undefined,
+        ruleName: '',
+        cType: undefined,
+        valueName: undefined,
+        ruleType: undefined,
+        leftValue: 0,
+        rightValue: 0,
+        remark: ''
+      }
+    },
+    getDefaultAssessForm: function() {
+      return {
+        id: undefined,
+        cType: undefined,
+        assessDetail: '',
+        remark: '',
+        ruleSettingIds: ''
+      }
+    },
+    setRuleBaseInfo: function() {
+      getRuleList().then((res) => {
+        const { data } = res
+        this.ruleBaseInfo = data
+      })
+    },
+    handleCheckedParamRuleIds(index) {
+      switch (index) {
+        case 0: {
+          const allowSetting = this.ruleBaseInfo.filter(it => it.cType === this.paramForm.cType).map(it => it.id)
+          this.paramForm.rulesSettingIds = this.checkRuleIdList.filter(it => allowSetting.includes(it)).join(',')
+          break
+        }
+        case 2: {
+          const allowSetting = this.ruleBaseInfo.filter(it => it.cType === this.assessForm.cType).map(it => it.id)
+          this.assessForm.ruleSettingIds = this.checkRuleIdList.filter(it => allowSetting.includes(it)).join(',')
+          break
+        }
+      }
+    },
+    getRuleIds: function(data) {
+      return string2List(data).map(item => parseInt(item))
     }
   }
 }

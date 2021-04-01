@@ -24,6 +24,9 @@ public class RuleSetting implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "规则名称")
+    private String ruleName;
+
     @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文")
     private Integer cType;
 
@@ -128,15 +131,25 @@ public class RuleSetting implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+
     @Override
     public String toString() {
-        return "ruleSetting{" +
+        return "RuleSetting{" +
                 "id=" + id +
+                ", ruleName='" + ruleName + '\'' +
                 ", cType=" + cType +
                 ", valueName='" + valueName + '\'' +
                 ", ruleType=" + ruleType +
                 ", leftValue=" + leftValue +
                 ", rightValue=" + rightValue +
+                ", remark='" + remark + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +

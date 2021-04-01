@@ -14,6 +14,16 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.AssessRuleModel">
+        <id column="id" property="id" />
+        <result column="c_type" property="cType" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="rule_setting_ids" property="ruleSettingIds" />
+        <result column="remark" property="remark" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, c_type, assess_detail, rule_setting_ids, remark, is_deleted, update_time, create_time
@@ -36,5 +46,17 @@
         FROM assess_rule
         WHERE c_type = #{cType} AND is_deleted = 0
     </select>
+
+    <select id="queryAssessList" resultMap="ModelResultMap">
+        SELECT id, c_type, assess_detail, rule_setting_ids, remark, update_time, create_time
+        FROM assess_rule
+        <where>
+            is_deleted = 0
+            <if test="data.cType != null">
+                AND c_type = #{data.cType}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

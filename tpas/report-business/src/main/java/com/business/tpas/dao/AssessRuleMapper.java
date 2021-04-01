@@ -3,6 +3,7 @@ package com.business.tpas.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.business.tpas.entity.AssessRule;
 import com.business.tpas.model.AssessRuleModel;
+import com.business.tpas.model.ParamSearchModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +26,7 @@ public interface AssessRuleMapper extends BaseMapper<AssessRule> {
     void deletedModelById(@Param("data") AssessRuleModel model);
 
     List<AssessRule> selectByCType(@Param("cType") Integer type);
+
+    List<AssessRuleModel> queryAssessList(@Param("data") ParamSearchModel searchModel);
+
 }

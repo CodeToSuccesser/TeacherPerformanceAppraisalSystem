@@ -94,13 +94,18 @@ public class ParamsInfoController {
             @ApiResponse(code = 500, message = "系统错误")})
     @PostMapping("/editRuleSetting")
     public BaseResponse<?> editRuleSetting(@RequestBody RuleSettingModel model) {
-        if (model == null || model.getcType() == null || model.getValueName() == null || model.getRuleType() == null) {
+        if (model == null
+                || model.getcType() == null
+                || StringUtils.isBlank(model.getValueName())
+                || model.getRuleType() == null
+                || StringUtils.isBlank(model.getRuleName())
+        ) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
         }
         // 判断规则字段是否有效
         if (Arrays.stream(RuleSettingColumnNameEnum.values())
                 .noneMatch(it -> it.getcType().equals(model.getcType())
-                        && it.getColumnName().equals(model.getValueName().toLowerCase()))) {
+                        && it.getColumnName().equals(model.getValueName()))) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_WRONG);
         }
         // 判断规则参数取值类型
@@ -136,6 +141,27 @@ public class ParamsInfoController {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
         }
         List<Integer> list = paramsRulesSettingService.queryCNumList(searchModel);
+        return new BaseResponse<>(list);
+    }
+
+    @ApiOperation(value = "查询规则列表")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = RuleSettingModel.class),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/queryRuleList")
+    public BaseResponse<?> queryRuleList(@RequestBody ParamSearchModel searchModel) {
+        if (searchModel == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        PageInfo<RuleSettingModel> list = ruleSettingService.queryRuleList(searchModel);
+        return new BaseResponse<>(list);
+    }
+
+    @ApiOperation(value = "查询规则信息")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = RuleSettingModel.class),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/getRuleList")
+    public BaseResponse<?> getRuleList() {
+        List<RuleSettingModel> list = ruleSettingService.getRuleList();
         return new BaseResponse<>(list);
     }
 }

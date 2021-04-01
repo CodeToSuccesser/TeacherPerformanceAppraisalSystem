@@ -3,8 +3,10 @@ package com.business.tpas.controller;
 import com.business.tpas.enums.RuleSettingCTypeEnum;
 import com.business.tpas.model.AssessCalculateSearchModel;
 import com.business.tpas.model.AssessRuleModel;
+import com.business.tpas.model.ParamSearchModel;
 import com.business.tpas.service.AssessRuleService;
 import com.business.tpas.service.AssessmentService;
+import com.github.pagehelper.PageInfo;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.model.BaseResponse;
 import io.swagger.annotations.Api;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
 
 /**
  * @author dude
@@ -75,5 +79,17 @@ public class AssessController {
         }
         assessmentService.calculateAssessment(model);
         return new BaseResponse<>();
+    }
+
+    @ApiOperation(value = "查询规则列表")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = Arrays.class),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/queryAssessList")
+    public BaseResponse<?> queryRuleList(@RequestBody ParamSearchModel searchModel) {
+        if (searchModel == null) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        PageInfo<AssessRuleModel> list = assessRuleService.queryAssessList(searchModel);
+        return new BaseResponse<>(list);
     }
 }
