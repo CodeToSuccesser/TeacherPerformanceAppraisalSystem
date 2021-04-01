@@ -19,6 +19,14 @@ const getters = {
   paramCNumList: state => state.sysParam.paramCNumList,
   ruleCompareType: state => state.sysParam.ruleCompareType,
   systemMenus: state => state.systemRole.systemMenus,
-  systemPermission: state => state.systemRole.systemPermission
+  systemPermission: state => state.systemRole.systemPermission,
+  schoolYearOptions: state => state.settings.schoolYearOptions,
+  semesterOptions: state => state.settings.semesterOptions,
+  courseCharacterEnum: state => state.courseBase.courseCharacterEnum,
+  courseTypeEnum: state => state.courseBase.courseTypeEnum,
+  softHardEnum: state => state.courseBase.softHardEnum,
+  studentTypeEnum: state => state.courseBase.studentTypeEnum,
+  bilingualEnum: state => state.courseBase.bilingualEnum
+
 }
 export default getters

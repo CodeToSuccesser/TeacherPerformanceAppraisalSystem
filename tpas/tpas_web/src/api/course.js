@@ -124,3 +124,100 @@ export function auditCourseHoursModify(id, result) {
     method: 'post'
   })
 }
+
+/** course base api **/
+
+/**
+ * 查询课程信息
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function queryCourseBase(data) {
+  return request({
+    url: '/course/info/getCourseInfo',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 下载课程管理文件模板
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function downloadCourseInfoTemplate() {
+  return request({
+    url: '/course/info/download/template',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+/**
+ * 导入课程信息文件
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function uploadCourseInfo(data) {
+  return request({
+    url: '/course/info/upload',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+    },
+    data
+  })
+}
+
+/**
+ * 导出课程信息文件
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function exportCourseInfo(data) {
+  return request({
+    url: '/course/info/export',
+    method: 'post',
+    responseType: 'blob',
+    data
+  })
+}
+
+/**
+ * 修改单条课程信息
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function editCourseBaseInfo(data, id) {
+  return request({
+    url: '/course/info/' + id + '/modify',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 插入单条课程信息记录
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function addCourseBaseInfo(data) {
+  return request({
+    url: '/course/info/insert',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 删除课程信息
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function deleteCourseInfos(data) {
+  return request({
+    url: '/course/info/deleteCourseInfos',
+    method: 'post',
+    data
+  })
+}

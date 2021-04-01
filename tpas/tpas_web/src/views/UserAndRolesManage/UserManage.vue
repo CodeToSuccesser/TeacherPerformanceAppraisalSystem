@@ -6,7 +6,7 @@
 
     <el-input v-model="searchData.logName" placeholder="工号" clearable class="selector" style="width: 120px" />
 
-    <el-button type="primary" size="small" class="button-find" :disabled="loadingVisible" @click="skipPage(0)">查找</el-button>
+    <el-button type="primary" size="small" class="button-find" :disabled="loadingVisible" @click="handleCurrentChange(0)">查找</el-button>
 
     <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editUser(null)">新增</el-button>
     <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="downloadTemplate">下载导入模板</el-button>
@@ -273,7 +273,7 @@ export default {
             message: '删除成功!'
           })
           this.loadingVisible = false
-          this.skipPage(0)
+          this.handleCurrentChange(0)
         }).catch(error => {
           console.log(error)
           this.loadingVisible = false
@@ -355,7 +355,7 @@ export default {
           })
           this.loadingVisible = false
           this.editDialogVisible = false
-          this.skipPage(0)
+          this.handleCurrentChange(0)
         }).catch(error => {
           console.log(error)
           this.loadingVisible = false
@@ -403,7 +403,7 @@ export default {
           })
           this.importDialogVisible = false
           hideFullScreenLoading()
-          this.skipPage(0)
+          this.handleCurrentChange(0)
         })
         .catch(error => {
           console.log(error)

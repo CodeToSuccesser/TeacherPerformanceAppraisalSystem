@@ -12,6 +12,7 @@ import com.management.common.base.BaseServiceImpl;
 import com.management.common.enums.ErrorCodeEnum;
 import com.management.common.exception.BusinessException;
 import com.management.common.utils.BeanMapper;
+import com.management.tpas.utils.UserUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,7 @@ public class CourseBaseServiceImpl extends BaseServiceImpl<CourseBaseMapper, Cou
         if (courseBaseMapper.countByCourseCode(courseBaseModel.getCourseCode()) != 0) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_EXISTED.code, "课程记录已存在");
         }
+        courseBaseModel.setAdminId(UserUtil.getUserId());
         courseBaseMapper.insertCourseBase(BeanMapper.map(courseBaseModel, CourseBase.class));
     }
 

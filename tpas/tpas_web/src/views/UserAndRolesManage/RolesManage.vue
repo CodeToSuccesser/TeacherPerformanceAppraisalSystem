@@ -7,7 +7,7 @@
       class="input-username"
     />
 
-    <el-button type="primary" size="small" class="button-find" :disabled="loadingVisible" @click="skipPage(0)">查找</el-button>
+    <el-button type="primary" size="small" class="button-find" :disabled="loadingVisible" @click="handleCurrentChange(0)">查找</el-button>
 
     <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editRole(null)">新增</el-button>
 
@@ -176,7 +176,7 @@ export default {
             message: '删除成功!'
           })
           this.loadingVisible = false
-          this.skipPage(0)
+          this.handleCurrentChange(0)
         }).catch(error => {
           console.log(error)
           this.loadingVisible = false

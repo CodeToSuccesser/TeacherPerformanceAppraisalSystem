@@ -1,13 +1,15 @@
 import defaultSettings from '@/settings'
 
-const { showSettings, fixedHeader, sidebarLogo, passwordReg, passwordTip } = defaultSettings
+const { showSettings, fixedHeader, sidebarLogo, passwordReg, passwordTip, schoolYearOptions, semesterOptions } = defaultSettings
 
 const state = {
   showSettings: showSettings,
   fixedHeader: fixedHeader,
   sidebarLogo: sidebarLogo,
   passwordReg: passwordReg,
-  passwordTip: passwordTip
+  passwordTip: passwordTip,
+  schoolYearOptions: schoolYearOptions,
+  semesterOptions: semesterOptions
 }
 
 const mutations = {
