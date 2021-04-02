@@ -92,8 +92,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 系统接口权限
         List<SystemPermissionModel> pathPermissionList = allPermission.stream()
                 .filter(it -> it.getUrlPath().contains(urlPath) &&
-                        (it.getControlType().equals(SystemPermissionControlTypeEnum.LIST.getCode())
-                                || it.getControlType().equals(SystemPermissionControlTypeEnum.BUTTON_FILED.getCode())))
+                        it.getControlType().equals(SystemPermissionControlTypeEnum.BUTTON_FILED.getCode()))
                 .collect(Collectors.toList());
         // 用户该接口权限
         List<SystemPermissionModel> userPermission = redisUserMsg.getPermissionList()

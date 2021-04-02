@@ -19,6 +19,25 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.CourseScoreModel">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="teacher_code" property="teacherCode" />
+        <result column="teacher_name" property="teacherName" />
+        <result column="course_name" property="courseName" />
+        <result column="course_code" property="courseCode" />
+        <result column="course_hours_id" property="courseHoursId" />
+        <result column="total" property="total" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="assess_rule_id" property="assessRuleId" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="assess_format" property="assessFormat" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, teacher_id, course_hours_id, total, semester, school_year, admin_id, update_time, create_time, is_deleted
@@ -37,5 +56,31 @@
         , total = VALUES(total)
         , is_deleted = 0
     </insert>
+
+    <select id="queryScoreList" resultMap="ModelResultMap">
+        SELECT s.id, s.teacher_id, s.course_hours_id, s.total, s.semester, s.school_year, s.admin_id
+        , s.update_time, s.create_time, s.assess_rule_id, s.assess_detail, s.assess_format
+        , u.log_name AS teacher_code
+        , u.user_name AS teacher_name
+        , b.course_name AS course_name
+        , b.course_code AS course_code
+        FROM course_score s LEFT JOIN user_msg u ON s.teacher_id = u.id
+        LEFT JOIN course_hours h ON s.course_hours_id = h.id
+        LEFT JOIN course_base b ON h.course_id = b.id
+        <where>
+            <if test="data.teacherCode != null">
+                AND u.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.schoolYear != null">
+                AND s.school_year = #{data.schoolYear}
+            </if>
+            <if test="data.semester != null">
+                AND s.semester = #{data.semester}
+            </if>
+            <if test="1==1">
+                AND s.is_deleted = 0
+            </if>
+        </where>
+    </select>
 
 </mapper>

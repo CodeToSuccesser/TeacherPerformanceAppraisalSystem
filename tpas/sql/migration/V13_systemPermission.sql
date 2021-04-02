@@ -42,3 +42,16 @@ CREATE TABLE `system_role_permission_ref`(
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统角色权限关系表';
 
 -- ---------------------系统权限表--------------------------------
+
+-- ---------------------考核分数查询权限---------------------------
+INSERT INTO `system_permission`(`permission_name`, `permission_key`, `value`, `url_path`, `control_type`, `filed_name`, `remark`)VALUES
+('考核成绩列表', 'queryAssessList-List', 'Assess-Analysis', '/score/queryAssessList', 1, '', '考核成绩列表'),
+('考核成绩搜索教师编码', 'queryAssessListSearch-teacherCode', 'Assess-Analysis', '/score/queryAssessList', 2, 'teacherCode', '考核成绩搜索参数教师信息'),
+('查询授课考核明细列表', 'courseQueryScoreList-List', 'Assess-Score', '/score/course/queryScoreList', 1, '', '查询授课考核明细列表'),
+('实习考核明细列表', 'internQueryScoreList-List', 'Assess-Score', '/score/intern/queryScoreList', 1, '', '查询实习考核明细列表'),
+('论文考核明细列表', 'paperQueryScoreList-List', 'Assess-Score', '/score/paper/queryScoreList', 1, '', '查询论文考核明细列表'),
+('授课考核明细搜索参数教师信息', 'courseQueryScoreList-teacherCode', 'Assess-Score', '/score/course/queryScoreList', 2, 'teacherCode', '查询授课考核明细搜索参数教师信息'),
+('实习考核明细搜索参数教师信息', 'internQueryScoreList-teacherCode', 'Assess-Score', '/score/intern/queryScoreList', 2, 'teacherCode', '查询实习考核明细搜索参数教师信息'),
+('论文考核明细搜索参数教师信息', 'paperQueryScoreList-teacherCode', 'Assess-Score', '/score/paper/queryScoreList', 2, 'teacherCode', '查询论文考核明细搜索参数教师信息');
+
+-- ---------------------考核分数查询权限---------------------------

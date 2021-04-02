@@ -1,9 +1,13 @@
 package com.business.tpas.dao;
 
 import com.business.tpas.entity.InternScore;
+import com.business.tpas.model.InternScoreModel;
+import com.business.tpas.model.ScoreSearchModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,6 @@ import org.springframework.stereotype.Repository;
 public interface InternScoreMapper extends BaseDao<InternScore> {
 
     void updateOrInsert(@Param("data") InternScore internScore);
+
+    List<InternScoreModel> queryScoreList(@Param("data") ScoreSearchModel searchModel);
 }

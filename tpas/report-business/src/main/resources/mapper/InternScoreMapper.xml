@@ -18,10 +18,25 @@
         <result column="is_deleted" property="isDeleted" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.InternScoreModel">
+        <id column="id" property="id" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="intern_id" property="internId" />
+        <result column="c14_value" property="c14Value" />
+        <result column="c15_value" property="c15Value" />
+        <result column="total" property="total" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="admin_id" property="adminId" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, teacher_id, intern_id, c14_value, c15_value, total, semester, school_year, admin_id, update_time, create_time, is_deleted
-    </sql>
+        id, teacher_id, intern_id, total, semester, school_year, admin_id, update_time, create_time, is_deleted
+        , assess_rule_id, assess_detail, assess_format
+        </sql>
 
     <insert id="updateOrInsert">
         INSERT INTO intern_score(teacher_id, intern_id, total, semester
@@ -35,5 +50,26 @@
         , total = VALUES(total)
         , is_deleted = 0
     </insert>
+
+    <select id="queryScoreList" resultMap="ModelResultMap">
+        SELECT id, teacher_id, intern_id, total, semester, school_year, admin_id, update_time, create_time
+        , assess_rule_id, assess_detail, assess_format
+        FROM intern_score
+        <where>
+            <if test="data.teacherCode != null">
+                AND u.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.schoolYear != null">
+                AND school_year = #{data.schoolYear}
+            </if>
+            <if test="data.semester != null">
+                AND semester = #{data.semester}
+            </if>
+            <if test="1==1">
+                AND is_deleted = 0
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

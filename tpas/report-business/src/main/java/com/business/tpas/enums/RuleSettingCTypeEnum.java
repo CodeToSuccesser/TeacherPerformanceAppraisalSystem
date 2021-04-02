@@ -11,17 +11,22 @@ import java.util.Arrays;
  **/
 public enum RuleSettingCTypeEnum {
 
-    COURSE(1, "授课"),
-    PAPER(2, "论文"),
-    INTERN(3, "实习");
+    COURSE(1, "授课", "course"),
+    PAPER(2, "论文", "paper"),
+    INTERN(3, "实习", "intern"),
+    TASK(4, "任务", "task"),
+    OTHER(5, "其他", "other");
 
     private final Integer code;
 
     private final String value;
 
-    RuleSettingCTypeEnum(Integer code, String value) {
+    private final String path;
+
+    RuleSettingCTypeEnum(Integer code, String value, String path) {
         this.code = code;
         this.value = value;
+        this.path = path;
     }
 
     public Integer getCode() {
@@ -32,6 +37,10 @@ public enum RuleSettingCTypeEnum {
         return value;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public static RuleSettingCTypeEnum getEnumByCode(Integer code) {
         return Arrays.stream(values()).filter(it -> it.code.equals(code)).findFirst().orElse(COURSE);
     }
@@ -40,7 +49,15 @@ public enum RuleSettingCTypeEnum {
         return Arrays.stream(values()).filter(it -> it.value.equals(value)).findFirst().orElse(COURSE);
     }
 
+    public static RuleSettingCTypeEnum getEnumByPath(String path) {
+        return Arrays.stream(values()).filter(it -> it.path.equals(path)).findFirst().orElse(null);
+    }
+
     public static boolean isExistByCode(Integer code) {
         return Arrays.stream(RuleSettingCTypeEnum.values()).anyMatch(it -> it.code.equals(code));
+    }
+
+    public static boolean isExistByPath(String path) {
+        return Arrays.stream(RuleSettingCTypeEnum.values()).anyMatch(it -> it.path.equals(path));
     }
 }

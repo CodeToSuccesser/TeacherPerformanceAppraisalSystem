@@ -6,6 +6,8 @@ import com.business.tpas.enums.RuleSettingCTypeEnum;
 import com.business.tpas.model.*;
 import com.business.tpas.service.AssessmentService;
 import com.business.tpas.utils.AssessRuleUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.utils.JacksonUtil;
 import com.management.tpas.utils.UserUtil;
@@ -128,6 +130,14 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
                 calculateAssessRules(eachData, assessRuleForData, ruleId, model.getcType());
             }
         });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageInfo<Assessment> queryAssessList(ScoreSearchModel searchModel) {
+        PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
+        List<Assessment> data = assessmentMapper.queryAssessList(searchModel);
+        return new PageInfo<>(data);
     }
 
     /**

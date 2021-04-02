@@ -1,7 +1,12 @@
 package com.business.tpas.service;
 
 import com.business.tpas.entity.CourseScore;
+import com.business.tpas.model.CourseScoreModel;
+import com.business.tpas.model.ScoreSearchModel;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,7 @@ import com.management.common.base.BaseService;
  */
 public interface CourseScoreService extends BaseService<CourseScore> {
 
+    PageInfo<CourseScoreModel> queryScoreList(ScoreSearchModel searchModel);
+
+    List<CourseScoreModel> getScoreList(ScoreSearchModel searchModel);
 }

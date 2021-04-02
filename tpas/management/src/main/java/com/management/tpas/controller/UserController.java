@@ -71,8 +71,9 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok", response = UserMsgModel.class),
             @ApiResponse(code = 1, message = "-1 服务器内部异常")})
     public BaseResponse<?> login(@RequestBody LoginMsgModel loginMsgModel) {
-        if (null == loginMsgModel || StringUtils.isBlank(loginMsgModel.getLogName()) || StringUtils
-                .isBlank(loginMsgModel.getLogPassword()) || null == loginMsgModel.getUserType()) {
+        if (null == loginMsgModel
+                || StringUtils.isBlank(loginMsgModel.getLogName())
+                || StringUtils.isBlank(loginMsgModel.getLogPassword())) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY.code, ErrorCodeEnum.PARAM_IS_EMPTY.msg);
         }
         // 获取账号信息,生成jwt和设置缓存

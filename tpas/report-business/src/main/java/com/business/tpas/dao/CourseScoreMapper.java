@@ -1,9 +1,13 @@
 package com.business.tpas.dao;
 
 import com.business.tpas.entity.CourseScore;
+import com.business.tpas.model.CourseScoreModel;
+import com.business.tpas.model.ScoreSearchModel;
 import com.management.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +21,7 @@ import org.springframework.stereotype.Repository;
 public interface CourseScoreMapper extends BaseDao<CourseScore> {
 
     void updateOrInsert(@Param("data") CourseScore courseScore);
+
+    List<CourseScoreModel> queryScoreList(@Param("data")ScoreSearchModel searchModel);
 
 }

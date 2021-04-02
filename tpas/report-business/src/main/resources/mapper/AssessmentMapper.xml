@@ -56,4 +56,23 @@
         </choose>
     </insert>
 
+    <select id="queryAssessList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM assessment
+        <where>
+            <if test="data.teacherId != null">
+                AND teacher_id = #{data.teacherId}
+            </if>
+            <if test="data.schoolYear != null">
+                AND school_year = #{data.schoolYear}
+            </if>
+            <if test="data.semester != null">
+                AND semester = #{data.semester}
+            </if>
+            <if test="1==1">
+                AND is_deleted = 0
+            </if>
+        </where>
+    </select>
+
 </mapper>

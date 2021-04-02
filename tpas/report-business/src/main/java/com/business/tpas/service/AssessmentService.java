@@ -2,6 +2,8 @@ package com.business.tpas.service;
 
 import com.business.tpas.entity.Assessment;
 import com.business.tpas.model.AssessCalculateSearchModel;
+import com.business.tpas.model.ScoreSearchModel;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 
 /**
@@ -21,5 +23,7 @@ public interface AssessmentService extends BaseService<Assessment> {
      * @date 2021/4/1
      **/
     void calculateAssessment(AssessCalculateSearchModel model);
+
+    PageInfo<Assessment> queryAssessList(ScoreSearchModel searchModel);
 
 }

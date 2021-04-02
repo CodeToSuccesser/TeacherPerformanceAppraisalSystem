@@ -1,7 +1,12 @@
 package com.business.tpas.service;
 
 import com.business.tpas.entity.PaperScore;
+import com.business.tpas.model.PaperScoreModel;
+import com.business.tpas.model.ScoreSearchModel;
+import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,7 @@ import com.management.common.base.BaseService;
  */
 public interface PaperScoreService extends BaseService<PaperScore> {
 
+    PageInfo<PaperScoreModel> queryScoreList(ScoreSearchModel searchModel);
+
+    List<PaperScoreModel> getScoreList(ScoreSearchModel searchModel);
 }
