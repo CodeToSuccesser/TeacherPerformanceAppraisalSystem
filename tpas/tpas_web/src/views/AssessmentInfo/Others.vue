@@ -5,11 +5,11 @@
         <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
-      <el-select v-model="searchForm.selectedSemester" placeholder="学期" class="selector">
-        <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+      <el-select v-model="searchData.semester" placeholder="学期" class="selector-term">
+        <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
-      <el-button type="primary" size="small" class="button-find">查找</el-button>
+      <el-button :v-loading="loadingVisible" type="primary" size="small" class="button-find" @click="handleCurrentChange(0, 0)">查找</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyOtherDialogVisible = true">新增</el-button>
     </el-form>
@@ -105,28 +105,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
+  },
   data() {
     return {
       pageSize: 25,
       curPageNum: 1,
       total: 0,
       otherInfo: [],
-      searchForm: {
-        selectedSemester: '',
-        selectedSchoolYear: ''
+      searchData: {
+        semester: '',
+        schoolYear: ''
       },
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       otherDialogVisible: false,
       otherEditDisable: true,
       applyOtherDialogVisible: false,
@@ -169,11 +166,11 @@ export default {
 </script>
 
 <style scoped>
-  .selector-first {
+  .selector-year {
     margin-bottom: 20px;
   }
 
-  .selector {
+  .selector-term {
     margin-left: 10px;
     margin-bottom: 20px;
   }

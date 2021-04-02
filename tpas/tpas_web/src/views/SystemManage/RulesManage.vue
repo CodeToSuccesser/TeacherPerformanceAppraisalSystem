@@ -425,23 +425,7 @@ export default {
         pageSize: this.pageInfo[0].pageSize,
         pageNum: val
       }
-      switch (index) {
-        case 0: {
-          this.searchList(index, param)
-          break
-        }
-        case 1: {
-          this.searchList(index, param)
-          break
-        }
-        case 2: {
-          this.searchList(index, param)
-          break
-        }
-        default: {
-          return
-        }
-      }
+      this.searchList(index, param)
       this.pageInfo[index].curPageNum = val
     },
     searchList: function(index, param) {
