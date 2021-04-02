@@ -27,6 +27,9 @@ class CourseHoursServiceImplTest extends BaseTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    /**
+     * 根据课程id选择课时信息
+     */
     @Test
     void testSelectByCourseIdSuccess() {
         List<CourseHours> courseHours = courseHoursService.selectByCourseId(12L);
