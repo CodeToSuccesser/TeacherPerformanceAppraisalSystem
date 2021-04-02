@@ -3,6 +3,7 @@ package com.business.tpas.model;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.business.tpas.utils.CourseHoursContentConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -42,32 +43,37 @@ public class PaperScoreModel {
     @ApiModelProperty(value = "论文指导信息编码")
     private Long paperId;
 
+    @ExcelIgnore
     @ApiModelProperty(value = "选用的绩效规则id")
     private Long assessRuleId;
 
+    @ExcelProperty(value = "绩效规则")
     @ApiModelProperty(value = "选用的绩效规则")
     private String assessDetail;
 
+    @ExcelProperty(value = "绩效公式")
     @ApiModelProperty(value = "统计得出绩效规则")
     private String assessFormat;
 
-    @ApiModelProperty(value = "论文总分")
+    @ExcelProperty(value = "得分")
+    @ApiModelProperty(value = "授课总分")
     private BigDecimal total;
 
-    @ApiModelProperty(value = "学期, 默认1 第一学期, 2 第二学期")
+    @ExcelProperty(value = "学期", converter = CourseHoursContentConverter.class)
+    @ApiModelProperty(value = "学期")
     private Integer semester;
 
+    @ExcelProperty(value = "学年")
     @ApiModelProperty(value = "学年")
     private String schoolYear;
 
+    @ExcelIgnore
     @ApiModelProperty(value = "处理的管理员编码")
     private Long adminId;
 
-    /**
-     * 数据最新操作时间
-     */
+    @ExcelIgnore
     private Date updateTime;
-
+    @ExcelIgnore
     private Date createTime;
 
     public Long getId() {

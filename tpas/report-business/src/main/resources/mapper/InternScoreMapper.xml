@@ -7,12 +7,13 @@
         <id column="id" property="id" />
         <result column="teacher_id" property="teacherId" />
         <result column="intern_id" property="internId" />
-        <result column="c14_value" property="c14Value" />
-        <result column="c15_value" property="c15Value" />
         <result column="total" property="total" />
         <result column="semester" property="semester" />
         <result column="school_year" property="schoolYear" />
         <result column="admin_id" property="adminId" />
+        <result column="assess_rule_id" property="assessRuleId" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="assess_format" property="assessFormat" />
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
         <result column="is_deleted" property="isDeleted" />
@@ -21,13 +22,19 @@
     <resultMap id="ModelResultMap" type="com.business.tpas.model.InternScoreModel">
         <id column="id" property="id" />
         <result column="teacher_id" property="teacherId" />
+        <result column="teacher_code" property="teacherCode" />
+        <result column="teacher_name" property="teacherName" />
         <result column="intern_id" property="internId" />
-        <result column="c14_value" property="c14Value" />
-        <result column="c15_value" property="c15Value" />
+        <result column="normal_practice" property="normalPractice" />
+        <result column="non_normal_practice" property="nonNormalPractice" />
+        <result column="school_practice" property="schoolPractice" />
         <result column="total" property="total" />
         <result column="semester" property="semester" />
         <result column="school_year" property="schoolYear" />
         <result column="admin_id" property="adminId" />
+        <result column="assess_rule_id" property="assessRuleId" />
+        <result column="assess_detail" property="assessDetail" />
+        <result column="assess_format" property="assessFormat" />
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
     </resultMap>
@@ -52,21 +59,27 @@
     </insert>
 
     <select id="queryScoreList" resultMap="ModelResultMap">
-        SELECT id, teacher_id, intern_id, total, semester, school_year, admin_id, update_time, create_time
-        , assess_rule_id, assess_detail, assess_format
-        FROM intern_score
+        SELECT s.id, s.teacher_id, s.intern_id, s.total, s.semester, s.school_year, s.admin_id
+        , s.update_time, s.create_time, s.assess_rule_id, s.assess_detail, s.assess_format
+        , u.user_name AS teacher_name
+        , u.log_name AS teacher_code
+        , i.normal_practice AS normal_practice
+        , i.non_normal_practice AS non_normal_practice
+        , i.school_practice AS school_practice
+        FROM intern_score s LEFT JOIN user_msg u ON s.teacher_id = u.id
+        LEFT JOIN intern i ON s.intern_id = i.id
         <where>
             <if test="data.teacherCode != null">
                 AND u.log_name = #{data.teacherCode}
             </if>
             <if test="data.schoolYear != null">
-                AND school_year = #{data.schoolYear}
+                AND s.school_year = #{data.schoolYear}
             </if>
             <if test="data.semester != null">
-                AND semester = #{data.semester}
+                AND s.semester = #{data.semester}
             </if>
             <if test="1==1">
-                AND is_deleted = 0
+                AND s.is_deleted = 0
             </if>
         </where>
     </select>

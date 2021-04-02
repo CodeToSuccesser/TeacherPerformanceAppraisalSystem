@@ -37,7 +37,6 @@ public class CourseScoreModel {
     @ApiModelProperty(value = "教师姓名")
     private String teacherName;
 
-
     @ExcelProperty(value = "课程编码")
     @ApiModelProperty(value = "课程编码")
     private String courseCode;
@@ -78,11 +77,8 @@ public class CourseScoreModel {
     @ApiModelProperty(value = "处理的管理员编码")
     private Long adminId;
 
-    /**
-     * 数据最新操作时间
-     */
+    @ExcelIgnore
     private Date updateTime;
-
     @ExcelIgnore
     private Date createTime;
 
