@@ -804,4 +804,10 @@ export default {
   .button-add {
     float: right;
   }
+
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
+  }
 </style>

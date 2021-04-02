@@ -1,83 +1,134 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="searchForm">
-      <el-input v-model="searchForm.title" placeholder="公示标题" clearable class="selector" style="width: 200px" />
-      <el-button type="primary" size="small" class="button-find" @click="searchPublicity">查找</el-button>
+    <el-form ref="form" :model="searchData">
+      <el-input v-model="searchData.title" placeholder="公示标题" clearable class="selector" style="width: 200px" />
+      <el-date-picker
+        v-model="searchData.timeRange"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        type="daterange"
+        range-separator="-"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        clearable
+        class="selector"
+      />
+      <el-button type="primary" size="small" class="button-find" @click="handleCurrentChange(0)">查找</el-button>
     </el-form>
-    <el-row class="el-row">
-      <el-col v-for="(o,index) in publicityInfo" :key="o" span="11" >
-        <el-card :data="publicityInfo" class="box-card" shadow="hover">
-          <div slot="header" class="clearfix">
-            <el-row>
-              <el-col>
-                <span class="title" :title="publicityInfo[index].title">{{ publicityInfo[index].title }}</span>
-              </el-col>
-              <el-col>
-                <span class="date">{{ publicityInfo[index].createTime }}</span>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="text item">
-            {{ publicityInfo[index].content }}
-          </div>
-          <el-image
-            v-if="publicityInfo[index].pictureUrl"
-            style="width: 100px; height: 100px ; margin-top: 5px"
-            :src="publicityInfo[index].pictureUrl"
-            :fit="fit"
-          />
-        </el-card>
-      </el-col>
+
+    <el-row v-for="(o,index) in publicityList" :key="index" class="el-row">
+      <el-card class="box-card" shadow="hover">
+        <div slot="header" class="clearfix">
+          <el-row>
+            <el-col>
+              <span class="title" :title="o.title">{{ o.title }}</span>
+            </el-col>
+            <el-col>
+              <span class="date">发布时间: {{ o.createTime }}|发布账号: {{ o.publisherCode }}</span>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="text item">
+          {{ o.content }}
+        </div>
+        <el-image
+          v-if="o.pictureUrl"
+          style="width: 100px; height: 100px ; margin-top: 5px"
+          :src="o.pictureUrl"
+          :fit="fit"
+        />
+      </el-card>
     </el-row>
+
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="curPageNum"
+      class="pagination"
+      @prev-click="skipPage(-1)"
+      @next-click="skipPage(1)"
+      @current-change="handleCurrentChange"
+    />
 
   </div>
 </template>
 
 <script>
+import { getPublicity } from '@/api/publicity'
+
 export default {
   name: 'IndexVue',
   data() {
     return {
-      searchForm: {
-        title: ''
+      loadingVisible: false,
+      editDialogVisible: false,
+      pageSize: 3,
+      curPageNum: 1,
+      total: 0,
+      searchData: {
+        title: '',
+        timeRange: []
       },
-      publicityInfo: [
-        {
-          title: '2020-2021第一学期计算机学院优秀教师评比',
-          content: '2020-2021第一学期计算机学院优秀教师评比，本次评比参考课时、实习带队、论文指导以及日常的获奖情况进行评比，具体评比细则见下图。本次评比以系统绩效考核为准，选出前2%的教师参与学年的分享会议',
-          createTime: '2020-11-15'
-        },
-        {
-          title: '关于组织我院教师参加教务技能培训活动',
-          content: '关于组织我院教师参加教务技能培训活动，关于组织我院教师参加教务技能培训活动,关于组织我院教师参加教务技能培训活动,详情见学者网链接：https://www.scholat.com/teamwork/showPostMessage.html?id=9261',
-          createTime: '2020-10-15'
-        },
-        {
-          title: '关于组织我院教师参加教务技能培训活动',
-          content: '关于组织我院教师参加教务技能培训活动，详情见学者网链接：https://www.scholat.com/teamwork/showPostMessage.html?id=9261',
-          createTime: '2020-10-15'
-        },
-        {
-          title: '关于组织我院教师参加教务技能培训活动',
-          content: '关于组织我院教师参加教务技能培训活动，详情见学者网链接：https://www.scholat.com/teamwork/showPostMessage.html?id=9261',
-          createTime: '2020-10-15'
-        },
-        {
-          title: '2020-2021第一学期计算机学院优秀教师评比',
-          content: '2020-2021第一学期计算机学院优秀教师评比，本次评比参考课时、实习带队、论文指导以及日常的获奖情况进行评比，具体评比细则见下图。本次评比以系统绩效考核为准，选出前2%的教师参与学年的分享会议',
-          createTime: '2020-11-15'
-        },
-        {
-          title: '2020-2021第一学期计算机学院优秀教师评比',
-          content: '2020-2021第一学期计算机学院优秀教师评比，本次评比参考课时、实习带队、论文指导以及日常的获奖情况进行评比，具体评比细则见下图。本次评比以系统绩效考核为准，选出前2%的教师参与学年的分享会议',
-          createTime: '2020-11-15'
-        }
-      ]
+      publicityList: []
     }
   },
+  created() {
+    this.skipPage(0)
+  },
   methods: {
-    searchPublicity: function() {
-
+    getDefaultForm: function() {
+      return {
+        title: '',
+        content: '',
+        createTime: undefined,
+        pictureUrl: undefined
+      }
+    },
+    skipPage: function(addPage) {
+      const param = {
+        pageNum: this.curPageNum + addPage,
+        pageSize: this.pageSize
+      }
+      this.searchList(param)
+      this.curPageNum = this.curPageNum + addPage
+    },
+    handleCurrentChange: function(val) {
+      const param = {
+        pageSize: this.pageSize,
+        pageNum: val
+      }
+      this.searchList(param)
+      this.curPageNum = val
+    },
+    /**
+     * 查询列表
+     * @param param
+     */
+    searchList: function(param) {
+      this.loadingVisible = true
+      const searchModel = param
+      if (this.searchData.title) {
+        searchModel.title = this.searchData.title
+      }
+      if (this.searchData.timeRange && this.searchData.timeRange.length > 0) {
+        if (this.searchData.timeRange[0]) {
+          searchModel.startTime = this.searchData.timeRange[0]
+        }
+        if (this.searchData.timeRange[1]) {
+          searchModel.endTime = this.searchData.timeRange[1]
+        }
+      }
+      getPublicity(searchModel).then(response => {
+        const { data } = response
+        this.publicityList = data.list
+        this.total = data.total
+        this.loadingVisible = false
+      }).catch(error => {
+        console.log(error)
+        this.loadingVisible = false
+      })
     }
   }
 }
@@ -102,7 +153,7 @@ export default {
 
   .box-card {
     margin-top: 20px;
-    width: 500px;
+    width: 100%;
     background-color: #EFF5FB;
     height: 200px;
     padding: 10px;
@@ -141,6 +192,12 @@ export default {
   .el-row {
     display: flex;
     flex-wrap: wrap
+  }
+
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
   }
 
 </style>

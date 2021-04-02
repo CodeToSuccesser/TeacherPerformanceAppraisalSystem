@@ -41,6 +41,12 @@
             <if test="data.title != null and data.title != ''">
                 and p.title like "%"#{data.title}"%"
             </if>
+            <if test="data.startTime != null">
+                and p.create_time &gt; #{data.startTime}
+            </if>
+            <if test="data.endTime != null">
+                and p.create_time &lt; #{data.endTime}
+            </if>
             and p.is_deleted = 0
         </where>
         order by p.create_time DESC

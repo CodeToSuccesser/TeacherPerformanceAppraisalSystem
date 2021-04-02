@@ -484,4 +484,10 @@ export default {
     margin-bottom: 20px;
   }
 
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
+  }
+
 </style>

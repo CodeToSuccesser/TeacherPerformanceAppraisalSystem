@@ -11,19 +11,22 @@ import java.util.Date;
 public class PublicitySearchModel extends PageModel {
 
     @ApiModelProperty(value = "发布者编号")
-    private Long publisherCode;
+    private String publisherCode;
 
     @ApiModelProperty(value = "标题")
     private String title;
 
-    @ApiModelProperty(value = "发布日期")
-    private Date publishTime;
+    @ApiModelProperty(value = "开始日期")
+    private Date startTime;
 
-    public Long getPublisherCode() {
+    @ApiModelProperty(value = "结束日期")
+    private Date endTime;
+
+    public String getPublisherCode() {
         return publisherCode;
     }
 
-    public void setPublisherCode(Long publisherCode) {
+    public void setPublisherCode(String publisherCode) {
         this.publisherCode = publisherCode;
     }
 
@@ -35,11 +38,19 @@ public class PublicitySearchModel extends PageModel {
         this.title = title;
     }
 
-    public Date getPublishTime() {
-        return publishTime;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setPublishTime(Date publishTime) {
-        this.publishTime = publishTime;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }
