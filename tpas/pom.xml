@@ -52,6 +52,7 @@
         <spring.framwork.version>2.3.1.RELEASE</spring.framwork.version>
         <jackson.version>2.11.4</jackson.version>
         <nekohtml.version>1.9.22</nekohtml.version>
+        <h2.version>1.4.200</h2.version>
     </properties>
 
     <dependencies>
@@ -233,6 +234,19 @@
             <groupId>net.sourceforge.nekohtml</groupId>
             <artifactId>nekohtml</artifactId>
             <version>${nekohtml.version}</version>
+        </dependency>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
 
     </dependencies>

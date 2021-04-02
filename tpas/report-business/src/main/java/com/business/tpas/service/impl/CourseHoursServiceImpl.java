@@ -57,6 +57,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
     public List<CourseHours> selectByCourseId(Long id) {
         Map<String, Object> map = new HashMap<>();
         map.put("course_id", id);
+        map.put("is_deleted", 0);
 
         return courseHoursMapper.selectByMap(map);
     }
@@ -91,7 +92,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
         if (oldRecord == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "课时信息不存在，无法修改");
         }
-        CourseBase courseBase = courseBaseMapper.selectByCourseName(courseHoursModel.getCourseName());
+        CourseBase courseBase = courseBaseMapper.selectByCourseCode(courseHoursModel.getCourseCode());
         if (courseBase == null) {
             throw new BusinessException(ErrorCodeEnum.OBJECT_NOT_FOUND.code, "课时信息对应的课程不存在，无法修改");
         }
