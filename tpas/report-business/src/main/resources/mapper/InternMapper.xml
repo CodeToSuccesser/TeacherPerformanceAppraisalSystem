@@ -61,6 +61,29 @@
         order by t.create_time DESC
     </select>
 
+    <select id="selectInternInfoForAssess" resultMap="ModelResultMap">
+        select DISTINCT t.id,t.teacher_id,um.user_name as teacher_name,um.log_name as teacher_code,
+        t.normal_practice,t.non_normal_practice,t.school_practice,t.semester,t.school_year,
+        t.remark,t.update_time,t.create_time,t.is_deleted,t.is_in_school
+        from intern t
+        LEFT JOIN intern_score s ON t.id = s.intern_id AND t.school_year = s.school_year AND t.semester = s.semester
+        inner join user_msg um on t.teacher_id = um.id
+        <where>
+            <if test="data.teacherCode != null">
+                and um.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.semester != null ">
+                and t.semester = #{data.semester}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                and t.school_year = #{data.schoolYear}
+            </if>
+            and t.is_deleted = 0
+            and (s.id IS NULL OR s.is_deleted = 1)
+        </where>
+        order by t.create_time DESC
+    </select>
+
     <insert id="saveBatch" parameterType="java.util.List">
         <foreach collection="list" item="data" index="index" separator=";">
             insert into intern

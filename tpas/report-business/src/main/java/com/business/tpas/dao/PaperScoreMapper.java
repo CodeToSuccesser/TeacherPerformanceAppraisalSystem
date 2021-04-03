@@ -23,4 +23,7 @@ public interface PaperScoreMapper extends BaseDao<PaperScore> {
     void updateOrInsert(@Param("data") PaperScore paperScore);
 
     List<PaperScoreModel> queryScoreList(@Param("data")ScoreSearchModel searchModel);
+
+    Long countByDataId(@Param("dataId") Long dataId);
+
 }

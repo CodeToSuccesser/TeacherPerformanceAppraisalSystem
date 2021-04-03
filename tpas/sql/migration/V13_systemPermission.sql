@@ -25,7 +25,7 @@ INSERT INTO `system_permission`(`permission_name`, `permission_key`, `value`, `u
 ('导入实习指导信息按钮', 'importIntern-Button', 'AssessmentInfo-Intern', '', 3, '', '导入实习指导信息文件按钮'),
 ('导出实习指导信息按钮', 'exportIntern-Button', 'AssessmentInfo-Intern', '', 3, '', '导出实习指导信息文件按钮'),
 ('下载实习指导模板文件按钮', 'downloadInternTemplate-Button', 'AssessmentInfo-Intern', '', 3, '', '下载实习指导模板文件按钮'),
-('导入论文指导信息按钮', 'importPaper-Button', 'AssessmentInfo-Paper', '', 3, '', '导入论文指导信息文件按钮'),
+('导入论文指导信息按钮', 'importPaper-Button', 'AssessmentInfo-Paper', '', 3, ''Intern, '导入论文指导信息文件按钮'),
 ('导出论文指导信息按钮', 'exportPaper-Button', 'AssessmentInfo-Paper', '', 3, '', '导出论文指导信息文件按钮'),
 ('下载论文指导模板文件按钮', 'downloadPaperTemplate-Button', 'AssessmentInfo-Paper', '', 3, '', '下载论文指导模板文件按钮');
 
@@ -53,5 +53,13 @@ INSERT INTO `system_permission`(`permission_name`, `permission_key`, `value`, `u
 ('授课考核明细搜索参数教师信息', 'courseQueryScoreList-teacherCode', 'Assess-Score', '/score/course/queryScoreList', 2, 'teacherCode', '查询授课考核明细搜索参数教师信息'),
 ('实习考核明细搜索参数教师信息', 'internQueryScoreList-teacherCode', 'Assess-Score', '/score/intern/queryScoreList', 2, 'teacherCode', '查询实习考核明细搜索参数教师信息'),
 ('论文考核明细搜索参数教师信息', 'paperQueryScoreList-teacherCode', 'Assess-Score', '/score/paper/queryScoreList', 2, 'teacherCode', '查询论文考核明细搜索参数教师信息');
+
+
+-- 考核触发权限
+INSERT INTO `system_permission`(`permission_name`, `permission_key`, `value`, `url_path`, `control_type`, `filed_name`, `remark`)VALUES
+('授课考核触发按钮', 'courseCalculateAssess-button', 'AssessmentInfo-CourseHour', '/params/info/calculateAssess', 3, '', '授课考核触发按钮'),
+('实习考核触发按钮', 'internCalculateAssess-button', 'AssessmentInfo-Intern', '/params/info/calculateAssess', 3, '', '实习考核触发按钮'),
+('论文考核触发按钮', 'paperCalculateAssess-button', 'AssessmentInfo-Paper', '/params/info/calculateAssess', 3, '', '论文考核触发按钮');
+
 
 -- ---------------------考核分数查询权限---------------------------

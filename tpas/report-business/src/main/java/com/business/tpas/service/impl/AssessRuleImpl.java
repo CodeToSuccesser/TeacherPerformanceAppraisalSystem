@@ -95,4 +95,10 @@ public class AssessRuleImpl extends BaseServiceImpl<AssessRuleMapper, AssessRule
         List<AssessRuleModel> list = assessRuleMapper.queryAssessList(searchModel);
         return new PageInfo<>(list);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AssessRule> getAssessList(ParamSearchModel searchModel) {
+        return assessRuleMapper.selectByCType(searchModel.getcType());
+    }
 }

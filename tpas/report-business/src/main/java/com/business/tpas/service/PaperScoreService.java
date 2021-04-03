@@ -21,4 +21,9 @@ public interface PaperScoreService extends BaseService<PaperScore> {
     PageInfo<PaperScoreModel> queryScoreList(ScoreSearchModel searchModel);
 
     List<PaperScoreModel> getScoreList(ScoreSearchModel searchModel);
+
+    Boolean hasScoreChecked(Long dataId);
+
+    void updateOrInsert(PaperScore paperScore);
+
 }

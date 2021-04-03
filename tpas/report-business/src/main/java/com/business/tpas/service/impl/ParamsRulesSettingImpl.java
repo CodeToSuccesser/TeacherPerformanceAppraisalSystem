@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,5 +119,13 @@ public class ParamsRulesSettingImpl extends BaseServiceImpl<ParamsRulesSettingMa
     @Transactional(readOnly = true)
     public List<Integer> queryCNumList(ParamSearchModel model) {
         return mapper.getCNumList(model);
+    }
+
+    @Override
+    public List<ParamsRulesSetting> queryByCNumList(List<Integer> list) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return mapper.queryByCNumList(list);
     }
 }

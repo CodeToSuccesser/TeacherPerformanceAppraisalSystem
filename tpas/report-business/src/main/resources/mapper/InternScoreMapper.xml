@@ -84,5 +84,11 @@
         </where>
     </select>
 
+    <select id="countByDataId" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM intern_score
+        WHERE intern_id = #{dataId} AND is_deleted = 0
+        LIMIT 1
+    </select>
 
 </mapper>

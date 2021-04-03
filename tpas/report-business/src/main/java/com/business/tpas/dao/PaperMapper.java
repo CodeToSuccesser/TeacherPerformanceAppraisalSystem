@@ -33,6 +33,8 @@ public interface PaperMapper extends BaseDao<Paper> {
      */
     List<PaperModel> selectPaperInfo(@Param("data") PaperSearchModel searchModel);
 
+    List<PaperModel> selectPaperInfoForAssess(@Param("data") PaperSearchModel searchModel);
+
     /**
      * 插入单条论文信息
      * @param paper

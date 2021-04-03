@@ -45,4 +45,6 @@ public interface CourseHoursMapper extends BaseDao<CourseHours> {
      */
     void deleteCourseHoursByIds(@Param("ids")List<Long> ids);
 
+    List<CourseHoursModel> selectCourseHoursForAssess(@Param("data") CourseHoursSearchModel searchModel);
+
 }

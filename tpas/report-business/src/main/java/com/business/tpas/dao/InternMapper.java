@@ -35,6 +35,8 @@ public interface InternMapper extends BaseDao<Intern> {
      */
     List<InternModel> selectInternInfo(@Param("data") InternSearchModel searchModel);
 
+    List<InternModel> selectInternInfoForAssess(@Param("data") InternSearchModel searchModel);
+
     /**
      * 插入单条实习指导信息
      *

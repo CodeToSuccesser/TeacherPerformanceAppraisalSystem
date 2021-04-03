@@ -42,4 +42,6 @@ public interface RuleSettingService extends BaseService<RuleSetting> {
     PageInfo<RuleSettingModel> queryRuleList(ParamSearchModel searchModel);
 
     List<RuleSettingModel> getRuleList();
+
+    List<RuleSetting> queryByIdList(List<Long> ruleIdList);
 }

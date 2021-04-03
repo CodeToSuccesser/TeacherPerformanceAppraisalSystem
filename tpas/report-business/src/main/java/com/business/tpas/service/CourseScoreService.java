@@ -21,4 +21,8 @@ public interface CourseScoreService extends BaseService<CourseScore> {
     PageInfo<CourseScoreModel> queryScoreList(ScoreSearchModel searchModel);
 
     List<CourseScoreModel> getScoreList(ScoreSearchModel searchModel);
+
+    Boolean hasScoreChecked(Long dataId);
+
+    void updateOrInsert(CourseScore courseScore);
 }

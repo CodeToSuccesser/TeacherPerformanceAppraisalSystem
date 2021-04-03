@@ -103,6 +103,17 @@ public class InternModel {
     @ApiModelProperty(value = "插入时间")
     private Date createTime;
 
+    @ExcelIgnore
+    private Long adminId;
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
     public Long getId() {
         return id;
     }

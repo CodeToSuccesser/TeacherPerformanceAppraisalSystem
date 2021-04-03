@@ -41,4 +41,19 @@ public class InternScoreServiceImpl extends BaseServiceImpl<InternScoreMapper, I
     public List<InternScoreModel> getScoreList(ScoreSearchModel searchModel) {
         return scoreMapper.queryScoreList(searchModel);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean hasScoreChecked(Long dataId) {
+        if (dataId == null) {
+            return false;
+        }
+        return scoreMapper.countByDataId(dataId) > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrInsert(InternScore internScore) {
+        scoreMapper.updateOrInsert(internScore);
+    }
 }

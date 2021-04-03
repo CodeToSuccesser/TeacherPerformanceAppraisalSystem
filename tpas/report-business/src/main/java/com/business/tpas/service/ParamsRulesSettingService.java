@@ -51,4 +51,6 @@ public interface ParamsRulesSettingService extends BaseService<ParamsRulesSettin
      * @date 2021/3/16
      **/
     List<Integer> queryCNumList(ParamSearchModel model);
+
+    List<ParamsRulesSetting> queryByCNumList(List<Integer> list);
 }

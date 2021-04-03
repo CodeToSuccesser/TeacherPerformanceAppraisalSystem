@@ -23,4 +23,7 @@ public interface InternScoreMapper extends BaseDao<InternScore> {
     void updateOrInsert(@Param("data") InternScore internScore);
 
     List<InternScoreModel> queryScoreList(@Param("data") ScoreSearchModel searchModel);
+
+    Long countByDataId(@Param("dataId") Long dataId);
+
 }

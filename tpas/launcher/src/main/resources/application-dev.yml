@@ -70,3 +70,12 @@ upload:
     image: /image
 
 # 时间格式配置
+
+# 绩效考核任务
+assess-task:
+  # 定时任务的cron 每15min
+  course-cron: 0 0/15 * * * ?
+  paper-cron: 0 5/15 * * * ?
+  intern-cron: 0 10/15 * * * ?
+  # 初始化任务开关
+  task-switch: true

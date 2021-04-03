@@ -75,3 +75,12 @@ spring.http.multipart.enabled: true
 spring.http.multipart.max-file-size: 1Mb
 #最大支持请求大小
 spring.http.multipart.max-request-size: 10Mb
+
+# 绩效考核任务
+assess-task:
+  # 定时任务的cron 每15min
+  course-cron: 0 0/15 * * * ?
+  paper-cron: 0 5/15 * * * ?
+  intern-cron: 0 10/15 * * * ?
+  # 初始化任务开关
+  task-switch: true

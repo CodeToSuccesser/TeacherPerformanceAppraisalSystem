@@ -6,6 +6,8 @@ import com.business.tpas.model.ParamSearchModel;
 import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 
+import java.util.List;
+
 /**
  * @author dude
  * @version 1.0
@@ -39,4 +41,6 @@ public interface AssessRuleService extends BaseService<AssessRule> {
      * @date 2021/4/1
      **/
     PageInfo<AssessRuleModel> queryAssessList(ParamSearchModel searchModel);
+
+    List<AssessRule> getAssessList(ParamSearchModel searchModel);
 }

@@ -21,4 +21,8 @@ public interface InternScoreService extends BaseService<InternScore> {
     PageInfo<InternScoreModel> queryScoreList(ScoreSearchModel searchModel);
 
     List<InternScoreModel> getScoreList(ScoreSearchModel searchModel);
+
+    Boolean hasScoreChecked(Long dataId);
+
+    void updateOrInsert(InternScore internScore);
 }

@@ -9,16 +9,22 @@ import com.business.tpas.utils.AssessRuleUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
+import com.management.common.model.UploadResponseModel;
 import com.management.common.utils.JacksonUtil;
 import com.management.tpas.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static com.management.common.config.GlobalConst.*;
 
 /**
  * <p>
@@ -61,75 +67,98 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
     @Autowired
     private AssessmentMapper assessmentMapper;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void calculateAssessment(AssessCalculateSearchModel model) {
-        List<AssessRule> assessRuleList = null;
-        List<Map<String, Object>> dataList = null;
-        // TODO: 分批查询
+    public UploadResponseModel<?> calculateAssessment(AssessCalculateSearchModel model) {
+        int pageNum = 0;
+        int pageSize = 100;
+        AtomicInteger addNum = new AtomicInteger();
+        AtomicInteger failNum = new AtomicInteger();
         // 获取需要统计的数据
         switch (RuleSettingCTypeEnum.getEnumByCode(model.getcType())) {
             case COURSE: {
+                List<CourseHoursModel> rejectData = new ArrayList<>();
                 CourseHoursSearchModel courseHoursSearchModel = new CourseHoursSearchModel();
                 courseHoursSearchModel.setSchoolYear(model.getSchoolYear());
                 courseHoursSearchModel.setSemester(model.getSemester());
-                List<CourseHoursModel> courseList = courseHoursMapper.selectCourseHours(courseHoursSearchModel);
-                if (!courseList.isEmpty()) {
-                    dataList = courseList.stream().map(JacksonUtil::object2Map).collect(Collectors.toList());
-                }
-                break;
+                PageHelper.startPage(pageNum, pageSize);
+                List<CourseHoursModel> courseList;
+                do {
+                    courseList = courseHoursMapper.selectCourseHoursForAssess(courseHoursSearchModel);
+                    courseList.forEach(it -> {
+                        String key = COURSE_ASSESS_KEY + it.getId().toString();
+                        if (redisTemplate.hasKey(key) == Boolean.FALSE) {
+                            addNum.getAndIncrement();
+                            it.setAdminId(UserUtil.getUserId());
+                            redisTemplate.opsForValue().set(key, it);
+                        } else {
+                            failNum.getAndIncrement();
+                            rejectData.add(it);
+                        }
+                    });
+                    PageHelper.offsetPage(pageNum * pageSize + courseList.size(), pageSize);
+                    pageNum++;
+                } while (courseList.size()>0);
+                return new UploadResponseModel<>(rejectData,
+                        addNum.get(), failNum.get(), failNum.addAndGet(addNum.get()));
             }
             case PAPER: {
+                List<PaperModel> rejectData = new ArrayList<>();
                 PaperSearchModel paperSearchModel = new PaperSearchModel();
                 paperSearchModel.setSchoolYear(model.getSchoolYear());
                 paperSearchModel.setSemester(model.getSemester());
-                List<PaperModel> paperList = paperMapper.selectPaperInfo(paperSearchModel);
-                if (!paperList.isEmpty()) {
-                    dataList = paperList.stream().map(JacksonUtil::object2Map).collect(Collectors.toList());
-                }
-                break;
+                PageHelper.startPage(pageNum, pageSize);
+                List<PaperModel> paperList;
+                do {
+                    paperList = paperMapper.selectPaperInfoForAssess(paperSearchModel);
+                    paperList.forEach(it -> {
+                        String key = PAPER_ASSESS_KEY + it.getId().toString();
+                        if (redisTemplate.hasKey(key) == Boolean.FALSE) {
+                            addNum.getAndIncrement();
+                            it.setAdminId(UserUtil.getUserId());
+                            redisTemplate.opsForValue().set(key, it);
+                        } else {
+                            failNum.getAndIncrement();
+                            rejectData.add(it);
+                        }
+                    });
+                    PageHelper.offsetPage(pageNum * pageSize + paperList.size(), pageSize);
+                    pageNum++;
+                } while (paperList.size()>0);
+                return new UploadResponseModel<>(rejectData,
+                        addNum.get(), failNum.get(), failNum.addAndGet(addNum.get()));
             }
             case INTERN: {
+                List<InternModel> rejectData = new ArrayList<>();
                 InternSearchModel internSearchModel = new InternSearchModel();
                 internSearchModel.setSchoolYear(model.getSchoolYear());
                 internSearchModel.setSemester(model.getSemester());
-                List<InternModel> internList = internMapper.selectInternInfo(internSearchModel);
-                if (!internList.isEmpty()) {
-                    dataList = internList.stream().map(JacksonUtil::object2Map).collect(Collectors.toList());
-                }
-                break;
-            }
-        }
-        if (dataList != null && !dataList.isEmpty()) {
-            assessRuleList = assessRuleMapper.selectByCType(model.getcType());
-        }
-        if (assessRuleList == null || assessRuleList.isEmpty()) {
-            return;
-        }
-        // 筛选需要进行统计的assess
-        List<AssessRule> finalAssessRuleList = assessRuleList;
-        dataList.forEach(eachData -> {
-            List<AssessRule> assessRuleForData = new ArrayList<>();
-            Set<Long> ruleId = new HashSet<>();
-            finalAssessRuleList.forEach(eachAssess -> {
-                if (!StringUtils.isBlank(eachAssess.getRuleSettingIds())) {
-                    List<Long> ruleIdList = AssessRuleUtil.parseIdList(eachAssess.getRuleSettingIds());
-                    List<RuleSetting> ruleList = ruleSettingMapper.queryByIdList(ruleIdList);
-                    List<Long> checkedRuleId = AssessRuleUtil.checkRules(eachData, ruleList);
-                    if (!checkedRuleId.isEmpty()) {
-                        ruleId.addAll(checkedRuleId);
-                        if (checkedRuleId.size() == ruleList.size()) {
-                            assessRuleForData.add(eachAssess);
+                PageHelper.startPage(pageNum, pageSize);
+                List<InternModel> internList;
+                do {
+                    internList = internMapper.selectInternInfoForAssess(internSearchModel);
+                    internList.forEach(it -> {
+                        String key = INTERN_ASSESS_KEY + it.getId().toString();
+                        if (redisTemplate.hasKey(key) == Boolean.FALSE) {
+                            addNum.getAndIncrement();
+                            it.setAdminId(UserUtil.getUserId());
+                            redisTemplate.opsForValue().set(key, it);
+                        } else {
+                            failNum.getAndIncrement();
+                            rejectData.add(it);
                         }
-                    }
-                } else {
-                    assessRuleForData.add(eachAssess);
-                }
-            });
-            if (!assessRuleForData.isEmpty()) {
-                calculateAssessRules(eachData, assessRuleForData, ruleId, model.getcType());
+                    });
+                    PageHelper.offsetPage(pageNum * pageSize + internList.size(), pageSize);
+                    pageNum++;
+                } while (internList.size()>0);
+                return new UploadResponseModel<>(rejectData,
+                        addNum.get(), failNum.get(), failNum.addAndGet(addNum.get()));
             }
-        });
+        }
+        return new UploadResponseModel<>(null, 0, 0, 0);
     }
 
     @Override
@@ -140,111 +169,9 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
         return new PageInfo<>(data);
     }
 
-    /**
-     * 统计一个工作量对应的绩效
-     *
-     * @author dude
-     * @date 2021/3/5
-     **/
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    void calculateAssessRules(Map<String, Object> data, List<AssessRule> assessRuleList, Set<Long> ruleId, Integer cType) {
-        Map<Integer, BigDecimal> paramValueMap = new HashMap<>();// 已获取的cNum
-        Assessment assessment = new Assessment(Long.valueOf(data.getOrDefault("teacherId", 0).toString()),
-                (Integer)data.getOrDefault("semester", 0),
-                (String)data.getOrDefault("schoolYear", ""));
-        for (AssessRule assessRule: assessRuleList) {
-            if (!StringUtils.isBlank(assessRule.getRuleSettingIds())) {
-                List<Long> ruleFromAssess = AssessRuleUtil.parseIdList(assessRule.getRuleSettingIds());
-                if (!ruleFromAssess.isEmpty()) {
-                    ruleId.addAll(ruleFromAssess);
-                }
-            }
-        }
-        for (AssessRule assessRule: assessRuleList) {
-            List<Integer> paramCNum = AssessRuleUtil.parseParamsFromAssessDetail(assessRule.getAssessDetail(), false);
-            String assessFormat;
-            BigDecimal assessScore;
-            if (paramCNum.isEmpty()) {
-                assessFormat = assessRule.getAssessDetail();
-            } else {
-                // 获取可选的param，查询未获取的cNum，符合条件的rule加入ruleID
-                List<Integer> cNumForParse = paramCNum.stream().filter(it -> !paramValueMap.containsKey(it)).collect(Collectors.toList());
-                if (!cNumForParse.isEmpty()) {
-                    List<ParamsRulesSetting> paramsRulesList = paramsRulesSettingMapper.queryByCNumList(cNumForParse);
-                    List<Long> ruleIdForCheck = new ArrayList<>();
-                    for (ParamsRulesSetting paramsRulesSetting : paramsRulesList) {
-                        if (!StringUtils.isBlank(paramsRulesSetting.getRulesSettingIds())) {
-                            List<Long> ruleFromParam = AssessRuleUtil.parseIdList(paramsRulesSetting.getRulesSettingIds())
-                                    .stream().filter(it -> !ruleId.contains(it) && !ruleIdForCheck.contains(it))
-                                    .collect(Collectors.toList());
-                            if (!ruleFromParam.isEmpty()) {
-                                ruleIdForCheck.addAll(ruleFromParam);
-                            }
-                        }
-                    }
-                    List<RuleSetting> ruleForCheck = ruleSettingMapper.queryByIdList(ruleIdForCheck);
-                    ruleId.addAll(AssessRuleUtil.checkRules(data, ruleForCheck));
-                    paramValueMap.putAll(AssessRuleUtil.selectParamValue(data, paramsRulesList, ruleId));
-                }
-                assessFormat = AssessRuleUtil.parseFormat(assessRule.getAssessDetail(), paramValueMap);
-            }
-            assessScore = AssessRuleUtil.calculate(assessFormat);
-            // 插入新的分数统计
-            switch (RuleSettingCTypeEnum.getEnumByCode(assessRule.getcType())) {
-                case COURSE:{
-                    CourseScore courseScore = new CourseScore();
-                    courseScore.setAdminId(UserUtil.getUserId());
-                    courseScore.setCourseHoursId(Long.valueOf(data.getOrDefault("id", 0).toString()));
-                    courseScore.setTeacherId(assessment.getTeacherId());
-                    courseScore.setSchoolYear(assessment.getSchoolYear());
-                    courseScore.setSemester(assessment.getSemester());
-                    courseScore.setAssessRuleId(assessRule.getId());
-                    courseScore.setAssessDetail(assessRule.getAssessDetail());
-                    courseScore.setAssessFormat(assessFormat);
-                    courseScore.setTotal(assessScore);
-                    assessment.setCourseQuality(assessment.getCourseQuality().add(assessScore));
-                    courseScoreMapper.updateOrInsert(courseScore);
-                    break;
-                }
-                case INTERN:{
-                    InternScore internScore = new InternScore();
-                    internScore.setAdminId(UserUtil.getUserId());
-                    internScore.setInternId(Long.valueOf(data.getOrDefault("id", 0).toString()));
-                    internScore.setTeacherId(assessment.getTeacherId());
-                    internScore.setSchoolYear(assessment.getSchoolYear());
-                    internScore.setSemester(assessment.getSemester());
-                    internScore.setAssessRuleId(assessRule.getId());
-                    internScore.setAssessDetail(assessRule.getAssessDetail());
-                    internScore.setAssessFormat(assessFormat);
-                    internScore.setTotal(assessScore);
-                    assessment.setInternQuality(assessment.getInternQuality().add(assessScore));
-                    internScoreMapper.updateOrInsert(internScore);
-                    break;
-                }
-                case PAPER:{
-                    PaperScore paperScore = new PaperScore();
-                    paperScore.setAdminId(UserUtil.getUserId());
-                    paperScore.setPaperId(Long.valueOf(data.getOrDefault("id", 0).toString()));
-                    paperScore.setSchoolYear((String)data.getOrDefault("schoolYear", ""));
-                    paperScore.setTeacherId(assessment.getTeacherId());
-                    paperScore.setSchoolYear(assessment.getSchoolYear());
-                    paperScore.setSemester(assessment.getSemester());
-                    paperScore.setAssessRuleId(assessRule.getId());
-                    paperScore.setAssessDetail(assessRule.getAssessDetail());
-                    paperScore.setAssessFormat(assessFormat);
-                    paperScore.setTotal(assessScore);
-                    assessment.setPaperQuality(assessment.getPaperQuality().add(assessScore));
-                    paperScoreMapper.updateOrInsert(paperScore);
-                    break;
-                }
-            }
-        }
-        assessment.setTotalQuality(assessment.getCourseQuality()
-                .add(assessment.getPaperQuality())
-                .add(assessment.getInternQuality())
-                .add(assessment.getOtherQuality()));
+    public void updateOrInsert(Assessment assessment, Integer cType) {
         assessmentMapper.updateOrInsert(assessment, cType);
     }
-
-
 }

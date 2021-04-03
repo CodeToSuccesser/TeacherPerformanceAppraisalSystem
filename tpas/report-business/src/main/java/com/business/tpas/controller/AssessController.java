@@ -77,8 +77,7 @@ public class AssessController {
                 || model.getSemester() == null || StringUtils.isBlank(model.getSchoolYear())) {
             return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
         }
-        assessmentService.calculateAssessment(model);
-        return new BaseResponse<>();
+        return new BaseResponse<>(assessmentService.calculateAssessment(model));
     }
 
     @ApiOperation(value = "查询规则列表")

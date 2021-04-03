@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Wrapper;
 import java.util.List;
 
 /**
@@ -40,5 +41,20 @@ public class CourseScoreServiceImpl extends BaseServiceImpl<CourseScoreMapper, C
     @Transactional(readOnly = true)
     public List<CourseScoreModel> getScoreList(ScoreSearchModel searchModel) {
         return scoreMapper.queryScoreList(searchModel);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean hasScoreChecked(Long dataId) {
+        if (dataId == null) {
+            return false;
+        }
+        return scoreMapper.countByDataId(dataId) > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrInsert(CourseScore courseScore) {
+        scoreMapper.updateOrInsert(courseScore);
     }
 }

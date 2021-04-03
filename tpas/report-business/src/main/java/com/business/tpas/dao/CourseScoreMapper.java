@@ -24,4 +24,5 @@ public interface CourseScoreMapper extends BaseDao<CourseScore> {
 
     List<CourseScoreModel> queryScoreList(@Param("data")ScoreSearchModel searchModel);
 
+    Long countByDataId(@Param("dataId") Long dataId);
 }

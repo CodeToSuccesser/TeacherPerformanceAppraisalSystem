@@ -69,6 +69,35 @@
         order by p.create_time DESC
     </select>
 
+    <select id="selectPaperInfoForAssess" resultMap="ModelResultMap">
+        select DISTINCT p.id,p.teacher_id, m.major_name,um.log_name as teacher_code,m.major_code,um.user_name as teacher_name, p.major_id,
+        p.semester,p.school_year, p.admin_id,p.remark, p.student_number, p.update_time, p.create_time
+        from paper p
+        LEFT JOIN paper_score s ON p.id = s.paper_id AND p.school_year = s.school_year AND p.semester = s.semester
+        inner join user_msg um on p.teacher_id = um.id
+        inner join major m on m.id = p.major_id
+        <where>
+            <if test="data.majorId != null">
+                and p.major = #{data.majorId}
+            </if>
+            <if test="data.semester != null ">
+                and p.semester = #{data.semester}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                and p.school_year = #{data.schoolYear}
+            </if>
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                and um.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.majorName != null and data.majorName != ''">
+                and m.major_name like "%"#{data.majorName}"%"
+            </if>
+            and p.is_deleted = 0
+            and (s.id IS NULL OR s.is_deleted = 1)
+        </where>
+        order by p.create_time DESC
+    </select>
+
     <insert id="saveBatch" parameterType="java.util.List">
         insert into paper (teacher_id,major_id,student_number,semester,school_year,admin_id,remark)
         values

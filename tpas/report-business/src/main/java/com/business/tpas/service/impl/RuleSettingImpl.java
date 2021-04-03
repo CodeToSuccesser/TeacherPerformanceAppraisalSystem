@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,7 +88,18 @@ public class RuleSettingImpl extends BaseServiceImpl<RuleSettingMapper, RuleSett
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RuleSettingModel> getRuleList() {
         return mapper.getRuleMsgList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RuleSetting> queryByIdList(List<Long> ruleIdList) {
+        if (ruleIdList == null || ruleIdList.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return mapper.queryByIdList(ruleIdList);
+        }
     }
 }

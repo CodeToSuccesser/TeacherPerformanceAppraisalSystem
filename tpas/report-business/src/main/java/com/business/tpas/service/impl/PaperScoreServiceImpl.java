@@ -41,4 +41,19 @@ public class PaperScoreServiceImpl extends BaseServiceImpl<PaperScoreMapper, Pap
     public List<PaperScoreModel> getScoreList(ScoreSearchModel searchModel) {
         return scoreMapper.queryScoreList(searchModel);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean hasScoreChecked(Long dataId) {
+        if (dataId == null) {
+            return false;
+        }
+        return scoreMapper.countByDataId(dataId) > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrInsert(PaperScore paperScore) {
+        scoreMapper.updateOrInsert(paperScore);
+    }
 }

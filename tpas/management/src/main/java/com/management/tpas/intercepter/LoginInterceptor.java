@@ -139,7 +139,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         Map<String, String> paramMap = JacksonUtil.json2Map(paramStr);
         searchFiled.forEach(each -> {
-            String data = paramMap.getOrDefault(each, "");
+            String data = String.valueOf(paramMap.getOrDefault(each, ""));
             if (StringUtils.isBlank(data)) {
                 throw new BusinessException(ErrorCodeEnum.PARAM_IS_EMPTY);
             }

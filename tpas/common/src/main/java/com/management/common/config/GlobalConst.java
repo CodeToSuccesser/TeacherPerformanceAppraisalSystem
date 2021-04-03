@@ -50,6 +50,15 @@ public class GlobalConst {
     public static final String SYSTEM_ROLE_KEY = "TPAS::SYSTEM_ROLE_LIST";
 
     /**
+     *  绩效统计数据 redis key
+     **/
+    public static final String COURSE_ASSESS_KEY = "TPAS::COURSE_ASSESS_KEY-";
+
+    public static final String PAPER_ASSESS_KEY = "TPAS::PAPER_ASSESS_KEY-";
+
+    public static final String INTERN_ASSESS_KEY = "TPAS::INTERN_ASSESS_KEY-";
+
+    /**
      * 文件传输请求content-type
      *
      * @author dude
