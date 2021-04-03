@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("统计绩效选择")
 public class AssessCalculateSearchModel {
 
-    @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文, 3 其他")
+    @ApiModelProperty(value = "权值类型, 1 授课, 2 指导论文, 3 实习")
     private Integer cType;
 
     @ApiModelProperty(value = "学期, 默认1 第一学期, 2 第二学期")

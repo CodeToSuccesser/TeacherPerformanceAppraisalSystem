@@ -17,3 +17,11 @@ export function exportScoreFile(path, data) {
   })
 }
 
+export function calculateAssess(data) {
+  return request({
+    url: '/params/info/calculateAssess',
+    method: 'post',
+    data
+  })
+}
+

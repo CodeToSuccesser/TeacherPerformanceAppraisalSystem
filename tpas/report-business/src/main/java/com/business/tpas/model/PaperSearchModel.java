@@ -20,7 +20,7 @@ public class PaperSearchModel extends PageModel {
      * 教师编码
      */
     @ApiModelProperty(value = "教师编码")
-    private Long teacherCode;
+    private String teacherCode;
 
     /**
      * 专业id
@@ -75,11 +75,11 @@ public class PaperSearchModel extends PageModel {
         this.schoolYear = schoolYear;
     }
 
-    public Long getTeacherCode() {
+    public String getTeacherCode() {
         return teacherCode;
     }
 
-    public void setTeacherCode(Long teacherCode) {
+    public void setTeacherCode(String teacherCode) {
         this.teacherCode = teacherCode;
     }
 

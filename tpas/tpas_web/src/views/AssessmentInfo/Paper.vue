@@ -6,19 +6,33 @@
       </el-select>
 
       <el-select v-model="searchForm.selectedSemester" placeholder="学期" clearable class="selector">
-        <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+        <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
       <el-input v-model="searchForm.selectedMajorName" placeholder="专业名称" clearable class="selector" style="width: 120px" />
 
-      <el-input v-model="searchForm.selectedTeacherCode" placeholder="教师编码" clearable class="selector" style="width: 120px" />
+      <el-input
+        v-if="this.permissionMap === undefined
+        || this.permissionMap['getPaperSearch-teacherCode'] === undefined
+        || this.permissionMap['getPaperSearch-teacherCode']['teacherCode'] === undefined"
+        v-model="searchForm.selectedTeacherCode"
+        placeholder="教师编码"
+        clearable
+        class="selector"
+        style="width: 120px" />
 
       <el-button type="primary" size="small" class="button-find" @click="searchPaper">查找</el-button>
+      <el-button
+        v-if="permissionMap && permissionMap['paperCalculateAssess-button']"
+        type="primary"
+        size="small"
+        class="button-find"
+        @click="calculateAssess(2)">绩效考核</el-button>
 
       <el-button type="primary" size="small" class="button-add" @click="applyPaperDialogVisible = true">新增</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
-      <el-button v-if="isAdmin" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
+      <el-button v-if="permissionMap && permissionMap['downloadPaperTemplate-Button']" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
+      <el-button v-if="permissionMap && permissionMap['importPaper-Button']" type="primary" size="small" class="button-add" @click="importPaper">导入</el-button>
+      <el-button v-if="permissionMap && permissionMap['exportPaper-Button']" type="primary" size="small" class="button-add" @click="exportPaper">导出</el-button>
     </el-form>
 
     <el-table :data="paperInfo" stripe style="width: 100% " :border="true" fit>
@@ -166,9 +180,16 @@
 import { downloadPaperTemplate, getPaperInfo, exportPaperInfo, importPaperInfo, modifyPaperInfo, insertPaperInfo } from '@/api/paper'
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
+import { calculateAssess } from '@/api/score'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Paper',
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
+  },
   data() {
     return {
       pageSize: 25,
@@ -181,17 +202,6 @@ export default {
         selectedMajorName: '',
         selectedTeacherCode: ''
       },
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       importPaperForm: {
         semester: '',
         schoolYear: ''
@@ -216,7 +226,8 @@ export default {
       },
       formLabelWidth: '120px',
       isAdmin: false,
-      fileList: []
+      fileList: [],
+      permissionMap: {}
     }
   },
   created() {
@@ -224,8 +235,7 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    var roleName = this.$store.getters.rolesName === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName : this.$store.getters.rolesName
-    this.isAdmin = (roleName === '管理员角色' || roleName === '全菜单')
+    this.permissionMap = this.$store.getters.permissionMap['AssessmentInfo-Paper']
     this.getPaperInfo(param)
   },
   methods: {
@@ -265,8 +275,8 @@ export default {
         })
     },
     getPaperInfo: function(body) {
-      if (!this.isAdmin) {
-        body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
+      if (this.permissionMap && this.permissionMap['getPaperSearch-teacherCode'] && this.permissionMap['getPaperSearch-teacherCode']['teacherCode']) {
+        body.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.account : this.$store.getters.account
       }
       getPaperInfo(body).then(response => {
         const { data } = response
@@ -413,6 +423,21 @@ export default {
         param.majorName = this.searchForm.selectedMajorName
       }
       this.getPaperInfo(param)
+    },
+    calculateAssess: function(cType) {
+      const param = {
+        schoolYear: this.searchForm.selectedSchoolYear,
+        semester: this.searchForm.selectedSemester,
+        cType: cType
+      }
+      calculateAssess(param).then(response => {
+        this.$notify.success({
+          title: '提交成功',
+          message: '待统计' + response.data.successCount + '条，已统计' + response.data.failCount + '条'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }

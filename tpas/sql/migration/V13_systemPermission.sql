@@ -62,4 +62,13 @@ INSERT INTO `system_permission`(`permission_name`, `permission_key`, `value`, `u
 ('论文考核触发按钮', 'paperCalculateAssess-button', 'AssessmentInfo-Paper', '/params/info/calculateAssess', 3, '', '论文考核触发按钮');
 
 
+
+DELETE FROM system_permission WHERE permission_key = 'getCourseHoursSearch-teacherId';
+UPDATE system_role_permission_ref set permission_key = 'getCourseHoursSearch-teacherCode' WHERE permission_key = 'getCourseHoursSearch-teacherId';
+INSERT INTO system_permission (permission_name,permission_key,value,url_path,control_type,filed_name,remark,update_time,create_time,is_deleted) VALUES
+('查询课时记录teacherCode','getCourseHoursSearch-teacherCode','AssessmentInfo-CourseHour','/course/hours/getCourseHours',2,'teacherCode','查询课时记录teacherCode','2021-04-04 01:27:23.0','2021-03-26 18:08:24.0',0);
+
+INSERT INTO system_permission (permission_name,permission_key,value,url_path,control_type,filed_name,remark) VALUES
+('查询论文记录teacherCode','getPaperSearch-teacherCode','AssessmentInfo-Paper','/paper/info/getPaperInfo',2,'teacherCode','查询论文记录teacherCode'),
+('查询实习记录teacherCode','getInternSearch-teacherCode','AssessmentInfo-Intern','/intern/info/getInternInfo',2,'teacherCode','查询实习记录teacherCode');
 -- ---------------------考核分数查询权限---------------------------

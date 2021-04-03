@@ -2,20 +2,35 @@
   <div class="app-container">
     <el-form ref="form" :model="searchForm">
       <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" clearable class="selector-first">
-        <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.key" :value="item.value" />
+        <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
       <el-select v-model="searchForm.selectedSemester" placeholder="学期" clearable class="selector">
-        <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+        <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
       <el-input v-model="searchForm.selectedCourseName" placeholder="课程名称" clearable class="selector" style="width: 120px" />
 
       <el-input v-model="searchForm.selectedStudentInstitute" placeholder="学生学院" clearable class="selector" style="width: 120px" />
 
-      <el-input v-model="searchForm.selectedTeacherCode" placeholder="教师编码" clearable class="selector" style="width: 120px" />
+      <el-input
+        v-if="this.permissionMap === undefined
+        || this.permissionMap['getCourseHoursSearch-teacherCode'] === undefined
+        || this.permissionMap['getCourseHoursSearch-teacherCode']['teacherCode'] === undefined"
+        v-model="searchForm.selectedTeacherCode"
+        placeholder="教师编码"
+        clearable
+        class="selector"
+        style="width: 120px" />
 
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
+
+      <el-button
+        v-if="permissionMap && permissionMap['courseCalculateAssess-button']"
+        type="primary"
+        size="small"
+        class="button-find"
+        @click="calculateAssess(1)">绩效考核</el-button>
 
       <el-button v-if="permissionMap && permissionMap['importCourseHour-Button']" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
       <el-button v-if="permissionMap && permissionMap['exportCourseHour-Button']" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
@@ -237,11 +252,19 @@ import {
   downCourseHoursTemplate,
   exportCourseFile, importCourseHoursFile, modifyCourseHours, insertCourseHours
 } from '@/api/course'
+import { calculateAssess } from '@/api/score'
 
 import { downloadExcel } from '@/utils/file'
 import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading'
+import { mapGetters } from 'vuex'
 
 export default {
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
+  },
   data() {
     return {
       total: 0,
@@ -255,17 +278,6 @@ export default {
         selectedTeacherCode: ''
       },
       courseHourInfo: [],
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       importDialogVisible: false,
       dialogTableVisible: false,
       courseDetailVisible: false,
@@ -287,7 +299,6 @@ export default {
         expPerNumber: ''
       },
       formLabelWidth: '120px',
-      isAdmin: false,
       fileList: [],
       permissionMap: {}
     }
@@ -297,8 +308,6 @@ export default {
       pageSize: this.pageSize,
       pageNum: this.curPageNum
     }
-    var roleName = this.$store.getters.rolesName === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.rolesName : this.$store.getters.rolesName
-    this.isAdmin = roleName === '管理员角色' || roleName === '全菜单'
     // this.$store.getters.permissionMap[数据库system_permission表的value]，这里value对应system_menu表的value
     this.permissionMap = this.$store.getters.permissionMap['AssessmentInfo-CourseHour']
     this.getCourseHours(param)
@@ -345,13 +354,10 @@ export default {
       this.courseDetailForm.semester = String(this.courseDetailForm.semester)
     },
     getCourseHours: function(body) {
-      // if (!this.isAdmin) {
-      //   body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
-      // }
       // 用法，数据库配置teacherId权限的用户，该接口参数必传teacherId
       // this.permissionMap[数据库system_permission表的permissionKey][数据库system_permission表的filed]
-      if (this.permissionMap && this.permissionMap['getCourseHoursSearch-teacherId'] && this.permissionMap['getCourseHoursSearch-teacherId']['teacherId']) {
-        body.teacherId = Number(this.$store.getters.id === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.id : this.$store.getters.id)
+      if (this.permissionMap && this.permissionMap['getCourseHoursSearch-teacherCode'] && this.permissionMap['getCourseHoursSearch-teacherCode']['teacherCode']) {
+        body.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.account : this.$store.getters.account
       }
       showFullScreenLoading('加载中')
       getCourseHours(body)
@@ -530,6 +536,21 @@ export default {
           console.log(error)
           hideFullScreenLoading()
         })
+    },
+    calculateAssess: function(cType) {
+      const param = {
+        schoolYear: this.searchForm.selectedSchoolYear,
+        semester: this.searchForm.selectedSemester,
+        cType: cType
+      }
+      calculateAssess(param).then(response => {
+        this.$notify.success({
+          title: '提交成功',
+          message: '待统计' + response.data.successCount + '条，已统计' + response.data.failCount + '条'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }
