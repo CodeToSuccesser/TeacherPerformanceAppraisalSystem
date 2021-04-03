@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.business.tpas.dao.TaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.business.tpas.entity.Task">
+        <id column="id" property="id" />
+        <result column="publisher_id" property="publisherId" />
+        <result column="receiver_id" property="receiverId" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="picture_url" property="pictureUrl" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="score" property="score" />
+        <result column="state" property="state" />
+        <result column="complete_degree" property="completeDegree" />
+        <result column="feedback_content" property="feedbackContent" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.TaskModel">
+        <id column="id" property="id" />
+        <result column="publisher_code" property="publisherCode" />
+        <result column="publisher_name" property="publisherName" />
+        <result column="receiver_code" property="receiverCode" />
+        <result column="receiver_name" property="receiverName" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="picture_url" property="pictureUrl" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="score" property="score" />
+        <result column="state" property="state" />
+        <result column="complete_degree" property="completeDegree" />
+        <result column="feedback_content" property="feedbackContent" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, publisher_id, receiver_id, title, content, picture_url, start_time, end_time, score, state, complete_degree, feedback_content, is_deleted, update_time, create_time
+    </sql>
+
+    <select id="selectTask" resultMap="ModelResultMap">
+        select t.id, t.title, t.content,t.picture_url, t.start_time,t.end_time, t.score,
+               t.state, t.complete_degree,t.feedback_content,t.is_deleted,t.update_time,
+               t.create_time, um.log_name as receiver_code, um.user_name as receiver_name
+        from task t inner join user_msg um on t.receiver_id = um.id
+        <where>
+            <if test="data.receiverCode != null and data.receiverCode != ''">
+                and t.log_name = #{data.receiverCode}
+            </if>
+            <if test="data.title != null and data.title != ''">
+                and t.title like "%"#{data.title}"%"
+            </if>
+            <if test="data.state != null and state == 0">
+                and #{data.currentTime} <![CDATA[ < ]]> t.end_time
+            </if>
+            <if test="data.state != null and state == 1">
+                and #{data.currentTime} <![CDATA[ >= ]]> t.end_time
+                and t.is_deleted == 0
+            </if>
+            <if test="data.state != null and state == 2">
+                and t.is_deleted == 1
+            </if>
+        </where>
+        order by t.create_time DESC
+    </select>
+
+    <update id="deleteTaskByIds" parameterType="java.util.List">
+        update task
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>
