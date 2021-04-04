@@ -289,7 +289,7 @@ export default {
       switch (index) {
         case 0: {
           if (this.permissionMap && this.permissionMap['courseQueryScoreList-teacherCode'] && this.permissionMap['courseQueryScoreList-teacherCode']['teacherCode']) {
-            searchModel.teacherCode = this.$store.getters.account
+            searchModel.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.account
           } else {
             searchModel.teacherCode = this.searchSelect[index].teacherCode
           }
@@ -298,7 +298,7 @@ export default {
         }
         case 1: {
           if (this.permissionMap && this.permissionMap['paperQueryScoreList-teacherCode'] && this.permissionMap['paperQueryScoreList-teacherCode']['teacherCode']) {
-            searchModel.teacherCode = this.$store.getters.account
+            searchModel.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.account
           } else {
             searchModel.teacherCode = this.searchSelect[index].teacherCode
           }
@@ -307,7 +307,7 @@ export default {
         }
         case 2: {
           if (this.permissionMap && this.permissionMap['internQueryScoreList-teacherCode'] && this.permissionMap['internQueryScoreList-teacherCode']['teacherCode']) {
-            searchModel.teacherCode = this.$store.getters.account
+            searchModel.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.account
           } else {
             searchModel.teacherCode = this.searchSelect[index].teacherCode
           }

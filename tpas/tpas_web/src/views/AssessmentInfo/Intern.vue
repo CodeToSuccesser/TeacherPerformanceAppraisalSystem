@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="app-container">
     <el-form ref="form" :model="searchForm">
       <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" clearable class="selector-first">
         <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />

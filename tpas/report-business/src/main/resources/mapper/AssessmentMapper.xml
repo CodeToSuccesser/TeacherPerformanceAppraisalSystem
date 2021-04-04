@@ -17,6 +17,21 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.AssessmentModel">
+        <id column="id" property="id" />
+        <result column="teacher_code" property="teacherCode" />
+        <result column="teacher_name" property="teacherName" />
+        <result column="semester" property="semester" />
+        <result column="school_year" property="schoolYear" />
+        <result column="course_quality" property="courseQuality" />
+        <result column="paper_quality" property="paperQuality" />
+        <result column="intern_quality" property="internQuality" />
+        <result column="other_quality" property="otherQuality" />
+        <result column="total_quality" property="totalQuality" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, teacher_id, semester, school_year, course_quality, paper_quality, intern_quality, other_quality,
@@ -56,21 +71,23 @@
         </choose>
     </insert>
 
-    <select id="queryAssessList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM assessment
+    <select id="queryAssessList" resultMap="ModelResultMap">
+        SELECT a.id, u.log_name AS teacher_code, u.user_name AS teacher_name, a.semester, a.school_year
+        , a.course_quality, a.paper_quality, a.intern_quality, a.other_quality
+        , a.total_quality, a.update_time, a.create_time
+        FROM assessment a inner join user_msg u on a.teacher_id = u.id
         <where>
-            <if test="data.teacherId != null">
-                AND teacher_id = #{data.teacherId}
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                AND a.log_name = #{data.teacherCode}
             </if>
-            <if test="data.schoolYear != null">
-                AND school_year = #{data.schoolYear}
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                AND a.school_year = #{data.schoolYear}
             </if>
             <if test="data.semester != null">
-                AND semester = #{data.semester}
+                AND a.semester = #{data.semester}
             </if>
             <if test="1==1">
-                AND is_deleted = 0
+                AND a.is_deleted = 0 AND u.is_deleted = 0
             </if>
         </where>
     </select>

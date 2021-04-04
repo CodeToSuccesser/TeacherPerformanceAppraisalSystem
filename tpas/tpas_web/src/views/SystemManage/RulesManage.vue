@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="app-container">
 
     <el-tabs v-model="activeName">
       <el-tab-pane label="权值参数" name="paramSetting">

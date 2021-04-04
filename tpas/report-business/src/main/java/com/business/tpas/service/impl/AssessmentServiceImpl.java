@@ -10,19 +10,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.model.UploadResponseModel;
-import com.management.common.utils.JacksonUtil;
 import com.management.tpas.utils.UserUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static com.management.common.config.GlobalConst.*;
 
@@ -48,21 +44,6 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
 
     @Autowired
     private InternMapper internMapper;
-
-    @Autowired
-    private RuleSettingMapper ruleSettingMapper;
-
-    @Autowired
-    private ParamsRulesSettingMapper paramsRulesSettingMapper;
-
-    @Autowired
-    private CourseScoreMapper courseScoreMapper;
-
-    @Autowired
-    private InternScoreMapper internScoreMapper;
-
-    @Autowired
-    private PaperScoreMapper paperScoreMapper;
 
     @Autowired
     private AssessmentMapper assessmentMapper;
@@ -163,9 +144,9 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
 
     @Override
     @Transactional(readOnly = true)
-    public PageInfo<Assessment> queryAssessList(ScoreSearchModel searchModel) {
+    public PageInfo<AssessmentModel> queryAssessList(ScoreSearchModel searchModel) {
         PageHelper.startPage(searchModel.pageNum, searchModel.pageSize);
-        List<Assessment> data = assessmentMapper.queryAssessList(searchModel);
+        List<AssessmentModel> data = assessmentMapper.queryAssessList(searchModel);
         return new PageInfo<>(data);
     }
 

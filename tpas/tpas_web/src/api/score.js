@@ -25,3 +25,18 @@ export function calculateAssess(data) {
   })
 }
 
+export function queryAssessList(data) {
+  return request({
+    url: '/score/queryAssessList',
+    method: 'post',
+    data
+  })
+}
+
+export function assessDelete(data) {
+  return request({
+    url: '/score/assessDelete',
+    method: 'post',
+    data
+  })
+}
