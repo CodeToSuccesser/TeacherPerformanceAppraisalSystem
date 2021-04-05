@@ -13,6 +13,16 @@
         <result column="create_time" property="createTime" />
     </resultMap>
 
+    <resultMap id="ModelResultMap" type="com.business.tpas.model.MajorModel">
+        <id column="id" property="id" />
+        <result column="major_code" property="majorCode" />
+        <result column="major_name" property="majorName" />
+        <result column="admin_id" property="adminId" />
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, major_code, major_name, admin_id, is_deleted,update_time, create_time
@@ -25,6 +35,42 @@
         and is_deleted = 0
         order by create_time DESC
     </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="data" separator=";">
+            insert into major
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                admin_id,major_code,major_name
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{data.adminId},#{data.majorCode},#{data.majorName}
+            </trim>
+        </foreach>
+    </insert>
+
+    <select id="selectMajor" resultMap="ModelResultMap">
+        select m.id, m.admin_id, m.major_code, m.major_name, m.is_deleted, m.update_time, m.create_time
+        from major m
+        <where>
+            <if test="data.majorCode != null and data.majorCode != ''">
+                and m.major_code = #{data.majorCode}
+            </if>
+            <if test="data.majorName != null and data.majorName != ''">
+                and m.major_name = #{data.majorName}
+            </if>
+            and m.is_deleted = 0
+        </where>
+    </select>
+
+    <update id="deleteMajorByIds" parameterType="java.util.List">
+        update major
+        set is_deleted = 1
+        where 1 = 1
+        <foreach collection="ids" index="index" item="item" separator="," open="and id in (" close=")">
+            #{item}
+        </foreach>
+    </update>
 
 
 </mapper>

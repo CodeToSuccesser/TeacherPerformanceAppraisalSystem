@@ -129,9 +129,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
     @Transactional
     @Override
     public void deleteCourseHours(List<Long> ids) {
-        validateCourseHoursCanBeDeleted(ids);
-        // 逻辑删除课时记录
-        courseHoursMapper.deleteCourseHoursByIds(ids);
+        validateAndDeleteCourseHoursCanBeDeleted(ids);
     }
 
     @Transactional
@@ -206,7 +204,7 @@ public class CourseHoursServiceImpl extends BaseServiceImpl<CourseHoursMapper, C
      * 否则不做处理
      * @param ids 课时信息id
      */
-    private void validateCourseHoursCanBeDeleted(List<Long> ids) {
+    private void validateAndDeleteCourseHoursCanBeDeleted(List<Long> ids) {
         List<Long> hoursIdsToDelete = new ArrayList<>();
         for (Long id : ids) {
             int count = courseHoursModifyRecordMapper.countModifyRecordByHoursId(id);
