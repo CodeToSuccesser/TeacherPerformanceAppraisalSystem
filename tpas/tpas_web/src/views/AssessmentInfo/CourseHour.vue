@@ -15,13 +15,14 @@
 
       <el-input
         v-if="this.permissionMap === undefined
-        || this.permissionMap['getCourseHoursSearch-teacherCode'] === undefined
-        || this.permissionMap['getCourseHoursSearch-teacherCode']['teacherCode'] === undefined"
+          || this.permissionMap['getCourseHoursSearch-teacherCode'] === undefined
+          || this.permissionMap['getCourseHoursSearch-teacherCode']['teacherCode'] === undefined"
         v-model="searchForm.selectedTeacherCode"
         placeholder="教师编码"
         clearable
         class="selector"
-        style="width: 120px" />
+        style="width: 120px"
+      />
 
       <el-button type="primary" size="small" class="button-find" @click="searchCourseHours">查找</el-button>
 
@@ -30,17 +31,39 @@
         type="primary"
         size="small"
         class="button-find"
-        @click="calculateAssess(1)">绩效考核</el-button>
+        @click="calculateAssess(1)"
+      >绩效考核</el-button>
 
-      <el-button v-if="permissionMap && permissionMap['importCourseHour-Button']" type="primary" size="small" class="button-add" @click="importCourseHour">导入</el-button>
-      <el-button v-if="permissionMap && permissionMap['exportCourseHour-Button']" type="primary" size="small" class="button-add" @click="exportCourseHour">导出</el-button>
+      <el-button
+        v-if="permissionMap && permissionMap['importCourseHour-Button']"
+        type="primary"
+        size="small"
+        class="button-add"
+        @click="importCourseHour"
+      >导入</el-button>
+
+      <el-button
+        v-if="permissionMap && permissionMap['exportCourseHour-Button']"
+        type="primary"
+        size="small"
+        class="button-add"
+        @click="exportCourseHour"
+      >导出</el-button>
+
       <el-button
         type="primary"
         size="small"
         class="button-add"
         @click="applyCourseHoursVisible = true"
       >新增</el-button>
-      <el-button v-if="permissionMap && permissionMap['downloadCourseHourTemplate-Button']" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
+
+      <el-button
+        v-if="permissionMap && permissionMap['downloadCourseHourTemplate-Button']"
+        type="primary"
+        size="small"
+        class="button-add"
+        @click="downloadTemplate"
+      >下载导入模板</el-button>
 
     </el-form>
 
