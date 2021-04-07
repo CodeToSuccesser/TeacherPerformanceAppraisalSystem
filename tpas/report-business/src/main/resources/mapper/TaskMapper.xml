@@ -58,15 +58,16 @@
             <if test="data.title != null and data.title != ''">
                 and t.title like "%"#{data.title}"%"
             </if>
-            <if test="data.state != null and state == 0">
+            <if test="data.state != null and data.state == 0">
                 and #{data.currentTime} <![CDATA[ < ]]> t.end_time
+                and t.is_deleted = 0
             </if>
-            <if test="data.state != null and state == 1">
+            <if test="data.state != null and data.state == 1">
                 and #{data.currentTime} <![CDATA[ >= ]]> t.end_time
-                and t.is_deleted == 0
+                and t.is_deleted = 0
             </if>
-            <if test="data.state != null and state == 2">
-                and t.is_deleted == 1
+            <if test="data.state != null and data.state == 2">
+                and t.is_deleted = 1
             </if>
         </where>
         order by t.create_time DESC

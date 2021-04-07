@@ -5,14 +5,14 @@
         <el-option v-for="item in taskStateOptions" :key="item.value" :label="item.key" :value="item.value" />
       </el-select>
       <el-input v-model="searchForm.taskTitle" placeholder="任务标题" clearable class="selector" style="width: 120px" />
-      <el-input v-model="searchForm.userLogName" placeholder="发布对象" clearable class="selector" style="width: 120px" />
+      <el-input v-model="searchForm.receiverCode" placeholder="发布对象" clearable class="selector" style="width: 120px" />
 
       <el-button type="primary" size="small" class="button-find" @click="searchTask">查找</el-button>
       <el-button type="primary" size="small" class="publish-task" @click="taskPublishVisible=true">任务分配</el-button>
     </el-form>
 
     <el-row class="el-row">
-      <el-col v-for="(o,index) in taskInfo" :key="o" span="11">
+      <el-col v-for="(o,index) in taskInfo" :key="index">
         <el-card :data="taskInfo" class="box-card" shadow="hover">
           <div slot="header">
             <el-row>
@@ -22,7 +22,10 @@
               </el-col>
               <el-col>
                 <span class="date">{{ taskInfo[index].createTime }}</span>
-                <el-button style="float: right; padding: 3px 0" type="text" @click="taskDelete(index)">删除任务</el-button>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="taskDelete(taskInfo[index].id)">删除任务</el-button>
+              </el-col>
+              <el-col>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="showTaskFeedback(index)">查看任务反馈</el-button>
               </el-col>
             </el-row>
           </div>
@@ -32,10 +35,13 @@
                 开始日期： {{ taskInfo[index].startTime }}
               </el-col>
               <el-col class="task-content">
-                截止日期： {{ taskInfo[index].deadlineTime }}
+                截止日期： {{ taskInfo[index].endTime }}
               </el-col>
               <el-col class="task-content">
-                任务指派对象： {{ taskInfo[index].userName }}
+                任务指派对象： {{ taskInfo[index].receiverName }}
+              </el-col>
+              <el-col class="task-content">
+                任务指派对象编码： {{ taskInfo[index].receiverCode }}
               </el-col>
               <el-col class="task-content">
                 任务详情： {{ taskInfo[index].content }}
@@ -51,6 +57,18 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="curPageNum"
+      class="pagination"
+      @prev-click="prePage"
+      @next-click="nextPage"
+      @current-change="handleCurrentChange"
+    />
 
     <el-dialog
       title="任务内容修改"
@@ -68,7 +86,7 @@
           <el-date-picker v-model="taskDetailInfo.startTime" type="date" placeholder="选择日期" style="width: 100%;" />
         </el-form-item>
         <el-form-item label="完成截止日期：" label-width="120px">
-          <el-date-picker v-model="taskDetailInfo.deadlineTime" type="date" placeholder="选择日期" style="width: 100%;" />
+          <el-date-picker v-model="taskDetailInfo.endTime" type="date" placeholder="选择日期" style="width: 100%;" />
         </el-form-item>
         <el-form-item label="内容描述：" label-width="120px">
           <el-input v-model="taskDetailInfo.content" type="textarea" :autosize="{ minRows: 9, maxRows: 9}" style="resize: none" />
@@ -93,13 +111,13 @@
           <el-input v-model="taskPublishInfo.title" autocomplete="off" />
         </el-form-item>
         <el-form-item label="任务分配用户：" label-width="120px">
-          <el-input v-model="taskDetailInfo.userName" autocomplete="off" />
+          <el-input v-model="taskPublishInfo.receiverCode" autocomplete="off" />
         </el-form-item>
         <el-form-item label="开始日期：" label-width="120px">
           <el-date-picker v-model="taskPublishInfo.startTime" type="date" placeholder="选择日期" style="width: 100%;" />
         </el-form-item>
         <el-form-item label="完成截止日期：" label-width="120px">
-          <el-date-picker v-model="taskPublishInfo.deadlineTime" type="date" placeholder="选择日期" style="width: 100%;" />
+          <el-date-picker v-model="taskPublishInfo.endTime" type="date" placeholder="选择日期" style="width: 100%;" />
         </el-form-item>
         <el-form-item label="内容描述：" label-width="120px">
           <el-input v-model="taskPublishInfo.content" type="textarea" :autosize="{ minRows: 9, maxRows: 9}" style="resize: none" />
@@ -111,71 +129,102 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="任务进度反馈"
+      :visible.sync="feedbackVisible"
+      top="5vh"
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      class="el-dialog__body"
+    >
+      <el-form :model="taskFeedbackInfo">
+        <el-form-item label="任务完成百分比：">
+          <el-progress style="margin-bottom: 10px" :percentage="taskFeedbackInfo.completeDegree" :color="taskProgressColors" />
+        </el-form-item>
+        <el-form-item label="任务完成反馈：">
+          <el-input
+            v-model="taskFeedbackInfo.feedbackContent"
+            type="textarea"
+            :autosize="{ minRows: 6, maxRows: 6}"
+            style="resize: none"
+            :disabled="true"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="feedbackVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { getTask, insertTask, deleteTask, modifyTask, taskFeedback } from '@/api/task'
+import { hideFullScreenLoading, showFullScreenLoading } from '@/utils/loading'
+import { renderTime } from '@/utils/index'
 
 export default {
-  computed: {
-    ...mapGetters([
-      'taskStateOptions'
-    ])
-  },
   data() {
     return {
+      pageSize: 25,
+      curPageNum: 1,
+      total: 0,
       taskModifyVisible: false,
       taskPublishVisible: false,
       percentage: 0,
       taskDetailInfo: {
       },
+      taskFeedbackInfo: {
+      },
       taskPublishInfo: {
       },
-      colors: [
-        { color: '#f56c6c', percentage: 20 },
-        { color: '#6f7ad3', percentage: 40 },
-        { color: '#e6a23c', percentage: 60 },
-        { color: '#1989fa', percentage: 80 },
-        { color: '#5cb87a', percentage: 100 }
-      ],
-      taskInfo: [{
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        deadlineTime: '截止日期',
-        userName: 'yonghu',
-        percentage: 0
-      },
-      {
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        deadlineTime: '截止日期',
-        userName: 'yonghu',
-        percentage: 0
-      }, {
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        userName: 'yonghu',
-        deadlineTime: '截止日期',
-        percentage: 0
-      }],
+      taskInfo: [],
       searchForm: {
         taskState: '',
         taskTitle: '',
         userLogName: ''
-      }
+      },
+      feedbackVisible: false
     }
   },
+  computed: {
+    ...mapGetters([
+      'taskStateOptions',
+      'taskProgressColors'
+    ])
+  },
+  created() {
+    const param = {
+      pageSize: this.pageSize,
+      pageNum: this.curPageNum
+    }
+    this.getTask(param)
+  },
   methods: {
+    getTask(body) {
+      getTask(body)
+        .then(response => {
+          const { data } = response
+          this.taskInfo = data.list
+          this.total = data.total
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     searchTask: function() {
-
+      const data = {
+        state: this.searchForm.taskState,
+        title: this.searchForm.taskTitle,
+        receiverCode: this.searchForm.receiverCode,
+        pageSize: this.pageSize,
+        pageNum: this.curPageNum
+      }
+      this.getTask(data)
     },
     taskModify: function(index) {
       this.taskModifyVisible = true
@@ -183,6 +232,19 @@ export default {
     },
     taskModifyEnsure: function() {
       this.taskModifyVisible = false
+      this.taskDetailInfo.startTime = renderTime(this.taskDetailInfo.startTime)
+      this.taskDetailInfo.endTime = renderTime(this.taskDetailInfo.endTime)
+      showFullScreenLoading()
+      modifyTask(this.taskDetailInfo, this.taskDetailInfo.id)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('修改成功')
+          location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
     },
     taskModifyCancel: function() {
       this.taskModifyVisible = false
@@ -201,9 +263,65 @@ export default {
     },
     taskPublishEnsure() {
       this.taskPublishVisible = false
+      const body = {
+        content: this.taskPublishInfo.content,
+        title: this.taskPublishInfo.title,
+        receiverCode: this.taskPublishInfo.receiverCode,
+        startTime: renderTime(this.taskPublishInfo.startTime),
+        endTime: renderTime(this.taskPublishInfo.endTime)
+      }
+      body.publisherCode = this.$store.getters.account === ''
+        ? JSON.parse(sessionStorage.getItem('stateStore')).user.account : this.$store.getters.account
+      showFullScreenLoading()
+      insertTask(body)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('发布任务成功')
+          location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+          hideFullScreenLoading()
+        })
     },
     taskPublishCancel() {
       this.taskPublishVisible = false
+    },
+    prePage() {
+
+    },
+    nextPage() {
+
+    },
+    handleCurrentChange() {
+
+    },
+    taskDelete(id) {
+      const ids = [id]
+      this.$confirm('确认删除该任务?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        showFullScreenLoading()
+        deleteTask(ids)
+          .then(response => {
+            hideFullScreenLoading()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            location.reload()
+          })
+          .catch(error => {
+            console.log(error)
+            hideFullScreenLoading()
+          })
+      })
+    },
+    showTaskFeedback(index) {
+      this.feedbackVisible = true
+      this.taskFeedbackInfo = this.taskInfo[index]
     }
   }
 }
@@ -229,8 +347,8 @@ export default {
 
   .box-card {
     margin-top: 20px;
-    width: 500px;
-    height: 280px;
+    width: 95%;
+    height: 300px;
     padding: 10px;
     overflow: auto;
     margin-left: 20px;
@@ -264,6 +382,12 @@ export default {
 
   .text {
     font-size: 14px;
+  }
+
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
   }
 
 </style>

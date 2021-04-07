@@ -33,9 +33,10 @@ export function insertTask(data) {
 /**
  * 修改任务信息接口
  * @param data
+ * @param id
  * @returns {AxiosPromise}
  */
-export function modifyTask(data,id) {
+export function modifyTask(data, id) {
   return request({
     url: '/task/' + id + '/modify',
     method: 'post',
@@ -59,17 +60,14 @@ export function deleteTask(data) {
 /**
  * 任务反馈接口
  * @param data
+ * @param id
  * @returns {AxiosPromise}
  */
-export function taskFeedback(data,id) {
+export function taskFeedback(data, id) {
   return request({
     url: '/task/' + id + '/feedBack',
     method: 'post',
     data
   })
 }
-
-
-
-
 

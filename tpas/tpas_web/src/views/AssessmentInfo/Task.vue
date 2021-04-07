@@ -9,7 +9,7 @@
     </el-form>
 
     <el-row class="el-row">
-      <el-col v-for="(o,index) in taskInfo">
+      <el-col v-for="(o,index) in taskInfo" :key="index">
         <el-card :data="taskInfo" class="box-card" shadow="hover">
           <div slot="header">
             <el-row>
@@ -44,6 +44,18 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="curPageNum"
+      class="pagination"
+      @prev-click="prePage"
+      @next-click="nextPage"
+      @current-change="handleCurrentChange"
+    />
 
     <el-dialog
       title="任务进度反馈"
@@ -84,12 +96,6 @@ import { getTask, taskFeedback } from '@/api/task'
 import { hideFullScreenLoading, showFullScreenLoading } from '@/utils/loading'
 
 export default {
-  computed: {
-    ...mapGetters([
-      'taskStateOptions',
-      'taskProgressColors'
-    ])
-  },
   data() {
     return {
       pageSize: 25,
@@ -105,6 +111,12 @@ export default {
         taskTitle: ''
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'taskStateOptions',
+      'taskProgressColors'
+    ])
   },
   created() {
     const param = {
@@ -129,7 +141,18 @@ export default {
         })
     },
     searchTask: function() {
+      const param = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      }
+      if (this.searchForm.taskState) {
+        param.state = this.searchForm.taskState
+      }
+      if (this.searchForm.taskTitle) {
+        param.title = this.searchForm.taskTitle
+      }
 
+      this.getTask(param)
     },
     taskFeedback: function(index) {
       this.feedbackVisible = true
@@ -166,6 +189,15 @@ export default {
       if (this.taskDetailInfo.completeDegree < 0) {
         this.taskDetailInfo.completeDegree = 0
       }
+    },
+    prePage() {
+
+    },
+    nextPage() {
+
+    },
+    handleCurrentChange() {
+
     }
   }
 }
@@ -187,7 +219,7 @@ export default {
 
   .box-card {
     margin-top: 20px;
-    width: 90%;
+    width: 95%;
     height: 250px;
     padding: 10px;
     overflow: auto;
@@ -222,6 +254,12 @@ export default {
 
   .text {
     font-size: 14px;
+  }
+
+  .pagination {
+    margin-top: 20px ;
+    float: right ;
+    margin-bottom: 20px
   }
 
 </style>
