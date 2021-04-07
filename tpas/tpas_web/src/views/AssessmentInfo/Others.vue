@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="searchForm">
-      <el-select v-model="searchForm.selectedSchoolYear" placeholder="学年" class="selector-first">
+    <el-form ref="form" :model="searchData">
+      <el-select v-model="searchData.selectedSchoolYear" placeholder="学年" class="selector-first">
         <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
 
@@ -124,6 +124,7 @@ export default {
         semester: '',
         schoolYear: ''
       },
+      loadingVisible: false,
       otherDialogVisible: false,
       otherEditDisable: true,
       applyOtherDialogVisible: false,
