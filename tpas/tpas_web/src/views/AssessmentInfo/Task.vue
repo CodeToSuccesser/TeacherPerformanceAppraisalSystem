@@ -9,7 +9,7 @@
     </el-form>
 
     <el-row class="el-row">
-      <el-col v-for="(o,index) in taskInfo" :key="o" span="11">
+      <el-col v-for="(o,index) in taskInfo">
         <el-card :data="taskInfo" class="box-card" shadow="hover">
           <div slot="header">
             <el-row>
@@ -28,7 +28,7 @@
                 开始日期： {{ taskInfo[index].startTime }}
               </el-col>
               <el-col class="task-content">
-                截止日期： {{ taskInfo[index].deadlineTime }}
+                截止日期： {{ taskInfo[index].endTime }}
               </el-col>
               <el-col class="task-content">
                 任务详情： {{ taskInfo[index].content }}
@@ -56,7 +56,7 @@
     >
       <el-form :model="taskDetailInfo">
         <el-form-item label="任务完成百分比：">
-          <el-progress style="margin-bottom: 10px" :percentage="taskDetailInfo.percentage" :color="colors" />
+          <el-progress style="margin-bottom: 10px" :percentage="taskDetailInfo.completeDegree" :color="taskProgressColors" />
           <div>
             <el-button-group>
               <el-button icon="el-icon-minus" @click="decrease" />
@@ -65,11 +65,11 @@
           </div>
         </el-form-item>
         <el-form-item label="任务完成反馈：">
-          <el-input v-model="taskDetailInfo.content" type="textarea" :autosize="{ minRows: 6, maxRows: 6}" style="resize: none" />
+          <el-input v-model="taskDetailInfo.feedbackContent" type="textarea" :autosize="{ minRows: 6, maxRows: 6}" style="resize: none" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="feedbackEnsure">确 定</el-button>
+        <el-button type="primary" @click="feedbackEnsure(taskDetailInfo.id)">确 定</el-button>
         <el-button @click="feedbackCancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -79,64 +79,55 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getTask, taskFeedback } from '@/api/task'
+import { hideFullScreenLoading, showFullScreenLoading } from '@/utils/loading'
+
 export default {
+  computed: {
+    ...mapGetters([
+      'taskStateOptions',
+      'taskProgressColors'
+    ])
+  },
   data() {
     return {
-      percentage: 0,
+      pageSize: 25,
+      curPageNum: 1,
+      total: 0,
+      completeDegree: 0,
       taskDetailInfo: {
       },
-      colors: [
-        { color: '#f56c6c', percentage: 20 },
-        { color: '#6f7ad3', percentage: 40 },
-        { color: '#e6a23c', percentage: 60 },
-        { color: '#1989fa', percentage: 80 },
-        { color: '#5cb87a', percentage: 100 }
-      ],
       feedbackVisible: false,
-      taskInfo: [{
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        deadlineTime: '截止日期',
-        percentage: 0
-      },
-      {
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        deadlineTime: '截止日期',
-        percentage: 0
-      }, {
-        title: '任务标题',
-        content: '任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容任务内容',
-        createTime: '创建日期',
-        startTime: '开始日期',
-        deadlineTime: '截止日期',
-        percentage: 0
-      }],
+      taskInfo: [],
       searchForm: {
         taskState: '',
         taskTitle: ''
-      },
-      taskStateOptions: [
-        {
-          key: '未截止',
-          value: 0
-        },
-        {
-          key: '已截止',
-          value: 1
-        },
-        {
-          key: '已取消',
-          value: 2
-        }
-      ]
+      }
     }
   },
+  created() {
+    const param = {
+      pageSize: this.pageSize,
+      pageNum: this.curPageNum
+    }
+    this.getTask(param)
+  },
   methods: {
+    getTask(body) {
+      if (this.permissionMap && this.permissionMap['getTaskSearch-teacherCode'] && this.permissionMap['getTaskSearch-teacherCode']['teacherCode']) {
+        body.receiverCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.account : this.$store.getters.account
+      }
+      getTask(body)
+        .then(response => {
+          const { data } = response
+          this.taskInfo = data.list
+          this.total = data.total
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     searchTask: function() {
 
     },
@@ -144,22 +135,36 @@ export default {
       this.feedbackVisible = true
       this.taskDetailInfo = this.taskInfo[index]
     },
-    feedbackEnsure: function() {
+    feedbackEnsure: function(id) {
       this.feedbackVisible = false
+      const data = {
+        feedbackContent: this.taskDetailInfo.feedbackContent,
+        completeDegree: this.taskDetailInfo.completeDegree
+      }
+      showFullScreenLoading()
+      taskFeedback(data, id)
+        .then(response => {
+          hideFullScreenLoading()
+          this.$message.success('反馈成功')
+        })
+        .catch(error => {
+          hideFullScreenLoading()
+          console.log(error)
+        })
     },
     feedbackCancel: function() {
       this.feedbackVisible = false
     },
     increase() {
-      this.taskDetailInfo.percentage += 10
-      if (this.taskDetailInfo.percentage > 100) {
-        this.taskDetailInfo.percentage = 100
+      this.taskDetailInfo.completeDegree += 10
+      if (this.taskDetailInfo.completeDegree > 100) {
+        this.taskDetailInfo.completeDegree = 100
       }
     },
     decrease() {
-      this.taskDetailInfo.percentage -= 10
-      if (this.taskDetailInfo.percentage < 0) {
-        this.taskDetailInfo.percentage = 0
+      this.taskDetailInfo.completeDegree -= 10
+      if (this.taskDetailInfo.completeDegree < 0) {
+        this.taskDetailInfo.completeDegree = 0
       }
     }
   }
@@ -182,7 +187,7 @@ export default {
 
   .box-card {
     margin-top: 20px;
-    width: 500px;
+    width: 90%;
     height: 250px;
     padding: 10px;
     overflow: auto;

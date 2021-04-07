@@ -8,6 +8,7 @@ import permission from '@/store/modules/permission'
 import sysParam from '@/store/modules/sysParam'
 import systemRole from '@/store/modules/systemRole'
 import courseBase from '@/store/modules/courseBase'
+import task from '@/store/modules/task'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
     permission,
     sysParam,
     systemRole,
-    courseBase
+    courseBase,
+    task
   },
   getters
 })

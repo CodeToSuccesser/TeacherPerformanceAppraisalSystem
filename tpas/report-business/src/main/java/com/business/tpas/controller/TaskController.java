@@ -37,7 +37,7 @@ public class TaskController {
     @ApiOperation(value = "根据用户编码获取对应任务信息", notes = "根据用户编码获取对应任务信息")
     @ApiResponses(value = { @ApiResponse(code = 0, message = "ok", response = TaskModel.class),
         @ApiResponse(code = 500, message = "系统错误")})
-    @GetMapping("/getTask")
+    @PostMapping("/getTask")
     public BaseResponse<?> getTask(@RequestBody TaskSearchModel searchModel) {
         PageInfo<TaskModel> taskModelPageInfo = taskService.getTaskByPage(searchModel);
         return new BaseResponse<>(taskModelPageInfo);

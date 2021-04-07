@@ -116,7 +116,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters([
+      'taskStateOptions'
+    ])
+  },
   data() {
     return {
       taskModifyVisible: false,
@@ -163,21 +170,7 @@ export default {
         taskState: '',
         taskTitle: '',
         userLogName: ''
-      },
-      taskStateOptions: [
-        {
-          key: '未截止',
-          value: 0
-        },
-        {
-          key: '已截止',
-          value: 1
-        },
-        {
-          key: '已取消',
-          value: 2
-        }
-      ]
+      }
     }
   },
   methods: {

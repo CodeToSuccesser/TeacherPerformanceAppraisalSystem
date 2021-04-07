@@ -26,7 +26,8 @@ const getters = {
   courseTypeEnum: state => state.courseBase.courseTypeEnum,
   softHardEnum: state => state.courseBase.softHardEnum,
   studentTypeEnum: state => state.courseBase.studentTypeEnum,
-  bilingualEnum: state => state.courseBase.bilingualEnum
-
+  bilingualEnum: state => state.courseBase.bilingualEnum,
+  taskStateOptions: state => state.task.taskStateOptions,
+  taskProgressColors: state => state.task.taskProgressColors
 }
 export default getters
