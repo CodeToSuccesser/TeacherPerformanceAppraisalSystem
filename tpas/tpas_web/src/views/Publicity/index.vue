@@ -24,7 +24,7 @@
               <span class="title" :title="o.title">{{ o.title }}</span>
             </el-col>
             <el-col>
-              <span class="date">发布时间: {{ o.createTime }}|发布账号: {{ o.publisherCode }}</span>
+              <span class="date">发布时间: {{ o.createTime }} | 发布账号: {{ o.publisherCode }}</span>
             </el-col>
           </el-row>
         </div>
