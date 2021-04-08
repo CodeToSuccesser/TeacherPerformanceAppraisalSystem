@@ -65,6 +65,7 @@ public class OtherPerformanceServiceImpl extends BaseServiceImpl<OtherPerformanc
         OtherPerformance oldOtherPerformance = otherPerformanceMapper.selectById(otherPerformanceModel.getId());
         oldOtherPerformance.setTitle(otherPerformanceModel.getTitle());
         oldOtherPerformance.setContent(otherPerformanceModel.getContent());
+        oldOtherPerformance.setScore(otherPerformanceModel.getScore());
         oldOtherPerformance.setRemark(otherPerformanceModel.getRemark());
 
         otherPerformanceMapper.updateById(oldOtherPerformance);
@@ -94,6 +95,8 @@ public class OtherPerformanceServiceImpl extends BaseServiceImpl<OtherPerformanc
         otherPerformance.setContent(otherPerformanceModel.getContent());
         otherPerformance.setSemester(otherPerformanceModel.getSemester());
         otherPerformance.setSchoolYear(otherPerformanceModel.getSchoolYear());
+        otherPerformance.setScore(otherPerformanceModel.getScore());
+        otherPerformance.setRemark(otherPerformanceModel.getRemark());
 
         otherPerformanceMapper.insert(otherPerformance);
     }

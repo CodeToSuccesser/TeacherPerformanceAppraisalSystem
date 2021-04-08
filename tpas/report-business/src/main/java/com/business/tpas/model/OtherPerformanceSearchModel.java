@@ -1,11 +1,13 @@
 package com.business.tpas.model;
 
 import com.management.common.model.PageModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @description 其他教务工作信息查找类
  **/
+@ApiModel("其他教务工作信息查找类")
 public class OtherPerformanceSearchModel extends PageModel {
 
     @ApiModelProperty(value = "教师编码")

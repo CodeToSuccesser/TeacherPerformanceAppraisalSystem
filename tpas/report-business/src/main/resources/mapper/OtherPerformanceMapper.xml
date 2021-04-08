@@ -52,6 +52,9 @@
             <if test="data.schoolYear != null and data.schoolYear != ''">
                 and op.school_year = #{data.schoolYear}
             </if>
+            <if test="data.title != null and data.title != ''">
+                and op.title like "%"#{data.title}"%"
+            </if>
             and op.is_deleted = 0
         </where>
         order by op.create_time DESC
