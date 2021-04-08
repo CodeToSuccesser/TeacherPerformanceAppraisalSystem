@@ -11,26 +11,51 @@
 
       <el-input
         v-if="this.permissionMap === undefined
-        || this.permissionMap['getInternSearch-teacherCode'] === undefined
-        || this.permissionMap['getInternSearch-teacherCode']['teacherCode'] === undefined"
+          || this.permissionMap['getInternSearch-teacherCode'] === undefined
+          || this.permissionMap['getInternSearch-teacherCode']['teacherCode'] === undefined"
         v-model="searchForm.selectedTeacherCode"
         placeholder="教师编码"
         clearable
         class="selector"
-        style="width: 120px" />
+        style="width: 120px"
+      />
       <el-button type="primary" size="small" class="button-find" @click="searchIntern">查找</el-button>
 
-      <el-button
-        v-if="permissionMap && permissionMap['internCalculateAssess-button']"
-        type="primary"
-        size="small"
-        class="button-find"
-        @click="calculateAssess(3)">绩效考核</el-button>
+      <el-col>
+        <el-button
+          v-if="permissionMap && permissionMap['internCalculateAssess-button']"
+          type="primary"
+          size="small"
+          class="button-find"
+          @click="calculateAssess(3)"
+        >绩效考核</el-button>
 
-      <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">新增</el-button>
-      <el-button v-if="permissionMap && permissionMap['downloadInternTemplate-Button']" type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
-      <el-button v-if="permissionMap && permissionMap['importIntern-Button']" type="primary" size="small" class="button-add" @click="importIntern">导入</el-button>
-      <el-button v-if="permissionMap && permissionMap['exportIntern-Button']" type="primary" size="small" class="button-add" @click="exportIntern">导出</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="applyInternDialogVisible = true">新增</el-button>
+
+        <el-button
+          v-if="permissionMap && permissionMap['downloadInternTemplate-Button']"
+          type="primary"
+          size="small"
+          class="button-add"
+          @click="downloadTemplate"
+        >下载导入模板</el-button>
+
+        <el-button
+          v-if="permissionMap && permissionMap['importIntern-Button']"
+          type="primary"
+          size="small"
+          class="button-add"
+          @click="importIntern"
+        >导入</el-button>
+
+        <el-button
+          v-if="permissionMap && permissionMap['exportIntern-Button']"
+          type="primary"
+          size="small"
+          class="button-add"
+          @click="exportIntern"
+        >导出</el-button>
+      </el-col>
     </el-form>
 
     <el-table :data="internInfo" stripe style="width: 100% " :border="true" fit>
@@ -471,7 +496,8 @@ export default {
   }
 
   .button-add {
-    float: right;
+    margin-bottom: 10px;
+    margin-left :10px;
   }
 
   .pagination {

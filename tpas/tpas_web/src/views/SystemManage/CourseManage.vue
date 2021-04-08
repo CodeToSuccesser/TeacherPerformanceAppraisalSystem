@@ -1,29 +1,31 @@
 <template>
   <div class="app-container">
+    <el-form ref="form" :model="searchData">
 
-    <el-select v-model="searchData.courseCharacter" placeholder="课程性质" class="selector-year">
-      <el-option v-for="item in courseCharacterEnum" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-    <el-select v-model="searchData.courseType" placeholder="课程类别" class="selector-term">
-      <el-option v-for="item in courseTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-    <el-select v-model="searchData.softHard" placeholder="课程类别" class="selector-term">
-      <el-option v-for="item in softHardEnum" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-    <el-select v-model="searchData.studentType" placeholder="课程类别" class="selector-term">
-      <el-option v-for="item in studentTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-    <el-select v-model="searchData.isBilingual" placeholder="课程类别" class="selector-term">
-      <el-option v-for="item in bilingualEnum" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+      <el-select v-model="searchData.courseCharacter" placeholder="课程性质" class="selector-year">
+        <el-option v-for="item in courseCharacterEnum" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-select v-model="searchData.courseType" placeholder="课程类别" class="selector-term">
+        <el-option v-for="item in courseTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-select v-model="searchData.softHard" placeholder="软硬件课程" class="selector-term">
+        <el-option v-for="item in softHardEnum" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-select v-model="searchData.studentType" placeholder="学生类型" class="selector-term">
+        <el-option v-for="item in studentTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-select v-model="searchData.isBilingual" placeholder="是否双语" class="selector-term">
+        <el-option v-for="item in bilingualEnum" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-button :v-loading="loadingVisible" type="primary" size="small" class="button-find" @click="handleCurrentChange(0, 0)">查找</el-button>
 
-    <el-button :v-loading="loadingVisible" type="primary" size="small" class="button-find" @click="handleCurrentChange(0, 0)">查找</el-button>
-
-    <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editCourseBase(null)">新增</el-button>
-    <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="downloadTemplate">下载导入模板</el-button>
-    <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="importCourseInfo">导入</el-button>
-    <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="exportCourseInfo">导出</el-button>
-
+      <el-col>
+        <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="editCourseBase(null)">新增</el-button>
+        <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="downloadTemplate">下载导入模板</el-button>
+        <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="importCourseInfo">导入</el-button>
+        <el-button type="primary" size="small" class="button-add" :disabled="loadingVisible" @click="exportCourseInfo">导出</el-button>
+      </el-col>
+    </el-form>
     <el-table :data="courseBaseList" stripe style="width: 100% " :border="true" fit>
       <el-table-column :resizable="false" prop="id" sortable label="编码" align="center" width="60px" />
       <el-table-column :resizable="false" prop="courseCode" sortable label="课程编号" align="center" />
@@ -34,31 +36,31 @@
       <el-table-column :resizable="false" prop="courseCharacter" sortable label="课程性质" align="center">
         <template slot-scope="scope">
           {{ courseCharacterEnum.filter(it => it.value === scope.row.courseCharacter).length>0?
-          courseCharacterEnum.filter(it => it.value === scope.row.courseCharacter)[0].label:'?'}}
+            courseCharacterEnum.filter(it => it.value === scope.row.courseCharacter)[0].label:'?' }}
         </template>
       </el-table-column>
-      <el-table-column :resizable="false" prop="courseType" sortable label="课程类别" align="center" >
+      <el-table-column :resizable="false" prop="courseType" sortable label="课程类别" align="center">
         <template slot-scope="scope">
           {{ courseTypeEnum.filter(it => it.value === scope.row.courseType).length>0?
-          courseTypeEnum.filter(it => it.value === scope.row.courseType)[0].label:'?'}}
+            courseTypeEnum.filter(it => it.value === scope.row.courseType)[0].label:'?' }}
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="isBilingual" sortable label="授课语言" align="center">
         <template slot-scope="scope">
           {{ bilingualEnum.filter(it => it.value === scope.row.isBilingual).length>0?
-          bilingualEnum.filter(it => it.value === scope.row.isBilingual)[0].label:'?'}}
+            bilingualEnum.filter(it => it.value === scope.row.isBilingual)[0].label:'?' }}
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="softHard" sortable label="软硬件课程" align="center">
         <template slot-scope="scope">
           {{ softHardEnum.filter(it => it.value === scope.row.softHard).length>0?
-          softHardEnum.filter(it => it.value === scope.row.softHard)[0].label:'?'}}
+            softHardEnum.filter(it => it.value === scope.row.softHard)[0].label:'?' }}
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="studentType" sortable label="学生类型" align="center">
         <template slot-scope="scope">
           {{ studentTypeEnum.filter(it => it.value === scope.row.studentType).length>0?
-          studentTypeEnum.filter(it => it.value === scope.row.studentType)[0].label:'?'}}
+            studentTypeEnum.filter(it => it.value === scope.row.studentType)[0].label:'?' }}
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="firstClassTime" sortable label="首次开课时间" align="center" />
@@ -111,7 +113,8 @@
               v-for="item in courseCharacterEnum.filter(it => it.value !== '')"
               :key="item.value"
               :label="item.label"
-              :value="item.value" />
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="课程类别" :label-width="formLabelWidth">
@@ -120,7 +123,8 @@
               v-for="item in courseTypeEnum.filter(it => it.value !== '')"
               :key="item.value"
               :label="item.label"
-              :value="item.value" />
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="是否双语授课" :label-width="formLabelWidth">
@@ -129,7 +133,8 @@
               v-for="item in bilingualEnum.filter(it => it.value !== '')"
               :key="item.value"
               :label="item.label"
-              :value="item.value" />
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="软硬件课程" :label-width="formLabelWidth">
@@ -138,7 +143,8 @@
               v-for="item in softHardEnum.filter(it => it.value !== '')"
               :key="item.value"
               :label="item.label"
-              :value="item.value" />
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="学生类型" :label-width="formLabelWidth">
@@ -147,7 +153,8 @@
               v-for="item in studentTypeEnum.filter(it => it.value !== '')"
               :key="item.value"
               :label="item.label"
-              :value="item.value" />
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="首次开课时间" :label-width="formLabelWidth">
@@ -554,7 +561,8 @@ export default {
   }
 
   .button-add {
-    float: right;
+    margin-left: 10px;
+    margin-bottom: 10px;
   }
 
   .pagination {

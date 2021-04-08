@@ -33,6 +33,9 @@
               <el-col class="task-content">
                 任务详情： {{ taskInfo[index].content }}
               </el-col>
+              <el-col class="task-content">
+                任务评分： {{ taskInfo[index].score }}
+              </el-col>
             </el-row>
           </div>
           <el-image
@@ -191,13 +194,29 @@ export default {
       }
     },
     prePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getTask(param)
+      this.curPageNum = this.curPageNum - 1
     },
     nextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getTask(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getTask(param)
+      this.curPageNum = val
     }
   }
 }
