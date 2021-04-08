@@ -7,11 +7,12 @@
 
       <el-button type="primary" size="small" class="button-find" @click="searchMajor">查找</el-button>
 
-      <el-button type="primary" size="small" class="button-add" @click="applyMajorDialogVisible = true">新增</el-button>
-      <el-button type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
-      <el-button type="primary" size="small" class="button-add" @click="importMajor">导入</el-button>
-      <el-button type="primary" size="small" class="button-add" @click="exportMajor">导出</el-button>
-
+      <el-col>
+        <el-button type="primary" size="small" class="button-add" @click="applyMajorDialogVisible = true">新增</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="downloadTemplate">下载导入模板</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="importMajor">导入</el-button>
+        <el-button type="primary" size="small" class="button-add" @click="exportMajor">导出</el-button>
+      </el-col>
     </el-form>
 
     <el-table :data="majorInfo" stripe style="width: 100% " :border="true" fit>
@@ -206,13 +207,29 @@ export default {
       this.majorDialogVisible = false
     },
     prePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getMajorInfo(param)
+      this.curPageNum = this.curPageNum - 1
     },
     nextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getMajorInfo(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getMajorInfo(param)
+      this.curPageNum = val
     },
     exportMajor() {
       const param = {}
@@ -345,7 +362,8 @@ export default {
   }
 
   .button-add {
-    float: right;
+    margin-bottom: 10px;
+    margin-left: 10px;
   }
 
   .pagination {
