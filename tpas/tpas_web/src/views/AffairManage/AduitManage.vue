@@ -4,10 +4,10 @@
       <el-tab-pane label="课程课时操作" name="courseHour">
         <el-form ref="form" :model="courseSearchForm">
           <el-select v-model="courseSearchForm.selectedSchoolYear" clearable placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="courseSearchForm.selectedSemester" clearable placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-input v-model="courseSearchForm.selectedTeacherCode" clearable placeholder="教师编码" class="input-name" />
           <el-button type="primary" size="small" class="button-find" @click="searchCourseHourModifyRecord">查找</el-button>
@@ -154,10 +154,10 @@
       <el-tab-pane label="论文指导操作" name="paper">
         <el-form ref="form" :model="paperSearchForm">
           <el-select v-model="paperSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-input v-model="paperSearchForm.teacherCode" placeholder="教师编码" class="input-name" />
           <el-button type="primary" size="small" class="button-find" @click="searchPaperModifyRecord">查找</el-button>
@@ -281,10 +281,10 @@
       <el-tab-pane label="实习带队操作" name="intern">
         <el-form ref="form" :model="internSearchForm">
           <el-select v-model="internSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="internSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-input v-model="internSearchForm.teacherCode" placeholder="教师编码" class="input-name" />
           <el-button type="primary" size="small" class="button-find" @click="searchInternModifyRecord">查找</el-button>
@@ -410,6 +410,7 @@ import { getCourseHoursModifyRecord, auditCourseHoursModify } from '@/api/course
 import { getPaperModifyRecord, auditPaperModify } from '@/api/paper'
 import { getInternModifyRecord, auditInternModify } from '@/api/intern'
 import { hideFullScreenLoading, showFullScreenLoading } from '@/utils/loading'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'AuditRecord',
@@ -430,17 +431,6 @@ export default {
         selectedSemester: '',
         selectedTeacherCode: ''
       },
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       courseTotal: 0,
       coursePageSize: 25,
       courseCurPageNum: 1,
@@ -472,6 +462,12 @@ export default {
       applyType: ['教师申请', '教务员修改'],
       modifyType: ['课时修改', '指导论文修改', '专业带队管理']
     }
+  },
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
   },
   created() {
     this.getCourseHoursModifyRecord({})
@@ -584,31 +580,79 @@ export default {
         })
     },
     coursePrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getCourseHoursModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     courseNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getCourseHoursModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    courseHandleCurrentChange() {
+    courseHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getCourseHoursModifyRecord(param)
+      this.curPageNum = val
     },
     paperPrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getPaperModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     paperNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getPaperModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    paperHandleCurrentChange() {
+    paperHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getPaperModifyRecord(param)
+      this.curPageNum = val
     },
     internPrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getInternModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     internNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getInternModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    internHandleCurrentChange() {
+    internHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getInternModifyRecord(param)
+      this.curPageNum = val
     },
     searchCourseHourModifyRecord() {
       const param = {

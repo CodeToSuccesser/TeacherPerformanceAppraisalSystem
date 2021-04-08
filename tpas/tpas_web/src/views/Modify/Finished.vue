@@ -4,10 +4,10 @@
       <el-tab-pane label="课程课时修改" name="courseHour">
         <el-form ref="form" :model="courseSearchForm">
           <el-select v-model="courseSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="courseSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchCourseHourModifyRecord">查找</el-button>
         </el-form>
@@ -100,10 +100,10 @@
       <el-tab-pane label="论文指导修改" name="paper">
         <el-form ref="form" :model="paperSearchForm">
           <el-select v-model="paperSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchPaperModifyRecord">查找</el-button>
         </el-form>
@@ -173,10 +173,10 @@
         <el-form ref="form" :model="internSearchForm">
 
           <el-select v-model="internSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="internSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchInternModifyRecord">查找</el-button>
         </el-form>
@@ -247,6 +247,7 @@
 import { getCourseHoursModifyRecord } from '@/api/course'
 import { getPaperModifyRecord } from '@/api/paper'
 import { getInternModifyRecord } from '@/api/intern'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Finished',
@@ -279,22 +280,17 @@ export default {
         selectedCourseName: '',
         selectedStudentInstitute: ''
       },
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       courseHoursModifyRecord: [],
       paperModifyRecord: [],
       internModifyRecord: [],
       activeName: 'courseHour'
     }
+  },
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
   },
   created() {
     this.getCourseModifyRecord()

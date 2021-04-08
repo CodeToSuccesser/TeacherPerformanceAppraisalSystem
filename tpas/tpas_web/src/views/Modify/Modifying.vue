@@ -4,10 +4,10 @@
       <el-tab-pane label="课程课时修改" name="courseHour">
         <el-form ref="form" :model="courseSearchForm">
           <el-select v-model="courseSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="courseSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchCourseHourModifyRecord">查找</el-button>
         </el-form>
@@ -176,10 +176,10 @@
       <el-tab-pane label="论文指导修改" name="paper">
         <el-form ref="form" :model="paperSearchForm">
           <el-select v-model="paperSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchPaperModifyRecord">查找</el-button>
         </el-form>
@@ -288,10 +288,10 @@
       <el-tab-pane label="实习带队修改" name="intern">
         <el-form ref="form" :model="paperSearchForm">
           <el-select v-model="paperSearchForm.selectedSchoolYear" placeholder="学年" class="selector-year">
-            <el-option v-for="item in schoolYearOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-select v-model="paperSearchForm.selectedSemester" placeholder="学期" class="selector-term">
-            <el-option v-for="item in semesterOptions" :key="item.key" :label="item.key" :value="item.value" />
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-button type="primary" size="small" class="button-find" @click="searchInternModifyRecord">查找</el-button>
         </el-form>
@@ -405,6 +405,7 @@
 import { getCourseHoursModifyRecord } from '@/api/course'
 import { getPaperModifyRecord } from '@/api/paper'
 import { getInternModifyRecord } from '@/api/intern'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Modifying',
@@ -437,17 +438,6 @@ export default {
         selectedCourseName: '',
         selectedStudentInstitute: ''
       },
-      schoolYearOptions: {},
-      semesterOptions: [
-        {
-          key: '第一学期',
-          value: 0
-        },
-        {
-          key: '第二学期',
-          value: 1
-        }
-      ],
       courseHoursModifyRecord: [],
       courseModifyEditVisible: false,
       paperModifyRecord: [],
@@ -458,10 +448,16 @@ export default {
       formLabelWidth: '120px'
     }
   },
+  computed: {
+    ...mapGetters([
+      'semesterOptions',
+      'schoolYearOptions'
+    ])
+  },
   created() {
-    this.getCourseModifyRecord()
-    this.getInternModifyRecord()
-    this.getPaperModifyRecord()
+    this.getCourseModifyRecord({})
+    this.getInternModifyRecord({})
+    this.getPaperModifyRecord({})
   },
   methods: {
     modifyEdit: function(index) {
@@ -533,10 +529,9 @@ export default {
           console.log(error)
         })
     },
-    getInternModifyRecord: function() {
-      const body = {
-        checkResult: [0]
-      }
+    getInternModifyRecord: function(body) {
+      body.checkResult = [0]
+
       getInternModifyRecord(body)
         .then(response => {
           const { data } = response
@@ -547,31 +542,79 @@ export default {
         })
     },
     coursePrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getCourseModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     courseNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getCourseModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    courseHandleCurrentChange() {
+    courseHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getCourseModifyRecord(param)
+      this.curPageNum = val
     },
     paperPrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getPaperModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     paperNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getPaperModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    paperHandleCurrentChange() {
+    paperHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getPaperModifyRecord(param)
+      this.curPageNum = val
     },
     internPrePage() {
-
+      const param = {
+        pageNum: this.curPageNum - 1,
+        pageSize: this.pageSize
+      }
+      this.getInternModifyRecord(param)
+      this.curPageNum = this.curPageNum - 1
     },
     internNextPage() {
-
+      const param = {
+        pageNum: this.curPageNum + 1,
+        pageSize: this.pageSize
+      }
+      this.getInternModifyRecord(param)
+      this.curPageNum = this.curPageNum + 1
     },
-    internHandleCurrentChange() {
+    internHandleCurrentChange(val) {
+      const param = {
+        pageNum: this.curPageNum,
+        pageSize: this.pageSize
+      }
 
+      this.getInternModifyRecord(param)
+      this.curPageNum = val
     }
   }
 }
