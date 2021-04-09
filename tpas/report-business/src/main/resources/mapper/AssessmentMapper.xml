@@ -122,6 +122,11 @@
     <update id="deleteScores">
         UPDATE assessment
         SET is_deleted = 1
+        , course_quality = 0
+        , paper_quality = 0
+        , intern_quality = 0
+        , other_quality = 0
+        , total_quality = 0
         WHERE id IN
         <foreach collection="data" open="(" close=")" separator="," index="index" item="item">
             #{item}
