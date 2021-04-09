@@ -78,7 +78,7 @@
         FROM assessment a inner join user_msg u on a.teacher_id = u.id
         <where>
             <if test="data.teacherCode != null and data.teacherCode != ''">
-                AND a.log_name = #{data.teacherCode}
+                AND u.log_name = #{data.teacherCode}
             </if>
             <if test="data.schoolYear != null and data.schoolYear != ''">
                 AND a.school_year = #{data.schoolYear}
@@ -90,6 +90,32 @@
                 AND a.is_deleted = 0 AND u.is_deleted = 0
             </if>
         </where>
+    </select>
+
+    <select id="queryAssessListGroupByTime" resultMap="ModelResultMap">
+        SELECT a.id, a.semester, a.school_year
+        , avg(a.course_quality) AS course_quality
+        , avg(a.paper_quality) AS paper_quality
+        , avg(a.intern_quality) AS intern_quality
+        , avg(a.other_quality) AS other_quality
+        , avg(a.total_quality) AS total_quality
+        FROM assessment a inner join user_msg u on a.teacher_id = u.id
+        <where>
+            <if test="data.teacherCode != null and data.teacherCode != ''">
+                AND u.log_name = #{data.teacherCode}
+            </if>
+            <if test="data.schoolYear != null and data.schoolYear != ''">
+                AND a.school_year = #{data.schoolYear}
+            </if>
+            <if test="data.semester != null">
+                AND a.semester = #{data.semester}
+            </if>
+            <if test="1==1">
+                AND a.is_deleted = 0 AND u.is_deleted = 0
+            </if>
+        </where>
+        GROUP BY school_year, semester
+        ORDER BY school_year, semester
     </select>
 
 </mapper>

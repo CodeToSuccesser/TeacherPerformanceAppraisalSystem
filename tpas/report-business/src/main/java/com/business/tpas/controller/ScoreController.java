@@ -17,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,6 +76,21 @@ public class ScoreController {
         }
         return new BaseResponse<>(data);
     }
+
+
+    @ApiOperation(value = "查询考核汇总", notes = "查询考核汇总")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/queryScoreAnalysis")
+    public BaseResponse<?> queryScoreAnalysis(@RequestBody ScoreSearchModel searchModel) {
+        if ((StringUtils.isBlank(searchModel.getSchoolYear()) && searchModel.getSemester() != null) ||
+                (StringUtils.isNotBlank(searchModel.getSchoolYear()) && searchModel.getSemester() == null)) {
+            return new BaseResponse<>(ErrorCodeEnum.PARAM_IS_EMPTY);
+        }
+        ScoreAnalysisModel model = assessmentService.getScoreAnalysis(searchModel);
+        return new BaseResponse<>(model);
+    }
+
 
     @ApiOperation(value = "查询考核明细", notes = "查询考核明细")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),

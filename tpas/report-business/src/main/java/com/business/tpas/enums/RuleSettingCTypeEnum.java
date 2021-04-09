@@ -42,7 +42,7 @@ public enum RuleSettingCTypeEnum {
     }
 
     public static RuleSettingCTypeEnum getEnumByCode(Integer code) {
-        return Arrays.stream(values()).filter(it -> it.code.equals(code)).findFirst().orElse(COURSE);
+        return Arrays.stream(values()).filter(it -> it.code.equals(code)).findFirst().orElse(null);
     }
 
     public static RuleSettingCTypeEnum getEnumByValue(String value) {

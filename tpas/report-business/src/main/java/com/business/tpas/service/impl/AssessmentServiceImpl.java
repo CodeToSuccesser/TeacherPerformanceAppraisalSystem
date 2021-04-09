@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseServiceImpl;
 import com.management.common.model.UploadResponseModel;
 import com.management.tpas.utils.UserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import static com.business.tpas.enums.RuleSettingCTypeEnum.*;
 import static com.management.common.config.GlobalConst.*;
 
 /**
@@ -154,5 +157,40 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
     @Transactional(rollbackFor = Exception.class)
     public void updateOrInsert(Assessment assessment, Integer cType) {
         assessmentMapper.updateOrInsert(assessment, cType);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ScoreAnalysisModel getScoreAnalysis(ScoreSearchModel searchModel) {
+        ScoreAnalysisModel target = new ScoreAnalysisModel();
+        target.setLegendData(Arrays.asList("授课", "论文", "实习", "总分"));
+        List<AssessmentModel> data = assessmentMapper.queryAssessListGroupByTime(searchModel);
+        ScoreAnalysisSerieModel courseData = new ScoreAnalysisSerieModel(COURSE.getCode());
+        ScoreAnalysisSerieModel paperData = new ScoreAnalysisSerieModel(PAPER.getCode());
+        ScoreAnalysisSerieModel internData = new ScoreAnalysisSerieModel(INTERN.getCode());
+        ScoreAnalysisSerieModel totalData = new ScoreAnalysisSerieModel(-1);
+        target.setDataZoomSeries(new ArrayList<>());
+        target.getDataZoomSeries().add(courseData);
+        target.getDataZoomSeries().add(paperData);
+        target.getDataZoomSeries().add(internData);
+        target.getDataZoomSeries().add(totalData);
+        if (data == null || data.isEmpty()) {
+            target.setTitle("查无数据");
+            target.setxData(new ArrayList<>());
+            return target;
+        }
+        target.setxData(data.stream().map(it -> it.getSchoolYear().concat("-").concat(it.getSemester().toString())).collect(Collectors.toList()));
+        courseData.setData(data.stream().map(AssessmentModel::getCourseQuality).collect(Collectors.toList()));
+        paperData.setData(data.stream().map(AssessmentModel::getPaperQuality).collect(Collectors.toList()));
+        internData.setData(data.stream().map(AssessmentModel::getInternQuality).collect(Collectors.toList()));
+        totalData.setData(data.stream().map(AssessmentModel::getTotalQuality).collect(Collectors.toList()));
+
+        if (StringUtils.isNotBlank(searchModel.getTeacherCode())) {
+            target.setTitle(searchModel.getTeacherCode());
+        } else {
+            target.setTitle("平均绩效");
+        }
+
+        return target;
     }
 }

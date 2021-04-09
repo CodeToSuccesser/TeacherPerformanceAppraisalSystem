@@ -53,7 +53,7 @@
         from task t inner join user_msg um on t.receiver_id = um.id
         <where>
             <if test="data.receiverCode != null and data.receiverCode != ''">
-                and t.log_name = #{data.receiverCode}
+                and um.log_name = #{data.receiverCode}
             </if>
             <if test="data.title != null and data.title != ''">
                 and t.title like "%"#{data.title}"%"

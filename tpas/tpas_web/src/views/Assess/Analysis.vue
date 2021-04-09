@@ -61,23 +61,23 @@
       </el-tab-pane>
 
       <el-tab-pane label="统计" name="chart">
-        <el-select v-model="searchSelect[0].schoolYear" placeholder="年度" clearable class="selector-first">
+        <el-select v-model="searchSelect[1].schoolYear" placeholder="年度" clearable class="selector-first">
           <el-option v-for="item in schoolYearOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
 
-        <el-select v-model="searchSelect[0].semester" placeholder="学期" clearable class="selector">
+        <el-select v-model="searchSelect[1].semester" placeholder="学期" clearable class="selector">
           <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
 
         <el-input
           v-if="permissionMap === undefined || permissionMap['courseQueryScoreList-teacherCode'] === undefined"
-          v-model="searchSelect[0].teacherCode"
+          v-model="searchSelect[1].teacherCode"
           placeholder="教师编码"
           clearable
           class="selector"
           style="width: 200px" />
 
-        <el-button :v-loading="loadingVisible[1]" type="primary" size="small" class="button-find" @click="handleCurrentChange(1, 0)">查找</el-button>
+        <el-button :v-loading="loadingVisible[1]" type="primary" size="small" class="button-find" @click="drawChart">查找</el-button>
 
         <div id="chartBox" class="chart-container">
           <div id="chartCmp" class="chart-cmp"/>
@@ -92,7 +92,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { queryAssessList, assessDelete } from '@/api/score'
+import { queryAssessList, assessDelete, getScoreAnalysis } from '@/api/score'
 import resize from '@/components/Charts/mixins/resize'
 
 export default {
@@ -148,7 +148,9 @@ export default {
     window.onresize = function() {
       // that.chartssize(document.getElementById('chartBox'),
       //   document.getElementById('chartCmp'))
-      that.chartCmp.resize()
+      if (that.chartCmp) {
+        that.chartCmp.resize()
+      }
     }
   },
   methods: {
@@ -221,32 +223,23 @@ export default {
       })
     },
     drawChart() {
-      const echarts = require('echarts')
-      this.chartCmp = echarts.init(document.getElementById('chartCmp'))
-      const xData = (function() {
-        const data = [
-          '2017-2018-1',
-          '2017-2018-2',
-          '2018-2019-1',
-          '2018-2019-1'
-        ]
-        return data
-      }())
-      this.chartCmp.setOption({
-        backgroundColor: '#344b58',
-        title: {
-          text: 'admin2',
-          x: '20',
-          top: '20',
-          textStyle: {
-            color: '#fff',
-            fontSize: '22'
-          },
-          subtextStyle: {
-            color: '#90979c',
-            fontSize: '16'
-          }
-        },
+      this.loadingVisible[1] = true
+      const searchModel = {}
+      if (this.searchSelect[1].schoolYear && this.searchSelect[1].schoolYear !== '') {
+        searchModel.schoolYear = this.searchSelect[1].schoolYear
+      }
+      if (this.searchSelect[1].semester) {
+        searchModel.semester = this.searchSelect[1].semester
+      }
+      if (this.permissionMap && this.permissionMap['queryAssessList-teacherCode'] && this.permissionMap['queryAssessList-teacherCode']['teacherCode']) {
+        searchModel.teacherCode = this.$store.getters.account === '' ? JSON.parse(sessionStorage.getItem('stateStore')).user.name : this.$store.getters.account
+      } else {
+        if (this.searchSelect[1].teacherCode && this.searchSelect[1].teacherCode !== '') {
+          searchModel.teacherCode = this.searchSelect[1].teacherCode
+        }
+      }
+      const option = {
+        backgroundColor: '#fff',
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -271,7 +264,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['授课', '实习', '论文', '总分']
+          data: []
         },
         calculable: true,
         xAxis: [{
@@ -292,9 +285,12 @@ export default {
           },
           axisLabel: {
             interval: 0
-
           },
-          data: xData
+          data: (function() {
+            const data = [
+            ]
+            return data
+          }())
         }],
         yAxis: [{
           type: 'value',
@@ -326,13 +322,12 @@ export default {
             bottom: 30,
             start: 10,
             end: 80,
-            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
             handleSize: '110%',
             handleStyle: {
               color: '#d3dee5'
             },
             textStyle: {
-              color: '#fff' },
+              color: '#000' },
             borderColor: '#90979c'
           },
           {
@@ -341,111 +336,283 @@ export default {
             height: 15,
             start: 1,
             end: 35
-          }],
-        series: [
-          {
-            name: '授课',
-            type: 'bar',
-            stack: 'total',
-            barMaxWidth: 35,
-            barGap: '10%',
-            itemStyle: {
-              normal: {
-                color: 'rgba(255,144,128,1)',
-                label: {
-                  show: true,
-                  textStyle: {
-                    color: '#fff'
-                  },
-                  position: 'insideTop',
-                  formatter(p) {
-                    return p.value > 0 ? p.value : ''
-                  }
-                }
-              }
-            },
-            data: [
-              18.0,
-              19.7,
-              19.6,
-              19.9
-            ]
+          }]
+      }
+      const that = this
+      getScoreAnalysis(searchModel).then(response => {
+        const { data } = response
+        option.title = {
+          text: data.title,
+          x: '20',
+          top: '20',
+          textStyle: {
+            color: '#17273a',
+            fontSize: '22'
           },
-          {
-            name: '实习',
-            type: 'bar',
-            stack: 'total',
-            itemStyle: {
-              normal: {
-                color: 'rgba(0,191,183,1)',
-                barBorderRadius: 0,
-                label: {
-                  show: true,
-                  position: 'top',
-                  formatter(p) {
-                    return p.value > 0 ? p.value : ''
-                  }
-                }
-              }
-            },
-            data: [
-              10.0,
-              11.7,
-              11.8,
-              14.0
-            ]
-          },
-          {
-            name: '论文',
-            type: 'bar',
-            stack: 'total',
-            itemStyle: {
-              normal: {
-                color: 'rgb(165,177,186)',
-                barBorderRadius: 0,
-                label: {
-                  show: true,
-                  position: 'top',
-                  formatter(p) {
-                    return p.value > 0 ? p.value : ''
-                  }
-                }
-              }
-            },
-            data: [
-              15.0,
-              15.2,
-              15.2,
-              15.0
-            ]
-          },
-          {
-            name: '总分',
-            type: 'line',
-            stack: 'total',
-            symbolSize: 10,
-            symbol: 'circle',
-            itemStyle: {
-              normal: {
-                color: 'rgba(252,230,48,1)',
-                barBorderRadius: 0,
-                label: {
-                  show: true,
-                  position: 'top',
-                  formatter(p) {
-                    return p.value > 0 ? p.value : ''
-                  }
-                }
-              }
-            },
-            data: [
-              43.0,
-              46.6,
-              46.6,
-              48.9
-            ]
+          subtextStyle: {
+            color: '#323436',
+            fontSize: '16'
           }
-        ]
+        }
+        option.legend.data = data.legendData
+        option.xAxis[0].data = (function() {
+          return data.xData
+        }())
+        option.series = []
+        if (data.dataZoomSeries) {
+          data.dataZoomSeries.forEach(it => {
+            const serie = {
+              name: it.name,
+              type: it.type,
+              stack: it.stack,
+              barMaxWidth: it.barMaxWidth,
+              barGap: it.barGap,
+              symbolSize: it.symbolSize,
+              symbol: it.symbol,
+              itemStyle: {
+                normal: {
+                  color: it.color,
+                  barBorderRadius: it.barBorderRadius,
+                  label: {
+                    show: true,
+                    textStyle: {
+                      color: it.textColor
+                    },
+                    position: it.position,
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: it.data
+            }
+            option.series.push(serie)
+          })
+        }
+        console.log(option)
+        const d = {
+          backgroundColor: '#344b58',
+          title: {
+            text: 'admin2',
+            x: '20',
+            top: '20',
+            textStyle: {
+              color: '#fff',
+              fontSize: '22'
+            },
+            subtextStyle: {
+              color: '#90979c',
+              fontSize: '16'
+            }
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              textStyle: {
+                color: '#fff'
+              }
+            }
+          },
+          grid: {
+            left: '5%',
+            right: '5%',
+            borderWidth: 0,
+            top: 150,
+            bottom: 95,
+            textStyle: {
+              color: '#fff'
+            }
+          },
+          legend: {
+            x: '5%',
+            top: '10%',
+            textStyle: {
+              color: '#90979c'
+            },
+            data: ['授课', '实习', '论文', '总分']
+          },
+          calculable: true,
+          xAxis: [{
+            type: 'category',
+            axisLine: {
+              lineStyle: {
+                color: '#90979c'
+              }
+            },
+            splitLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
+            splitArea: {
+              show: false
+            },
+            axisLabel: {
+              interval: 0
+
+            },
+            data: 'xData'
+          }],
+          yAxis: [{
+            type: 'value',
+            splitLine: {
+              show: false
+            },
+            axisLine: {
+              lineStyle: {
+                color: '#90979c'
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              interval: 0
+            },
+            splitArea: {
+              show: false
+            }
+          }],
+          dataZoom: [
+            {
+              show: true,
+              height: 30,
+              xAxisIndex: [
+                0
+              ],
+              bottom: 30,
+              start: 10,
+              end: 80,
+              handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+              handleSize: '110%',
+              handleStyle: {
+                color: '#d3dee5'
+              },
+              textStyle: {
+                color: '#fff' },
+              borderColor: '#90979c'
+            },
+            {
+              type: 'inside',
+              show: true,
+              height: 15,
+              start: 1,
+              end: 35
+            }],
+          series: [
+            {
+              name: '授课',
+              type: 'bar',
+              stack: 'total',
+              barMaxWidth: 35,
+              barGap: '10%',
+              itemStyle: {
+                normal: {
+                  color: 'rgba(255,144,128,1)',
+                  label: {
+                    show: true,
+                    textStyle: {
+                      color: '#fff'
+                    },
+                    position: 'insideTop',
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: [
+                18.0,
+                19.7,
+                19.6,
+                19.9
+              ]
+            },
+            {
+              name: '实习',
+              type: 'bar',
+              stack: 'total',
+              itemStyle: {
+                normal: {
+                  color: 'rgba(0,191,183,1)',
+                  barBorderRadius: 0,
+                  label: {
+                    show: true,
+                    position: 'top',
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: [
+                10.0,
+                11.7,
+                11.8,
+                14.0
+              ]
+            },
+            {
+              name: '论文',
+              type: 'bar',
+              stack: 'total',
+              itemStyle: {
+                normal: {
+                  color: 'rgb(165,177,186)',
+                  barBorderRadius: 0,
+                  label: {
+                    show: true,
+                    position: 'top',
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: [
+                15.0,
+                15.2,
+                15.2,
+                15.0
+              ]
+            },
+            {
+              name: '总分',
+              type: 'line',
+              stack: 'total',
+              symbolSize: 10,
+              symbol: 'circle',
+              itemStyle: {
+                normal: {
+                  color: 'rgba(252,230,48,1)',
+                  barBorderRadius: 0,
+                  label: {
+                    show: true,
+                    position: 'top',
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: [
+                43.0,
+                46.6,
+                46.6,
+                48.9
+              ]
+            }
+          ]
+        }
+        console.log(d)
+        const echarts = require('echarts')
+        that.chartCmp = echarts.init(document.getElementById('chartCmp'))
+        that.chartCmp.setOption(option)
+      }).catch(error => {
+        console.log(error)
+        this.loadingVisible[1] = false
       })
     }
   }

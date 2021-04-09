@@ -23,4 +23,6 @@ public interface AssessmentMapper extends BaseDao<Assessment> {
     void updateOrInsert(@Param("data") Assessment assessment, @Param("cType") Integer cType);
 
     List<AssessmentModel> queryAssessList(@Param("data")ScoreSearchModel searchModel);
+
+    List<AssessmentModel> queryAssessListGroupByTime(@Param("data")ScoreSearchModel searchModel);
 }

@@ -40,3 +40,11 @@ export function assessDelete(data) {
     data
   })
 }
+
+export function getScoreAnalysis(data) {
+  return request({
+    url: '/score/queryScoreAnalysis',
+    method: 'post',
+    data
+  })
+}
