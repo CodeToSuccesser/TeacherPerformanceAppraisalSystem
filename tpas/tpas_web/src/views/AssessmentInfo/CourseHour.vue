@@ -76,6 +76,8 @@
         </template>
       </el-table-column>
       <el-table-column :resizable="false" prop="courseName" sortable label="课程名称" align="center" />
+      <el-table-column :resizable="false" prop="teacherName" sortable label="教师姓名" align="center" />
+      <el-table-column :resizable="false" prop="teacherCode" sortable label="教师编码" align="center" />
       <el-table-column :resizable="false" prop="selectedStudent" sortable label="已选学生人数" align="center" />
       <el-table-column :resizable="false" prop="studentsInstitute" sortable label="学生学院" align="center" />
       <el-table-column :resizable="false" prop="schoolYear" sortable label="学年" align="center" />
