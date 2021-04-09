@@ -134,24 +134,11 @@ export default {
   created() {
     this.permissionMap = this.$store.getters.permissionMap['Assess-Analysis']
     this.skipPage(0)
-    // const that = this
-    // window.addEventListener('resize', () => {
-    //   that.chartCmp.resize()
-    // })
   },
   mounted() {
     this.$nextTick(() => {
       this.drawChart()
-      this.chartCmp.resize()
     })
-    const that = this
-    window.onresize = function() {
-      // that.chartssize(document.getElementById('chartBox'),
-      //   document.getElementById('chartCmp'))
-      if (that.chartCmp) {
-        that.chartCmp.resize()
-      }
-    }
   },
   methods: {
     skipPage: function(addPage) {
@@ -228,7 +215,7 @@ export default {
       if (this.searchSelect[1].schoolYear && this.searchSelect[1].schoolYear !== '') {
         searchModel.schoolYear = this.searchSelect[1].schoolYear
       }
-      if (this.searchSelect[1].semester) {
+      if (this.searchSelect[1].semester !== undefined) {
         searchModel.semester = this.searchSelect[1].semester
       }
       if (this.permissionMap && this.permissionMap['queryAssessList-teacherCode'] && this.permissionMap['queryAssessList-teacherCode']['teacherCode']) {
@@ -390,223 +377,6 @@ export default {
             option.series.push(serie)
           })
         }
-        console.log(option)
-        const d = {
-          backgroundColor: '#344b58',
-          title: {
-            text: 'admin2',
-            x: '20',
-            top: '20',
-            textStyle: {
-              color: '#fff',
-              fontSize: '22'
-            },
-            subtextStyle: {
-              color: '#90979c',
-              fontSize: '16'
-            }
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              textStyle: {
-                color: '#fff'
-              }
-            }
-          },
-          grid: {
-            left: '5%',
-            right: '5%',
-            borderWidth: 0,
-            top: 150,
-            bottom: 95,
-            textStyle: {
-              color: '#fff'
-            }
-          },
-          legend: {
-            x: '5%',
-            top: '10%',
-            textStyle: {
-              color: '#90979c'
-            },
-            data: ['授课', '实习', '论文', '总分']
-          },
-          calculable: true,
-          xAxis: [{
-            type: 'category',
-            axisLine: {
-              lineStyle: {
-                color: '#90979c'
-              }
-            },
-            splitLine: {
-              show: false
-            },
-            axisTick: {
-              show: false
-            },
-            splitArea: {
-              show: false
-            },
-            axisLabel: {
-              interval: 0
-
-            },
-            data: 'xData'
-          }],
-          yAxis: [{
-            type: 'value',
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#90979c'
-              }
-            },
-            axisTick: {
-              show: false
-            },
-            axisLabel: {
-              interval: 0
-            },
-            splitArea: {
-              show: false
-            }
-          }],
-          dataZoom: [
-            {
-              show: true,
-              height: 30,
-              xAxisIndex: [
-                0
-              ],
-              bottom: 30,
-              start: 10,
-              end: 80,
-              handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
-              handleSize: '110%',
-              handleStyle: {
-                color: '#d3dee5'
-              },
-              textStyle: {
-                color: '#fff' },
-              borderColor: '#90979c'
-            },
-            {
-              type: 'inside',
-              show: true,
-              height: 15,
-              start: 1,
-              end: 35
-            }],
-          series: [
-            {
-              name: '授课',
-              type: 'bar',
-              stack: 'total',
-              barMaxWidth: 35,
-              barGap: '10%',
-              itemStyle: {
-                normal: {
-                  color: 'rgba(255,144,128,1)',
-                  label: {
-                    show: true,
-                    textStyle: {
-                      color: '#fff'
-                    },
-                    position: 'insideTop',
-                    formatter(p) {
-                      return p.value > 0 ? p.value : ''
-                    }
-                  }
-                }
-              },
-              data: [
-                18.0,
-                19.7,
-                19.6,
-                19.9
-              ]
-            },
-            {
-              name: '实习',
-              type: 'bar',
-              stack: 'total',
-              itemStyle: {
-                normal: {
-                  color: 'rgba(0,191,183,1)',
-                  barBorderRadius: 0,
-                  label: {
-                    show: true,
-                    position: 'top',
-                    formatter(p) {
-                      return p.value > 0 ? p.value : ''
-                    }
-                  }
-                }
-              },
-              data: [
-                10.0,
-                11.7,
-                11.8,
-                14.0
-              ]
-            },
-            {
-              name: '论文',
-              type: 'bar',
-              stack: 'total',
-              itemStyle: {
-                normal: {
-                  color: 'rgb(165,177,186)',
-                  barBorderRadius: 0,
-                  label: {
-                    show: true,
-                    position: 'top',
-                    formatter(p) {
-                      return p.value > 0 ? p.value : ''
-                    }
-                  }
-                }
-              },
-              data: [
-                15.0,
-                15.2,
-                15.2,
-                15.0
-              ]
-            },
-            {
-              name: '总分',
-              type: 'line',
-              stack: 'total',
-              symbolSize: 10,
-              symbol: 'circle',
-              itemStyle: {
-                normal: {
-                  color: 'rgba(252,230,48,1)',
-                  barBorderRadius: 0,
-                  label: {
-                    show: true,
-                    position: 'top',
-                    formatter(p) {
-                      return p.value > 0 ? p.value : ''
-                    }
-                  }
-                }
-              },
-              data: [
-                43.0,
-                46.6,
-                46.6,
-                48.9
-              ]
-            }
-          ]
-        }
-        console.log(d)
         const echarts = require('echarts')
         that.chartCmp = echarts.init(document.getElementById('chartCmp'))
         that.chartCmp.setOption(option)

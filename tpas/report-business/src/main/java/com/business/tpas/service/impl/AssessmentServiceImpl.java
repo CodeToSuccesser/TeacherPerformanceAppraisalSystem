@@ -179,7 +179,7 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
             target.setxData(new ArrayList<>());
             return target;
         }
-        target.setxData(data.stream().map(it -> it.getSchoolYear().concat("-").concat(it.getSemester().toString())).collect(Collectors.toList()));
+        target.setxData(data.stream().map(it -> it.getSchoolYear().concat("-").concat(String.valueOf(it.getSemester()+1))).collect(Collectors.toList()));
         courseData.setData(data.stream().map(AssessmentModel::getCourseQuality).collect(Collectors.toList()));
         paperData.setData(data.stream().map(AssessmentModel::getPaperQuality).collect(Collectors.toList()));
         internData.setData(data.stream().map(AssessmentModel::getInternQuality).collect(Collectors.toList()));
