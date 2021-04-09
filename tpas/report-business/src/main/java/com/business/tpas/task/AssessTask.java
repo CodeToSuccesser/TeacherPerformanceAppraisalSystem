@@ -191,7 +191,7 @@ public class AssessTask {
         Set<String> keySet = internRedisTemplate.keys(regex);
         if (keySet != null && !keySet.isEmpty()) {
             ParamSearchModel searchModel = new ParamSearchModel();
-            searchModel.setcType(RuleSettingCTypeEnum.PAPER.getCode());
+            searchModel.setcType(RuleSettingCTypeEnum.INTERN.getCode());
             List<AssessRule> assessRuleList = assessRuleService.getAssessList(searchModel);
             List<InternModel> list = internRedisTemplate.opsForValue().multiGet(keySet);
             if (list != null && !list.isEmpty()) {

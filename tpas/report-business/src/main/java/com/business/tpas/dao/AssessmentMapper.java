@@ -25,4 +25,6 @@ public interface AssessmentMapper extends BaseDao<Assessment> {
     List<AssessmentModel> queryAssessList(@Param("data")ScoreSearchModel searchModel);
 
     List<AssessmentModel> queryAssessListGroupByTime(@Param("data")ScoreSearchModel searchModel);
+
+    void deleteScores(@Param("data") List<Long> ids);
 }

@@ -9,6 +9,8 @@ import com.github.pagehelper.PageInfo;
 import com.management.common.base.BaseService;
 import com.management.common.model.UploadResponseModel;
 
+import java.util.List;
+
 /**
  * <p>
  * 教师绩效核算记录表 服务类
@@ -32,5 +34,7 @@ public interface AssessmentService extends BaseService<Assessment> {
     void updateOrInsert(Assessment assessment, Integer cType);
 
     ScoreAnalysisModel getScoreAnalysis(ScoreSearchModel searchModel);
+
+    void deleteScores(List<Long> ids);
 
 }

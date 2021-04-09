@@ -193,4 +193,13 @@ public class AssessmentServiceImpl extends BaseServiceImpl<AssessmentMapper, Ass
 
         return target;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteScores(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        assessmentMapper.deleteScores(ids);
+    }
 }

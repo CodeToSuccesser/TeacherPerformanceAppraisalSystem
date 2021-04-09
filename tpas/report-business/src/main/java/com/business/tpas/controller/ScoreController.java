@@ -77,6 +77,16 @@ public class ScoreController {
         return new BaseResponse<>(data);
     }
 
+    @ApiOperation(value = "删除考核", notes = "删除考核")
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),
+            @ApiResponse(code = 500, message = "系统错误")})
+    @PostMapping("/deleteScore")
+    public BaseResponse<?> deleteScore(@RequestBody List<Long> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            assessmentService.deleteScores(ids);
+        }
+        return new BaseResponse<>();
+    }
 
     @ApiOperation(value = "查询考核汇总", notes = "查询考核汇总")
     @ApiResponses(value = {@ApiResponse(code = 0, message = "ok"),

@@ -35,7 +35,7 @@ export function queryAssessList(data) {
 
 export function assessDelete(data) {
   return request({
-    url: '/score/assessDelete',
+    url: '/score/deleteScore',
     method: 'post',
     data
   })

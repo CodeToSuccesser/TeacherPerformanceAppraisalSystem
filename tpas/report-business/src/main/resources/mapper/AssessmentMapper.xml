@@ -15,6 +15,7 @@
         <result column="total_quality" property="totalQuality" />
         <result column="update_time" property="updateTime" />
         <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
     </resultMap>
 
     <resultMap id="ModelResultMap" type="com.business.tpas.model.AssessmentModel">
@@ -35,7 +36,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, teacher_id, semester, school_year, course_quality, paper_quality, intern_quality, other_quality,
-        total_quality, update_time, create_time
+        total_quality, update_time, create_time, is_deleted
     </sql>
 
     <insert id="updateOrInsert">
@@ -117,5 +118,14 @@
         GROUP BY school_year, semester
         ORDER BY school_year, semester
     </select>
+
+    <update id="deleteScores">
+        UPDATE assessment
+        SET is_deleted = 1
+        WHERE id IN
+        <foreach collection="data" open="(" close=")" separator="," index="index" item="item">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>
