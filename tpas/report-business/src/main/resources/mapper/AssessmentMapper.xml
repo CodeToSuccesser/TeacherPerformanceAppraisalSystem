@@ -49,19 +49,19 @@
         ON DUPLICATE KEY UPDATE
         <choose>
             <when test="cType == 1">
-                course_quality = VALUES(course_quality)
-                , total_quality = VALUES(course_quality) + paper_quality + intern_quality + other_quality
+                course_quality = VALUES(course_quality) + course_quality
+                , total_quality = VALUES(course_quality) + course_quality + paper_quality + intern_quality + other_quality
             </when>
             <when test="cType == 2">
-                paper_quality = VALUES(paper_quality)
-                , total_quality = VALUES(paper_quality) + course_quality + intern_quality + other_quality
+                paper_quality = VALUES(paper_quality) + paper_quality
+                , total_quality = VALUES(paper_quality) + paper_quality + course_quality + intern_quality + other_quality
             </when>
             <when test="cType == 3">
-                intern_quality = VALUES(intern_quality)
-                , total_quality = VALUES(intern_quality) + course_quality + paper_quality + other_quality            </when>
+                intern_quality = VALUES(intern_quality) + intern_quality
+                , total_quality = VALUES(intern_quality) + intern_quality + course_quality + paper_quality + other_quality            </when>
             <when test="cType == 4">
-                other_quality = VALUES(other_quality)
-                , total_quality = VALUES(other_quality) + course_quality + intern_quality + paper_quality            </when>
+                other_quality = VALUES(other_quality) + other_quality
+                , total_quality = VALUES(other_quality) + other_quality + course_quality + intern_quality + paper_quality            </when>
             <otherwise>
                 course_quality = VALUES(course_quality)
                 , paper_quality = VALUES(paper_quality)
