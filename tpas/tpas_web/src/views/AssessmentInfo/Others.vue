@@ -190,7 +190,7 @@ export default {
     ])
   },
   created() {
-    this.permissionMap = this.$store.getters.permissionMap['AssessmentInfo-Other']
+    this.permissionMap = this.$store.getters.permissionMap['AssessmentInfo-Others']
     const data = {
       pageNum: this.pageNum,
       pageSize: this.pageNum
