@@ -50,6 +50,8 @@
         <foreach collection="data" item="item" index="index" open="(" close=")" separator=",">
             #{item}
         </foreach>
+        AND r.is_deleted = 0
+        AND p.is_deleted = 0
     </select>
 
 </mapper>
